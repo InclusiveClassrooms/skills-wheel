@@ -1,3 +1,6 @@
+[![codecov](https://codecov.io/gh/InclusiveClassrooms/skills-wheel/branch/master/graph/badge.svg)](https://codecov.io/gh/InclusiveClassrooms/skills-wheel)
+
+
 # Skillswheel
 
 To start your Phoenix app:
