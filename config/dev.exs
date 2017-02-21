@@ -36,8 +36,8 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :skillswheel, Skillswheel.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
+  username: "jackcarlisle",
+  password: "",
   database: "skillswheel_dev",
   hostname: "localhost",
   pool_size: 10
