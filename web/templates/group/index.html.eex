@@ -1,8 +1,8 @@
 <h1>Groups</h1>
 
-<ul>
+<ul class="group-list">
   <%= for group <- @groups do %>
-  <li>
+  <li class="group-list-item">
     <%= group.group_name %>
   </li>
   <% end %>
@@ -10,8 +10,8 @@
 
 <%= form_for @changeset, group_path(@conn, :create), fn f -> %>
   <div>
-    <%= text_input f, :group_name, placeholder: "Group Name" %>
+    <%= text_input f, :group_name, placeholder: "Group Name", class: "group-input" %>
     <%= error_tag f, :group_name %>
   </div>
-  <%= submit "Create Group", class: "button" %>
+  <%= submit "Create New Group", class: "group-button" %>
 <% end %>
