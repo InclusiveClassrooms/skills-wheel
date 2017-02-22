@@ -1,1 +1,49 @@
 /* This file is for your main application css. */
+
+.help-block {
+  color: red;
+  text-transform: capitalize;
+}
+
+.group-button {
+  background-color: #ffffff;
+  color: grey;
+  border-style: none;
+  padding: 0.5em;
+  border: 1px solid grey;
+  border-radius: 500px;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.group-button:hover {
+  background-color: grey;
+  color: #ffffff;
+}
+
+.group-button:focus {
+  background-color: #ffffff;
+  color: grey;
+  outline: 0;
+}
+
+.group-input {
+  padding: 0.5em;
+  border-radius: 5px;
+  border-style: none;
+  border: 1px solid lightgrey;
+  margin-bottom: 0.5em;
+}
+
+.group-list {
+  list-style-type: none;
+  margin-left: 0.5em;
+  padding-left: 0;
+}
+
+.group-list-item {
+  border: 1px solid lightgrey;
+  padding: 1em;
+  margin-bottom: 0.5em;
+  border-radius: 5px;
+}
