@@ -6,24 +6,24 @@
 }
 
 .group-button {
-  background-color: grey;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: grey;
   border-style: none;
   padding: 0.5em;
+  border: 1px solid grey;
   border-radius: 500px;
   padding-left: 1em;
   padding-right: 1em;
 }
 
 .group-button:hover {
-  background-color: #ffffff;
-  color: grey;
-  border: 1px solid grey;
+  background-color: grey;
+  color: #ffffff;
 }
 
 .group-button:focus {
-  background-color: grey;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: grey;
   outline: 0;
 }
 
