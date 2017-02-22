@@ -17,6 +17,10 @@ defmodule Skillswheel.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/groups", GroupController, :index
+    post "/groups", GroupController, :create
+    get "/groups/:group_id", GroupController, :single
+    post "/groups/:group_id", GroupController, :create_student
   end
 
   # Other scopes may use custom stacks.
