@@ -25,7 +25,7 @@ defmodule Skillswheel.GroupController do
     end
   end
 
-  def single(conn, %{"group_id" => group_id}) do
+  def show(conn, %{"group_id" => group_id}) do
     case Repo.get(Group, group_id) do
       nil ->
         conn
