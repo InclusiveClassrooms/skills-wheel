@@ -19,6 +19,7 @@ defmodule Skillswheel.Router do
     get "/", PageController, :index
     get "/groups", GroupController, :index
     post "/groups", GroupController, :create
+    get "/groups/:group_id", GroupController, :single
   end
 
   # Other scopes may use custom stacks.

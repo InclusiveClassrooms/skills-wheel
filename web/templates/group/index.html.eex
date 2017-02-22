@@ -2,9 +2,11 @@
 
 <ul class="group-list">
   <%= for group <- @groups do %>
-  <li class="group-list-item">
-    <%= group.group_name %>
-  </li>
+    <%= link to: group_path(@conn, :single, group.id) do %>
+      <li class="group-list-item">
+        <%= group.group_name %>
+      </li>
+    <% end %>
   <% end %>
 </ul>
 
