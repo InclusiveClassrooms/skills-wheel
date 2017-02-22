@@ -1,1 +1,23 @@
+<%= link to: group_path(@conn, :index) do %>
+Back to groups
+<%= end %>
 <h1><%= @group.group_name %></h1>
+
+<ul class="student-list">
+  <%= for student <- @student do %>
+    <li class="student-list-item">
+      <%= student.student_name %>
+      <%= student.student_sex %>
+    </li>
+  <% end %>
+</ul>
+
+<%= form_for @changeset, group_path(@conn, :create_student), fn f -> %>
+  <div>
+    <%= text_input f, :student_name, placeholder: "Student Name", class: "student-input" %>
+    <%= error_tag f, :student_name %>
+  </div>
+  <%= submit "Create New Student", class: "student-button" %>
+<% end %>
+
+

@@ -2,6 +2,7 @@ defmodule Skillswheel.Group do
   use Skillswheel.Web, :model
 
   schema "groups" do
+    has_many :students, Skillswheel.Student
     field :group_name, :string
   end
 
