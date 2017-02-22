@@ -26,7 +26,13 @@ defmodule Skillswheel.GroupController do
   end
 
   def single(conn, %{"group_id" => group_id}) do
-    group = Repo.get(Group, group_id)
-    render conn, "single.html", group: group
+    case Repo.get(Group, group_id) do
+      nil ->
+        conn
+        |> put_flash(:error, "Group Does Not Exist")
+        |> redirect(to: group_path(conn, :index))
+      group ->
+        render conn, "single.html", group: group
+    end
   end
 end
