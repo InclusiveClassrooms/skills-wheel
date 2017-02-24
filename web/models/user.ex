@@ -9,7 +9,7 @@ defmodule Skillswheel.User do
     field :password_hash, :string
     field :admin, :boolean
 
-    timestamps
+    timestamps()
   end
 
   def changeset(struct, params \\ :invalid) do
