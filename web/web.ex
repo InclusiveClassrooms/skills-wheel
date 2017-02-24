@@ -36,9 +36,7 @@ defmodule Skillswheel.Web do
 
       import Skillswheel.Router.Helpers
       import Skillswheel.Gettext
-      import Skillswheel.Auth, only: [authenticate_user: 2]
-      # add authenticate_admin when we need
-      # import Skillswheel.Auth, only: [authenticate_user: 2, authenticate_admin: 2]
+      import Skillswheel.Auth, only: [authenticate_user: 2, authenticate_admin: 2]
     end
   end
 
@@ -62,9 +60,7 @@ defmodule Skillswheel.Web do
     quote do
       use Phoenix.Router
 
-      import Skillswheel.Auth, only: [authenticate_user: 2]
-      # add authenticate_admin when we need
-      # import Skillswheel.Auth, only: [authenticate_user: 2, authenticate_admin: 2]
+      import Skillswheel.Auth, only: [authenticate_user: 2, authenticate_admin: 2]
     end
   end
 
