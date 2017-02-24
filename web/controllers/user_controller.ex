@@ -1,7 +1,9 @@
 defmodule Skillswheel.UserController do
   use Skillswheel.Web, :controller
   alias Skillswheel.User
-  plug :authenticate when action in [:index, :show]
+  plug :authenticate_user when action in [:index, :show]
+  # Need to discuss implementation of admin authentication
+  # plug :authenticate_admin when action in [:index, :show, :create, :new]
 
   def index(conn, _params) do
     users = Repo.all(User)
@@ -32,14 +34,4 @@ defmodule Skillswheel.UserController do
     end
   end
 
-  defp authenticate(conn, _opts) do
-    if conn.assigns.current_user do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must be logged in to view that page")
-      |> redirect(to: page_path(conn, :index))
-      |> halt()
-    end
-  end
 end

@@ -1,6 +1,9 @@
 defmodule Skillswheel.Auth do
   import Plug.Conn
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
+  import Phoenix.Controller
+
+  alias Skillswheel.Router.Helpers
 
   def init(opts) do
     Keyword.fetch!(opts, :repo)
@@ -37,5 +40,28 @@ defmodule Skillswheel.Auth do
   def logout(conn) do
     configure_session(conn, drop: true)
   end
+
+  def authenticate_user(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to view that page")
+      |> redirect(to: Helpers.page_path(conn, :index))
+      |> halt()
+    end
+  end
+
+  # Need to have a discussion about this implementation
+  # def authenticate_admin(conn, _opts) do
+  #   if conn.assigns.current_user.admin do
+  #     conn
+  #     |> put_flash(:info, "You're logged in as an admin")
+  #     |> redirect(to: Helpers.page_path(conn, :index))
+  #     |> halt()
+  #   else
+  #     conn
+  #   end
+  # end
 
 end
