@@ -17,6 +17,7 @@ defmodule Skillswheel.User do
     |> cast(params, [:email, :name])
     |> validate_format(:email, ~r/@/)
     |> validate_required(:email)
+    |> unique_constraint(:email)
   end
 
   def registration_changeset(struct, params) do
