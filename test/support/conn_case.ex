@@ -26,7 +26,6 @@ defmodule Skillswheel.ConnCase do
       import Ecto.Query
 
       import Skillswheel.Router.Helpers
-      import Skillswheel.TestHelpers
 
       # The default endpoint for testing
       @endpoint Skillswheel.Endpoint
