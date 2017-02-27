@@ -2,31 +2,45 @@ defmodule Skillswheel.UserControllerTest do
   use Skillswheel.ConnCase
   alias Skillswheel.User
 
-  setup do
-    %User{
-      id: 123456,
-      name: "First Last",
-      email: "test@gmail.com",
-      password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
-      admin: false
-    } |> Repo.insert
+  describe "all user paths that don't need authentication" do
+    test "/users/new", %{conn: conn} do
+      conn = get conn, user_path(conn, :new)
+      assert html_response(conn, 200) =~ "New User"
+    end
 
-    {:ok, user: Repo.get(User, 123456)}
+    test "/users not logged in", %{conn: conn} do
+      conn = get conn, user_path(conn, :index)
+      assert redirected_to(conn, 302) =~ "/"
+      assert conn.halted
+    end
+
+    test "/user/:id not logged in ", %{conn: conn} do
+      conn = get conn, user_path(conn, :show, 123456)
+      assert redirected_to(conn, 302) =~ "/"
+      assert conn.halted
+    end
   end
 
-  test "/users/new", %{conn: conn} do
-    conn = get conn, user_path(conn, :new)
-    assert html_response(conn, 200) =~ "New User"
-  end
+  describe "all user paths that need authentication" do
+    setup do
+      %User{
+        id: 12345,
+        name: "My Name",
+        email: "email@test.com",
+        password_hash: Comeonin.Bcrypt.hashpwsalt("password")
+      } |> Repo.insert
 
-  test "/users not logged in", %{conn: conn} do
-    conn = get conn, user_path(conn, :index)
-    assert redirected_to(conn, 302) =~ "/"
-  end
+      {:ok, conn: build_conn() |> assign(:current_user, Repo.get(User, 12345))}
+    end
 
-  test "/user/:id not logged in ", %{conn: conn} do
-    conn = get conn, user_path(conn, :show, 123456)
-    assert redirected_to(conn, 302) =~ "/"
-  end
+    test "/users renders users", %{conn: conn} do
+      conn = get conn, user_path(conn, :index)
+      assert html_response(conn, 200) =~ "Users"
+    end
 
+    test "/user/:id logged in", %{conn: conn} do
+      conn = get conn, user_path(conn, :show, 12345)
+      assert html_response(conn, 200) =~ "User"
+    end
+  end
 end
