@@ -32,6 +32,12 @@ defmodule Skillswheel.SessionControllerTest do
       assert html_response(conn, 200) =~ "Login"
     end
 
+    test "Login: Invalid password", %{conn: conn} do
+      conn = post conn, session_path(conn, :create,
+      %{"session" => %{"email" => "email@test.com", "password" => "invalid"}})
+      assert html_response(conn, 200) =~ "Login"
+    end
+
     test "Logout", %{conn: conn} do
       conn = delete conn, session_path(conn, :delete, conn.assigns.current_user)
       assert redirected_to(conn, 302) =~ "/"
