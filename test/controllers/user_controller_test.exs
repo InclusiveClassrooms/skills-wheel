@@ -73,4 +73,28 @@ defmodule Skillswheel.UserControllerTest do
       assert html_response(conn, 200) =~ "User"
     end
   end
+
+  describe "admin authentication" do
+    setup do
+      %User{
+        id: 12345,
+        name: "My Name",
+        email: "email@test.com",
+        password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
+        admin: true
+      } |> Repo.insert
+
+      {:ok, conn: build_conn() |> assign(:current_user, Repo.get(User, 12345))}
+    end
+
+    test "/users admin redirect to index", %{conn: conn} do
+      conn = get conn, user_path(conn, :index)
+      assert redirected_to(conn, 302) =~ "/"
+    end
+
+    test "/users/:id admin redirect to index", %{conn: conn} do
+      conn = get conn, user_path(conn, :show, 12345)
+      assert redirected_to(conn, 302) =~ "/"
+    end
+  end
 end

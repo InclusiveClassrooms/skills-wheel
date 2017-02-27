@@ -22,7 +22,7 @@ defmodule Skillswheel.SessionControllerTest do
     end
     test "Login: Valid session /sessions/new", %{conn: conn} do
       conn = post conn, session_path(conn, :create,
-      %{"session" => %{"email" => "email@test.com", "password" => "password"}})
+      %{"session" => %{"email" => "email@test.com", "password" => "password", "admin" => true}})
       assert redirected_to(conn, 302) =~ "/users"
     end
 
