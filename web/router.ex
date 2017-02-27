@@ -10,9 +10,9 @@ defmodule Skillswheel.Router do
     plug Skillswheel.Auth, repo: Skillswheel.Repo
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
+  # pipeline :api do
+  #   plug :accepts, ["json"]
+  # end
 
   scope "/", Skillswheel do
     pipe_through :browser # Use the default browser stack
