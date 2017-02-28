@@ -3,8 +3,7 @@ defmodule Skillswheel.TestHelpers do
 
   def insert_user(attrs \\ %{}) do
     changes = Dict.merge(%{
-      name: "Some User",
-      username: "user #{Base.encode16(:crypto.rand_bytes(7))}",
+      name: "user #{Base.encode16(:crypto.rand_bytes(7))}",
       email: "random@user.com",
       password: "supersecret"
     }, attrs)
