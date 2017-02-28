@@ -22,6 +22,13 @@ export POSTGRES_PASSWORD=<psql_password>
 * Start your phoenix server with `mix phoenix.server`
 * Now visit [`localhost:4000`](http://localhost:4000) from your browser.
 
+**NOTE:** If you are experiencing errors when trying to run the project then it
+might be because of the following:
+
+* `.env` file isn't sourced. Quick fix: type `source .env` into the command line
+at the root of your project
+* `psql` isn't running. Quick fix: start a `psql` server in your terminal
+
 ## Testing
 
 * To run the tests locally ensure you have run the above quick start steps
@@ -32,4 +39,3 @@ export POSTGRES_PASSWORD=<psql_password>
 ## Routes
 
 Check the application routes with `mix pheonix.routes`
-
