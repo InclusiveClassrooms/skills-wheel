@@ -3,7 +3,13 @@ defmodule Skillswheel.UserTest do
 
    alias Skillswheel.User
 
-   @valid_attrs %{email: "email@email.com", password: "secretshhh", admin: true}
+   @valid_attrs %{
+     email: "email@email.com",
+     password: "secretshhh",
+     admin: true,
+     school_id: 1,
+     name: "test"
+   }
    @invalid_attrs %{}
 
    test "changeset with valid attributes" do
