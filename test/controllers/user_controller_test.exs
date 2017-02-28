@@ -87,14 +87,14 @@ defmodule Skillswheel.UserControllerTest do
       {:ok, conn: build_conn() |> assign(:current_user, Repo.get(User, 12345))}
     end
 
-    test "/users admin redirect to index", %{conn: conn} do
+    test "/users admin", %{conn: conn} do
       conn = get conn, user_path(conn, :index)
-      assert redirected_to(conn, 302) =~ "/"
+      assert html_response(conn, 200) =~ "Users"
     end
 
-    test "/users/:id admin redirect to index", %{conn: conn} do
+    test "/users/:id admin", %{conn: conn} do
       conn = get conn, user_path(conn, :show, 12345)
-      assert redirected_to(conn, 302) =~ "/"
+      assert html_response(conn, 200) =~ "User"
     end
   end
 end
