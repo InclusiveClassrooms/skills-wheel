@@ -8,8 +8,8 @@ env:
 before_script:
   - mix do ecto.create, ecto.migrate
 script:
-  - mix do deps.get, test && mix compile && mix coveralls.travis
-notifications:
-  email: false
+  - mix do deps.get, compile --warnings-as-errors, coveralls.json
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+notifications:
+  email: false
