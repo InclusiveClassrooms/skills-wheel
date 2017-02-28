@@ -1,0 +1,17 @@
+<h1>ADMIN DASHBOARD</h1>
+
+<h2>List of approved schools</h2>
+<%= for school <- @schools do %>
+  <div><%= school.name %> : <%= school.email_suffix %></div>
+<% end %>
+<%= form_for @changeset, school_path(@conn, :create), fn f -> %>
+  <div class="form-group">
+    <%= label f, :name, class: "control-label" %>
+    <%= text_input f, :name, placeholder: "School Name", class: "control-label" %>
+  </div>
+  <div class="form-group">
+    <%= label f, :email_suffix, class: "control-label" %>
+    <%= text_input f, :email_suffix, placeholder: "Email Suffix", class: "control-label" %>
+  </div>
+  <%= submit "Create School" %>
+<% end %>

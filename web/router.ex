@@ -20,6 +20,8 @@ defmodule Skillswheel.Router do
     get "/", PageController, :index
     resources "/users", UserController, only: [:index, :show, :new, :create]
     resources "/sessions", SessionController, only: [:new, :create, :delete]
+    resources "/admin", AdminController, only: [:index]
+    resources "/school", SchoolController, only: [:create, :delete]
   end
 
   # Other scopes may use custom stacks.
