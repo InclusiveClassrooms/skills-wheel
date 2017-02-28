@@ -2,7 +2,6 @@ defmodule Skillswheel.UserController do
   use Skillswheel.Web, :controller
   alias Skillswheel.User
   plug :authenticate_user when action in [:index, :show]
-  plug :authenticate_admin when action in [:index, :show]
 
   def index(conn, _params) do
     users = Repo.all(User)
