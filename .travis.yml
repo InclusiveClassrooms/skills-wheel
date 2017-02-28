@@ -11,4 +11,5 @@ script:
   - mix do deps.get, test && mix compile && mix coveralls.travis
 notifications:
   email: false
-
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
