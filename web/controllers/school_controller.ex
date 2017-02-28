@@ -7,9 +7,9 @@ defmodule Skillswheel.SchoolController do
     case Repo.insert(changeset) do
       {:ok, school} ->
         conn
-        |> put_flash(:info, "School Created")
+        |> put_flash(:info, "#{school.name} Created")
         |> redirect(to: admin_path(conn, :index))
-      {:error, changeset} ->
+      {:error, _changeset} ->
         conn
         |> put_flash(:error, "Failed to create school")
         |> redirect(to: admin_path(conn, :index))
