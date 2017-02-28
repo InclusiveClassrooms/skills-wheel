@@ -1,5 +1,6 @@
 defmodule Skillswheel.SchoolController do
   use Skillswheel.Web, :controller
+  alias Skillswheel.School
 
   def create(conn, %{"school" => school_params}) do
     changeset = School.changeset(%School{}, school_params)

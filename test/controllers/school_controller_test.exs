@@ -2,7 +2,6 @@ defmodule Skillswheel.SchoolControllerTest do
   use Skillswheel.ConnCase
 
   alias Skillswheel.User
-  alias Skillswheel.School
 
   @valid_attrs %{name: "Test", email_suffix: "test.org"}
   @invalid_attrs %{name: "", email_suffix: ""}
