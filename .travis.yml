@@ -1,12 +1,15 @@
 language: elixir
 elixir:
   - 1.4.1
-
+addons:
+  postgresql: '9.4'
+env:
+  - MIX_ENV=test
+before_script:
+  - mix do ecto.create, ecto.migrate
 script:
-  - MIX_ENV=test mix do compile --warnings-as-errors, coveralls.json
-
+  - mix do deps.get, compile --warnings-as-errors, coveralls.json
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-
 notifications:
   email: false
