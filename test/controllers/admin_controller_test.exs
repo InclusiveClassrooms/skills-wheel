@@ -8,7 +8,8 @@ defmodule Skillswheel.AdminControllerTest do
       id: 12345,
       name: "My Name",
       email: "email@test.com",
-      password_hash: Comeonin.Bcrypt.hashpwsalt("password")
+      password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
+      admin: true
     } |> Repo.insert
 
     {:ok, conn: build_conn() |> assign(:current_user, Repo.get(User, 12345))}
