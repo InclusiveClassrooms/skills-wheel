@@ -3,7 +3,8 @@ defmodule Skillswheel.AdminController do
   alias Skillswheel.School
 
   def index(conn, _params) do
+    schools = Repo.all(School)
     changeset = School.changeset(%School{})
-    render conn, "index.html", changeset: changeset
+    render conn, "index.html", changeset: changeset, schools: schools
   end
 end
