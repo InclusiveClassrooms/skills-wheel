@@ -1,23 +1,35 @@
+[![Build Status](https://travis-ci.org/InclusiveClassrooms/skills-wheel.svg?branch=master)](https://travis-ci.org/InclusiveClassrooms/skills-wheel)
 [![codecov](https://codecov.io/gh/InclusiveClassrooms/skills-wheel/branch/master/graph/badge.svg)](https://codecov.io/gh/InclusiveClassrooms/skills-wheel)
-
 
 # Skillswheel
 
-To start your Phoenix app:
+This project uses:
+[Elixir version 1.4.x](http://elixir-lang.org/)
+[PostgreSQL version 9.5.x](https://www.postgresql.org/)
+[Node version 6.10.x](https://nodejs.org/)
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Install Node.js dependencies with `npm install`
-  * Start Phoenix endpoint with `mix phoenix.server`
+## Quick Start
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+* Ensure you have the above dependencies installed
+* Ensure you have the following environment variables in your path:
+```bash
+export POSTGRES_USERNAME=<psql_username>
+export POSTGRES_PASSWORD=<psql_password>
+```
+* Install dependencies with `mix deps.get`
+* Create and migrate your database with `mix ecto.create && mix ecto.migrate`
+* Install Node.js dependencies with `npm install`
+* Start your phoenix server with `mix phoenix.server`
+* Now visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
+## Testing
 
-## Learn more
+* To run the tests locally ensure you have run the above quick start steps
+* Run the test script with `mix test`
+* You can check test coverage with `mix coveralls`
+* You can generate a coverage report with `mix coveralls.html`
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+## Routes
+
+Check the application routes with `mix pheonix.routes`
+
