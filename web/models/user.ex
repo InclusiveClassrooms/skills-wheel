@@ -8,22 +8,23 @@ defmodule Skillswheel.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     field :admin, :boolean
+    belongs_to :school, Skillswheel.School
 
     timestamps()
   end
 
   def changeset(struct, params \\ :invalid) do
     struct
-    |> cast(params, [:email, :name])
+    |> cast(params, [:email, :name, :password, :school_id])
     |> validate_format(:email, ~r/@/)
-    |> validate_required(:email)
+    |> validate_required([:email, :password, :name, :school_id])
     |> unique_constraint(:email)
   end
 
   def registration_changeset(struct, params) do
     struct
     |> changeset(params)
-    |> cast(params, [:password])
+    |> cast(params, [:password, :school_id])
     |> validate_length(:password, min: 6, max: 100)
     |> put_pass_hash()
   end

@@ -18,6 +18,11 @@
     <%= error_tag f, :email %>
   </div>
   <div class="form-group">
+    <%= label f, :school_id, "School", class: "control-label" %>
+    <%= select f, :school_id, @schools, class: "form-control", prompt: "Choose a school" %>
+    <%= error_tag f, :school_id %>
+  </div>
+  <div class="form-group">
     <%= label f, :password, class: "control-label" %>
     <%= text_input f, :password, placeholder: "Password", class: "form-control", type: :password %>
     <%= error_tag f, :password %>

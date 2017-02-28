@@ -1,7 +1,10 @@
 defmodule Skillswheel.UserController do
   use Skillswheel.Web, :controller
   alias Skillswheel.User
+  alias Skillswheel.School
+
   plug :authenticate_user when action in [:index, :show]
+  plug :load_schools when action in [:new, :index, :create, :show]
 
   def index(conn, _params) do
     users = Repo.all(User)
@@ -30,6 +33,15 @@ defmodule Skillswheel.UserController do
     {:error, changeset} ->
       render conn, "new.html", changeset: changeset
     end
+  end
+
+  defp load_schools(conn, _) do
+    query =
+      School
+      |> School.alphabetical
+      |> School.names_and_ids
+    schools = Repo.all(query)
+    assign(conn, :schools, schools)
   end
 
 end
