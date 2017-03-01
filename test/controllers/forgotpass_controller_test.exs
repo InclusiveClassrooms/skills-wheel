@@ -8,7 +8,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
   test "/forgotpass :: create", %{conn: conn} do
     conn = post conn, forgotpass_path(conn, :create,
-      %{"forgotpass" => %{"email" => "email@me.com"}})
+      %{"forgotpass" => %{"email" => "sehouston3@gmail.com"}})
     assert redirected_to(conn, 302) =~ "/forgotpass"
   end
 end
