@@ -1,0 +1,10 @@
+<h1>Forgotten Password</h1>
+
+<%= form_for @conn, forgotpass_path(@conn, :create), [as: :forgotpass], fn f -> %>
+  <h6>Please enter your email:</h6>
+  <div class="form-group">
+    <%= label f, :email, class: "control-label" %>
+    <%= text_input f, :email, placeholder: "email@example.com", class: "form-control" %>
+  </div>
+  <%= submit "Send", class: "btn btn-primary" %>
+<% end %>
