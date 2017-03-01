@@ -22,6 +22,7 @@ defmodule Skillswheel.Router do
     resources "/sessions", SessionController, only: [:new, :create, :delete]
     resources "/admin", AdminController, only: [:index]
     resources "/school", SchoolController, only: [:create, :delete]
+    resources "/forgotpass", ForgotpassController, only: [:index, :create]
   end
 
   # Other scopes may use custom stacks.
