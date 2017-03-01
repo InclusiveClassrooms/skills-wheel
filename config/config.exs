@@ -19,10 +19,10 @@ config :skillswheel, Skillswheel.Endpoint,
 
 config :skillswheel, Skillswheel.Mailer,
   adapter: Bamboo.SMTPAdapter,
-  server: "  
-  email-smtp.us-west-2.amazonaws.com",
+  server: "email-smtp.us-west-2.amazonaws.com",
   port: 25,
   username: System.get_env("SMTP_USERNAME"),
+  # "samhouston",
   password: System.get_env("SMTP_PASSWORD"),
   tls: :always, # can be `:always` or `:never`
   ssl: false, # can be `true`
