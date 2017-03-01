@@ -6,10 +6,6 @@ defmodule Skillswheel.ForgotpassController do
   end
 
   def create(conn, %{"forgotpass" => %{"email" => email}}) do
-    IO.puts "+++++++++"
-    IO.inspect x = Skillswheel.Email.welcome_text_email(email)
-    IO.puts "+++++++++"
-
     Skillswheel.Mailer.deliver_now(x)
 
     conn
