@@ -6,7 +6,9 @@ defmodule Skillswheel.ForgotpassController do
   end
 
   def create(conn, %{"forgotpass" => %{"email" => email}}) do
-    Skillswheel.Mailer.deliver_now(x)
+    email
+    |> Skillswheel.Email.welcome_text_email()
+    |> Skillswheel.Mailer.deliver_now()
 
     conn
     |> put_flash(:info, "Email Sent")
