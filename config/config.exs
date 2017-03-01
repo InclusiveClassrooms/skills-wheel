@@ -19,14 +19,13 @@ config :skillswheel, Skillswheel.Endpoint,
 
 config :skillswheel, Skillswheel.Mailer,
   adapter: Bamboo.SMTPAdapter,
-  server: "email-smtp.us-west-2.amazonaws.com",
-  port: 25,
+  server: System.get_env("SES_SERVER"),
+  port: System.get_env("SES_PORT"),
   username: System.get_env("SMTP_USERNAME"),
-  # "samhouston",
   password: System.get_env("SMTP_PASSWORD"),
   tls: :always, # can be `:always` or `:never`
   ssl: false, # can be `true`
-  retries: 3
+  retries: 1
 
 # Configures Elixir's Logger
 config :logger, :console,
