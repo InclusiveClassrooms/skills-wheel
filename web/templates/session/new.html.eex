@@ -11,3 +11,5 @@
   </div>
   <%= submit "Log in", class: "btn btn-primary" %>
 <% end %>
+
+<%= link "Forgot Password", to: forgotpass_path(@conn, :index) %>
