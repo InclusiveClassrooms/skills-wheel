@@ -7,7 +7,7 @@ defmodule Skillswheel.ForgotpassController do
 
   def create(conn, %{"forgotpass" => %{"email" => email}}) do
     email
-    |> Skillswheel.Email.welcome_text_email()
+    |> Skillswheel.Email.forgotten_password_email()
     |> Skillswheel.Mailer.deliver_now()
 
     conn
