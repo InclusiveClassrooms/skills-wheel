@@ -46,7 +46,8 @@ defmodule Skillswheel.Mixfile do
      {:comeonin, "~> 2.0"},
      {:excoveralls, "~> 0.6.2"},
      {:bamboo, "~> 0.7"},
-     {:bamboo_smtp, "~> 1.2.1"}]
+     {:bamboo_smtp, "~> 1.2.1"},
+     {:mock, "~> 0.2.0", only: :test}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
