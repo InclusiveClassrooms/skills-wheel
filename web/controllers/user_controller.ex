@@ -33,5 +33,5 @@ defmodule Skillswheel.UserController do
       render conn, "new.html", changeset: changeset
     end
   end
-  
+
 end

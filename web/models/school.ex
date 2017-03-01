@@ -15,12 +15,4 @@ defmodule Skillswheel.School do
     |> validate_required([:email_suffix, :name])
     |> unique_constraint(:name)
   end
-
-  def alphabetical(query) do
-    from s in query, order_by: s.name
-  end
-
-  def names_and_ids(query) do
-    from s in query, select: {s.name, s.id}
-  end
 end

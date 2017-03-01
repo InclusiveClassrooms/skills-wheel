@@ -1,9 +1,16 @@
 defmodule Skillswheel.UserControllerTest do
   use Skillswheel.ConnCase
   alias Skillswheel.User
+  alias Skillswheel.School
 
   describe "all user paths that don't need authentication" do
     setup do
+      %School{
+        id: 1,
+        name: "Test School",
+        email_suffix: "test.com"
+      } |> Repo.insert
+      
       %User{
         id: 12345,
         name: "My Name",
@@ -35,7 +42,9 @@ defmodule Skillswheel.UserControllerTest do
       %{"user" => %{
           name: "Test Name",
           email: "test@test.com",
-          password: "secretpassword"
+          password: "secretpassword",
+          school_id: 1,
+          admin: true
         }})
       assert redirected_to(conn, 302) =~ "/users"
     end
