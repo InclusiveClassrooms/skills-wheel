@@ -1,6 +1,8 @@
 defmodule Skillswheel.UserController do
   use Skillswheel.Web, :controller
   alias Skillswheel.User
+  alias Skillswheel.School
+
   plug :authenticate_user when action in [:index, :show]
 
   def index(conn, _params) do

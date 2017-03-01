@@ -1,8 +1,15 @@
 defmodule Skillswheel.AuthTest do
   use Skillswheel.ConnCase
   alias Skillswheel.Auth
+  alias Skillswheel.School
 
   setup %{conn: conn} do
+    %School{
+      id: 1,
+      name: "Test School",
+      email_suffix: "test.com"
+    } |> Repo.insert
+
     conn =
       conn
       |> bypass_through(Skillswheel.Router, :browser)
@@ -63,11 +70,11 @@ defmodule Skillswheel.AuthTest do
   end
 
   test "login with a valid username and pass", %{conn: conn} do
-    user = insert_user(email: "me@me.com", password: "secret")
+    user = insert_user(%{email: "me@test.com", password: "secret"})
     {:ok, conn} =
-      Auth.login_by_email_and_pass(conn, "me@me.com", "secret", repo: Repo)
+      Auth.login_by_email_and_pass(conn, "me@test.com", "secret", repo: Repo)
 
-    assert conn.assigns.current_user.id == user.id 
+    assert conn.assigns.current_user.id == user.id
   end
 
   test "login with a not found user", %{conn: conn} do
@@ -76,9 +83,8 @@ defmodule Skillswheel.AuthTest do
   end
 
   test "login with password mismatch", %{conn: conn} do
-    _ = insert_user(email: "me@me.com", password: "secret")
+    _ = insert_user(%{email: "me@test.com", password: "secret"})
     assert {:error, :unauthorized, _conn} =
-      Auth.login_by_email_and_pass(conn, "me@me.com", "wrong", repo: Repo)
+      Auth.login_by_email_and_pass(conn, "me@test.com", "wrong", repo: Repo)
   end
 end
-
