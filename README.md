@@ -7,6 +7,7 @@ This project uses:
 [Elixir version 1.4.x](http://elixir-lang.org/)
 [PostgreSQL version 9.5.x](https://www.postgresql.org/)
 [Node version 6.10.x](https://nodejs.org/)
+[Redis version 3.2.4](https://redis.io/)
 
 ## Quick Start
 

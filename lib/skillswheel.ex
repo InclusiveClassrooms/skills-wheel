@@ -12,6 +12,8 @@ defmodule Skillswheel do
       supervisor(Skillswheel.Repo, []),
       # Start the endpoint when the application starts
       supervisor(Skillswheel.Endpoint, []),
+      # Start redis
+      supervisor(Skillswheel.RedisClientSupervisor, [])
       # Start your own worker by calling: Skillswheel.Worker.start_link(arg1, arg2, arg3)
       # worker(Skillswheel.Worker, [arg1, arg2, arg3]),
     ]
