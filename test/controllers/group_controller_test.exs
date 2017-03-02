@@ -59,7 +59,7 @@ defmodule Skillswheel.GroupControllerTest do
     end
 
     test "/groups create", %{conn: conn} do
-      conn = post conn, group_path(conn, :create, %{"group" => %{name: "Group 2", id: 10}})
+      conn = post conn, group_path(conn, :create, %{"group" => %{name: "Group 2"}})
       assert redirected_to(conn, 302) =~ "/groups"
     end
 
@@ -72,7 +72,7 @@ defmodule Skillswheel.GroupControllerTest do
       conn =
         conn
         |> assign(:current_user, %Skillswheel.User{})
-      conn = post conn, group_path(conn, :create, %{"group" => %{name: "Test", id: 30}})
+      conn = post conn, group_path(conn, :create, %{"group" => %{name: "Test"}})
       assert redirected_to(conn, 302) =~ "/groups"
     end
 
