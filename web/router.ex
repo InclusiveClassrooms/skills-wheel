@@ -18,11 +18,12 @@ defmodule Skillswheel.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    resources "/users", UserController, only: [:index, :show, :new, :create]
+    resources "/users", UserController, only: [:new, :create]
     resources "/sessions", SessionController, only: [:new, :create, :delete]
     resources "/admin", AdminController, only: [:index]
     resources "/school", SchoolController, only: [:create, :delete]
     resources "/forgotpass", ForgotpassController, only: [:index, :create]
+    resources "/groups", GroupController, only: [:index, :create, :show, :delete]
   end
 
   # Other scopes may use custom stacks.
