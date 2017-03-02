@@ -51,7 +51,7 @@ defmodule Skillswheel.User do
       [{_, school_id}] = Enum.filter(school_data, fn school -> elem(school, 0) == suffix end)
       put_change(changeset, :school_id, school_id)
     else
-      add_error(changeset, :email, "Your school is not signed up, contact [this email] to request access")
+      add_error(changeset, :email, "Sorry, it looks like SkillsWheel has not come to your school yet. If you'd like to gain access please get in touch [HERE]")
     end
   end
 end
