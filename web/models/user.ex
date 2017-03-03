@@ -10,6 +10,7 @@ defmodule Skillswheel.User do
     field :password_hash, :string
     field :admin, :boolean
     belongs_to :school, Skillswheel.School
+    many_to_many :groups, Skillswheel.Group, join_through: "users_groups"
 
     timestamps()
   end
@@ -51,7 +52,7 @@ defmodule Skillswheel.User do
       [{_, school_id}] = Enum.filter(school_data, fn school -> elem(school, 0) == suffix end)
       put_change(changeset, :school_id, school_id)
     else
-      add_error(changeset, :email, "Sorry, it looks like SkillsWheel has not come to your school yet. If you'd like to gain access please get in touch [HERE]")
+      add_error(changeset, :email, "Sorry, it looks like SkillsWheel has not come to your school yet. If you'd like to gain access please get in touch at helen@inclusiveclassrooms.co.uk")
     end
   end
 end

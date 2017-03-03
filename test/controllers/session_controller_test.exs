@@ -1,5 +1,5 @@
 defmodule Skillswheel.SessionControllerTest do
-  use Skillswheel.ConnCase
+  use Skillswheel.ConnCase, async: false
   alias Skillswheel.User
   alias Skillswheel.School
 
@@ -17,7 +17,8 @@ defmodule Skillswheel.SessionControllerTest do
         name: "Test School",
         email_suffix: "test.com"
       } |> Repo.insert
-      
+      :ok
+
       %User{
         id: 12345,
         name: "My Name",
@@ -31,7 +32,7 @@ defmodule Skillswheel.SessionControllerTest do
     test "Login: Valid session /sessions/new", %{conn: conn} do
       conn = post conn, session_path(conn, :create,
       %{"session" => %{"email" => "email@test.com", "password" => "password", "admin" => true}})
-      assert redirected_to(conn, 302) =~ "/users"
+      assert redirected_to(conn, 302) =~ "/groups"
     end
 
     test "Login: Invalid session /sessions/new", %{conn: conn} do

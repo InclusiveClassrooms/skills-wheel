@@ -1,5 +1,5 @@
 defmodule Skillswheel.SchoolControllerTest do
-  use Skillswheel.ConnCase
+  use Skillswheel.ConnCase, async: false
 
   alias Skillswheel.User
 

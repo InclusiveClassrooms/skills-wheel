@@ -1,5 +1,5 @@
 defmodule Skillswheel.UserTest do
-   use Skillswheel.ModelCase
+   use Skillswheel.ModelCase, async: false
 
    alias Skillswheel.User
    alias Skillswheel.School
