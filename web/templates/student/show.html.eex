@@ -1,0 +1,3 @@
+<h1>Student</h1>
+
+<h1><%= @student.first_name <> " " <> @student.last_name %></h1>
