@@ -1,9 +1,9 @@
 defmodule Skillswheel.UserGroupTest do
-  use Skillswheel.ModelCase
+  use Skillswheel.ModelCase, async: false
   alias Skillswheel.UserGroup
 
   @valid_attrs %{user_id: 1, group_id: 2}
-  @invalid_attrs %{user_id: "", group_id: ""}
+  @invalid_attrs %{}
 
   test "changeset with correct attributes" do
     changeset = UserGroup.changeset(%UserGroup{}, @valid_attrs)

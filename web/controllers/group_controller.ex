@@ -24,7 +24,7 @@ defmodule Skillswheel.GroupController do
           group_id: group.id
           })
         case Repo.insert(user_group_changeset) do
-          {:ok, user_group} ->
+          {:ok, _user_group} ->
             conn
             |> put_flash(:info, "Group created!")
             |> redirect(to: group_path(conn, :index))

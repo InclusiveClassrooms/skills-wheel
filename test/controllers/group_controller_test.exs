@@ -1,5 +1,5 @@
 defmodule Skillswheel.GroupControllerTest do
-  use Skillswheel.ConnCase
+  use Skillswheel.ConnCase, async: false
   alias Skillswheel.User
   alias Skillswheel.Group
   alias Skillswheel.UserGroup
@@ -11,21 +11,6 @@ defmodule Skillswheel.GroupControllerTest do
       email: "email@test.com",
       password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
       admin: admin?
-    } |> Repo.insert
-
-    %Group{
-      name: "Group 1",
-      id: 1
-    } |> Repo.insert
-
-    %Group{
-      name: "Group 2",
-      id: 2
-    } |> Repo.insert
-
-    %UserGroup{
-      group_id: 1,
-      user_id: 12345
     } |> Repo.insert
 
     if admin? do
@@ -49,22 +34,50 @@ defmodule Skillswheel.GroupControllerTest do
     end
 
     test "/groups/:id", %{conn: conn} do
+      %User{
+        id: 123456,
+        name: "My Name",
+        email: "email@test2.com",
+        password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
+        admin: true
+      } |> Repo.insert
+
+      IO.inspect Repo.get(User, 123456)
+      conn =
+        conn
+        |> assign(:current_user, Repo.get(User, 123456))
+
+      Repo.insert %Group{
+        name: "Group 1",
+        id: 1
+      }
+
+      %UserGroup{
+        group_id: 1,
+        user_id: 123456
+      } |> Repo.insert
+
+
       conn = get conn, group_path(conn, :show, 1)
       assert html_response(conn, 200) =~ "Group 1"
     end
 
     test "/groups/:id access denied", %{conn: conn} do
+      %Group{
+        name: "Group 2",
+        id: 2
+      } |> Group.changeset |> Repo.insert
       conn = get conn, group_path(conn, :show, 2)
       assert redirected_to(conn, 302) =~ "/groups"
     end
 
     test "/groups create", %{conn: conn} do
-      conn = post conn, group_path(conn, :create, %{"group" => %{name: "Group 2"}})
+      conn = post conn, group_path(conn, :create, %{"group" => %{name: "Group Two"}})
       assert redirected_to(conn, 302) =~ "/groups"
     end
 
     test "/groups create invalid", %{conn: conn} do
-      conn = post conn, group_path(conn, :create, %{"group" => %{name: "", id: 20}})
+      conn = post conn, group_path(conn, :create, %{"group" => %{name: ""}})
       assert redirected_to(conn, 302) =~ "/groups"
     end
 
@@ -72,7 +85,7 @@ defmodule Skillswheel.GroupControllerTest do
       conn =
         conn
         |> assign(:current_user, %Skillswheel.User{})
-      conn = post conn, group_path(conn, :create, %{"group" => %{name: "Test"}})
+      conn = post conn, group_path(conn, :create, %{"group" => %{name: "Test Group"}})
       assert redirected_to(conn, 302) =~ "/groups"
     end
 

@@ -1,7 +1,6 @@
 defmodule Skillswheel.UserController do
   use Skillswheel.Web, :controller
   alias Skillswheel.User
-  alias Skillswheel.School
   
   def new(conn, _params) do
     changeset = User.changeset(%User{})

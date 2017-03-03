@@ -1,5 +1,5 @@
 defmodule Skillswheel.UserControllerTest do
-  use Skillswheel.ConnCase
+  use Skillswheel.ConnCase, async: false
   alias Skillswheel.User
   alias Skillswheel.School
 
@@ -10,6 +10,7 @@ defmodule Skillswheel.UserControllerTest do
         name: "Test School",
         email_suffix: "test.com"
       } |> Repo.insert
+      :ok
 
       %User{
         id: 12345,

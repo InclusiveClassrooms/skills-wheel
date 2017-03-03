@@ -13,4 +13,14 @@ defmodule Skillswheel.TestHelpers do
     |> Skillswheel.User.registration_changeset(changes)
     |> Repo.insert!()
   end
+
+  # def insert_group(attrs \\ %{}) do
+  #   changes = Map.merge(%{
+  #     name: "Group 1"
+  #   }, attrs)
+  #
+  #   %Skillswheel.Group{}
+  #   |> Skillswheel.Group.changeset(changes)
+  #   |> Repo.insert!()
+  # end
 end
