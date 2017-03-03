@@ -4,11 +4,7 @@ defmodule Skillswheel.RedisCli do
   end
 
   def query(param) do
-    case Redix.command(:redix, param) do
-      {:ok, result} -> result
-      {:error, error} -> error
-      _ -> nil
-    end
+    Redix.command(:redix, param)
   end
 end
 

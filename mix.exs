@@ -49,6 +49,7 @@ defmodule Skillswheel.Mixfile do
      {:bamboo_smtp, "~> 1.2.1"},
      {:mock, "~> 0.2.0", only: :test},
      {:redix, ">= 0.0.0"}]
+     # {:mix_test_watch, "~> 2.12", only: :dev, runtime: false}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
