@@ -46,10 +46,10 @@ defmodule Skillswheel.GroupControllerTest do
         conn
         |> assign(:current_user, Repo.get(User, 123456))
 
-      Repo.insert %Group{
+      %Group{
         name: "Group 1",
         id: 1
-      }
+      } |> Repo.insert 
 
       %UserGroup{
         group_id: 1,
