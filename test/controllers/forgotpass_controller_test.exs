@@ -25,16 +25,24 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
   describe "/forgotpass :: update_password" do
     setup do
-      RedisCli.query(["flushdb"])
-      :ok
+      RedisCli.flushdb()
     end
 
-    test "should error", %{conn: conn} do
+    test "No matching hash in database :: redirect: / :: flash: User not in database", %{conn: conn} do
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
-        %{"forgotpass" => %{"hash"=> "s00Rand0m", "newpass" => %{"password" => "mypass"}}}
+        %{"forgotpass" => %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}}
 
       assert redirected_to(conn, 302) =~ "/"
+      assert get_flash(conn, :error) == "User not in database"
     end
+
+    # test "Matching hash in database :: redirect: / :: flash", %{conn:, conn} do
+    #   RedisCli.set("s00Rand0m", "email@me.com")
+    #   conn = post conn, forgotpass_path(conn, :updatepassword, "s00Rand0m"),
+    #     %{"forgotpass" => %{"hash" => "s00Random", "newpass" => %{"password" => "mypass"}}}
+    #   
+    #   assert 
+    # end
   end
 end
 
