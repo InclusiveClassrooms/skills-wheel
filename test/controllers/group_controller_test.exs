@@ -42,7 +42,6 @@ defmodule Skillswheel.GroupControllerTest do
         admin: true
       } |> Repo.insert
 
-      IO.inspect Repo.get(User, 123456)
       conn =
         conn
         |> assign(:current_user, Repo.get(User, 123456))
