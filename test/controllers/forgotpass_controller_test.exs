@@ -4,10 +4,9 @@ defmodule Skillswheel.ForgotpassControllerTest do
   import Mock
   alias Skillswheel.{RedisCli, ForgotpassController, User}
 
-  require IEx
-
   test "/forgotpass :: index", %{conn: conn} do
     conn = get conn, forgotpass_path(conn, :index)
+
     assert html_response(conn, 200) =~ "Forgotten Password"
   end
 
@@ -15,6 +14,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
     with_mock Skillswheel.Mailer, [deliver_now: fn(_) -> nil end] do
       conn = post conn, forgotpass_path(conn, :create,
         %{"forgotpass" => %{"email" => "sehouston3@gmail.com"}})
+
       assert redirected_to(conn, 302) =~ "/forgotpass"
     end
   end
@@ -25,28 +25,45 @@ defmodule Skillswheel.ForgotpassControllerTest do
     assert html_response(conn, 200) =~ "s00Rand0m"
   end
 
-  describe "update password" do
-    setup do
-      RedisCli.flushdb()
-    end
-
-    test "test", %{conn: conn}  do
-      RedisCli.set("s00Rand0m", "me@me.com")
+  describe "/forgotpass :: update_password" do
+    test "forgot password working flow", %{conn: conn} do
       insert_user(%{email: "me@me.com", password: "secret"})
+      RedisCli.set("s00Rand0m", "me@me.com")
+  
+      conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
+        %{"forgotpass" => %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}}
+
+      assert redirected_to(conn, 302) =~ "/users"
+
+      user = Repo.get_by(User, email: "me@me.com")
       
-      params = %{
-        "forgotpass" => %{
-          "hash" => "s00Rand0m",
-          "newpass" => %{"password" => "newpass"}
-        }
-      }
-
-      actual = ForgotpassController.update_password(conn, params)
-      expected = "hi"
-
-      assert actual == expected
+      refute Comeonin.Bcrypt.checkpw("secret", user.password_hash)
+      assert Comeonin.Bcrypt.checkpw("mypass", user.password_hash)
     end
   end
+
+  # describe "update password" do
+  #   setup do
+  #     RedisCli.flushdb()
+  #   end
+
+  #   test "test", %{conn: conn}  do
+  #     RedisCli.set("s00Rand0m", "me@me.com")
+  #     insert_user(%{email: "me@me.com", password: "secret"})
+  #     
+  #     params = %{
+  #       "forgotpass" => %{
+  #         "hash" => "s00Rand0m",
+  #         "newpass" => %{"password" => "newpass"}
+  #       }
+  #     }
+
+  #     actual = ForgotpassController.update_password(conn, params)
+  #     expected = "hi"
+
+  #     assert actual == expected
+  #   end
+  # end
 
   describe "get_email_from_hash" do
     setup do
@@ -104,65 +121,6 @@ defmodule Skillswheel.ForgotpassControllerTest do
   #     assert elem(actual, 1).email == elem(expected, 1).email
   #     assert elem(actual, 1).name =~ elem(expected, 1).name
   #     assert elem(actual, 1).password == elem(expected, 1).password
-  #   end
-  # end
-
-  # describe "validate_password" do
-  #   test "too short" do
-  #     email = "me@me.com"
-  #     insert_user(%{email: email, password: "secret"})
-  #     IO.puts "++++++++"
-  #     getting = IO.inspect(Repo.get_by(User, email: email))
-  #     IO.puts "++++++++"
-  #     user = %{getting | password: "pass"}
-
-  #     actual = ForgotpassController.validate_password({:ok, user})
-  #     expected = {:error, "password too short"}
-
-  #     assert actual == expected
-  #   end
-
-    # test "too long" do
-
-    # end
-
-    # test "just right" do
-
-    # end
-  # end
-
-  # describe "/forgotpass :: update_password" do
-  #   setup do
-  #     RedisCli.flushdb()
-  #   end
-
-  #   # test "No matching hash in database :: redirect: / :: flash: User not in database", %{conn: conn} do
-  #   #   conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
-  #   #     %{"forgotpass" => %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}}
-
-  #   #   assert redirected_to(conn, 302) =~ "/"
-  #   #   assert get_flash(conn, :error) == "User not in redis"
-  #   # end
-
-  #   # test "Matching hash in database :: redirect: / :: flash", %{conn: conn} do
-  #   #   RedisCli.set("s00Rand0m", "me@me.com")
-
-  #   #   conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
-  #   #     %{"forgotpass" => %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}}
-  #   #   
-  #   #   assert redirected_to(conn, 302) =~ "/"
-  #   #   assert get_flash(conn, :error) == "User not in postgres"
-  #   # end
-
-  #   test "Matching hash in database and getting user postgres", %{conn: conn} do
-  #     insert_user(%{email: "me@me.com", password: "secret"})
-  #     RedisCli.set("s00Rand0m", "me@me.com")
-
-  #     conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
-  #       %{"forgotpass" => %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}}
-
-  #     assert redirected_to(conn, 302) =~ "/"
-  #     assert get_flash(conn, :error) == "User not in postgres"
   #   end
   # end
 end
