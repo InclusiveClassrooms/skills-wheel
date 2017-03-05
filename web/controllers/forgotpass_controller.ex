@@ -37,7 +37,7 @@ defmodule Skillswheel.ForgotpassController do
     update
       =  get_email_from_hash(hash)
       |> get_user_from_email()
-      |> put_new_pass(password)
+      |> validate_password(password)
       # |> validate_password()
       # |> put_pass_hash()
       # |> insert_user()
@@ -75,10 +75,25 @@ defmodule Skillswheel.ForgotpassController do
     end
   end
 
-  def put_new_pass(tuple, password) do
+  def validate_password(tuple, password) do
     case tuple do
       {:ok, nil} -> {:error, "NIL"}
-      {:ok, struct} -> {:ok, struct}
+      {:ok, user} ->
+        params = %{
+          "email" => user.email,
+          "name" => user.name,
+          "password" => password
+        }
+        changeset = User.validate_password(%User{}, params)
+        cond do
+          changeset.valid? ->
+            {:ok, password}
+          true ->
+            {:error, elem(elem(hd(changeset.errors), 1), 0)}
+        end
+        # case User.validate_password(%User{}, params) do
+        #   Changeset.valid?
+        # end
       {:error, struct} -> {:error, struct}
     end
   end
