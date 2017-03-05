@@ -14,7 +14,7 @@ defmodule Skillswheel.User do
 
   def validate_password(changeset, params) do
     changeset
-    |> cast(params, [:password])
+    |> cast(params, [:password, :email])
     |> validate_length(:password, min: 6, max: 100)
   end
 

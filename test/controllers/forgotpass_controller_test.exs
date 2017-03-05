@@ -37,7 +37,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
       params = %{
         "forgotpass" => %{
           "hash" => "s00Rand0m",
-          "newpass" => %{"password" => "newp"}
+          "newpass" => %{"password" => "newpass"}
         }
       }
 

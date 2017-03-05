@@ -38,23 +38,22 @@ defmodule Skillswheel.ForgotpassController do
       =  get_email_from_hash(hash)
       |> get_user_from_email()
       |> validate_password(password)
-      # |> validate_password()
-      # |> put_pass_hash()
-      # |> insert_user()
+      |> put_pass_hash()
+      |> update_user()
 
-    # case update do
-    #   {:ok, user} ->
-    #     conn
-    #     |> Auth.login(user)
-    #     |> put_flash(:info, "Password Changed")
-    #     |> redirect(to: user_path(conn, :index))
-    #   {:error, message} ->
-    #     case message do
-    #       "Password Validation Fail" -> display_error(conn, message, &user_path/2)
-    #       _ -> display_error(conn, message, &user_path/2)
-    #     end
-    #   _ -> display_error(conn, "Unknown Error", &user_path/2)
-    # end
+    case update do
+      {:ok, user} ->
+        conn
+        |> Auth.login(user)
+        |> put_flash(:info, "Password Changed")
+        |> redirect(to: user_path(conn, :index))
+      {:error, message} ->
+        case message do
+          "Password Validation Fail" -> display_error(conn, message, &user_path/2)
+          _ -> display_error(conn, message, &user_path/2)
+        end
+      _ -> display_error(conn, "Unknown Error", &user_path/2)
+    end
   end
 
   def get_email_from_hash(hash) do
@@ -87,39 +86,33 @@ defmodule Skillswheel.ForgotpassController do
         changeset = User.validate_password(%User{}, params)
         cond do
           changeset.valid? ->
-            {:ok, password}
+            {:ok, changeset}
           true ->
             {:error, elem(elem(hd(changeset.errors), 1), 0)}
         end
-        # case User.validate_password(%User{}, params) do
-        #   Changeset.valid?
-        # end
       {:error, struct} -> {:error, struct}
     end
   end
 
-  # def replace_new_password(tuple, password) do
-  #   case tuple do
-  #     {:ok, user} ->
-  #       params = %{
-  #         "username" => user.username,
-  #         "email" => user.email,
-  #         "password" => password
-  #       }
-  #       changeset = User.registration_changetset(%User{}, params)
-  #       case Repo.(changeset) do
-  #         
-  #       end
-  #     {:error, error} -> {:error, error}
-  #   end
-  # end
+  def put_pass_hash(tuple) do
+    case tuple do
+      {:ok, changeset} -> {:ok, User.put_pass_hash(changeset)}
+      {:error, error} -> {:error, error}
+    end
+  end
 
-  # def replace_password_in_struct(tuple, password) do
-  #   case tuple do
-  #     {:ok, user} -> {:ok, %{user | password: password}}
-  #     {:error, error} -> {:error, error}
-  #   end
-  # end
+  def update_user(tuple) do
+    case tuple do
+      {:ok, changeset} ->
+        user = Repo.get_by(User, email: changeset.changes.email)
+        user = Changeset.change(user, password_hash: changeset.changes.password_hash)
+        case Repo.update user do
+          {:ok, struct} -> {:ok, struct}
+          {:error, error} -> {:error, error}
+        end
+      {:error, error} -> {:error, error}
+    end
+  end
 
   def validate_password(tuple) do
     case tuple do
@@ -133,39 +126,6 @@ defmodule Skillswheel.ForgotpassController do
       {:error, error} -> {:error, error}
     end
   end
-
-  # defp validate_password(tuple) do
-  #   case tuple do
-  #     {:ok, changeset} -> {:ok, User.put_pass_hash(changeset)}
-  #     {:error, error} -> {:error, error}
-  #   end
-  # end
-
-  # defp replace_password_in_struct(tuple, _password) do
-  #   case tuple do
-  #     {:ok, nil} -> {:error, "NIL VAL"}
-  #     {:ok, user} ->
-  #       pass = "newpass"
-  #       struct(
-  #         user,
-  #         [
-  #           password: pass,
-  #           password_hash: Comeonin.Bcrypt.hashpwsalt(pass)
-  #         ]
-  #       )
-  #       # %User{}
-  #       # |> Changeset.cast(user, [:email])
-  #       # |> Changeset.validate_length(:password, min: 6, max: 100)
-  #     {:error, error} -> {:error, error}
-  #   end
-  # end
-
-  # defp store_new_user(tuple) do
-  #   case tuple do
-  #     {:ok, changeset} -> Repo.insert(changeset)
-  #     {:error, error} -> {:error, error}
-  #   end
-  # end
 
   defp gen_rand_string(length) do
     :crypto.strong_rand_bytes(length)
