@@ -10,7 +10,7 @@ defmodule Skillswheel.SessionController do
       {:ok, conn} ->
         conn
         |> put_flash(:info, "Welcome Back!")
-        |> redirect(to: user_path(conn, :index))
+        |> redirect(to: group_path(conn, :index))
       {:error, _reason, conn} ->
         conn
         |> put_flash(:error, "Invalid email/password combination")

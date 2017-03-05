@@ -4,3 +4,11 @@
   color: red;
   text-transform: capitalize;
 }
+
+.skillswheel-school-access {
+  background-color: #e74c3c;
+  color: #ffffff;
+  padding: 1em;
+  border-radius: 4px;
+  font-size: 1.2em;
+}

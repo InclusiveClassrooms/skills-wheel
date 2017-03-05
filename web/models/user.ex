@@ -1,6 +1,7 @@
 defmodule Skillswheel.User do
-
   use Skillswheel.Web, :model
+  alias Skillswheel.School
+  alias Skillswheel.Repo
 
   schema "users" do
     field :name, :string
@@ -8,6 +9,8 @@ defmodule Skillswheel.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     field :admin, :boolean
+    belongs_to :school, Skillswheel.School
+    many_to_many :groups, Skillswheel.Group, join_through: "users_groups"
 
     timestamps()
   end
@@ -20,15 +23,17 @@ defmodule Skillswheel.User do
 
   def changeset(struct, params \\ :invalid) do
     struct
-    |> cast(params, [:email, :name])
+    |> cast(params, [:email, :name, :password])
     |> validate_format(:email, ~r/@/)
-    |> validate_required(:email)
+    |> validate_required([:email, :password, :name])
+    |> assoc_constraint(:school)
     |> unique_constraint(:email)
   end
 
   def registration_changeset(struct, params) do
     struct
     |> changeset(params)
+    |> email_validation()
     |> validate_password(params)
     |> put_pass_hash()
   end
@@ -39,6 +44,20 @@ defmodule Skillswheel.User do
         put_change(changeset, :password_hash, Comeonin.Bcrypt.hashpwsalt(pass))
       _ ->
         changeset
+    end
+  end
+  
+  defp email_validation(changeset) do
+    schools = Repo.all(School)
+    school_data = Enum.map(schools, fn school -> {school.email_suffix, school.id} end)
+    school_emails = Enum.map(school_data, fn school -> elem(school, 0) end)
+    [_prefix, suffix] = get_field(changeset, :email) |> String.split("@")
+
+    if Enum.member?(school_emails, suffix) do
+      [{_, school_id}] = Enum.filter(school_data, fn school -> elem(school, 0) == suffix end)
+      put_change(changeset, :school_id, school_id)
+    else
+      add_error(changeset, :email, "Sorry, it looks like SkillsWheel has not come to your school yet. If you'd like to gain access please get in touch at helen@inclusiveclassrooms.co.uk")
     end
   end
 end

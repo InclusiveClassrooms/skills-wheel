@@ -1,9 +1,17 @@
 defmodule Skillswheel.UserControllerTest do
-  use Skillswheel.ConnCase
+  use Skillswheel.ConnCase, async: false
   alias Skillswheel.User
+  alias Skillswheel.School
 
   describe "all user paths that don't need authentication" do
     setup do
+      %School{
+        id: 1,
+        name: "Test School",
+        email_suffix: "test.com"
+      } |> Repo.insert
+      :ok
+
       %User{
         id: 12345,
         name: "My Name",
@@ -18,26 +26,16 @@ defmodule Skillswheel.UserControllerTest do
       assert html_response(conn, 200) =~ "New User"
     end
 
-    test "/users not logged in", %{conn: conn} do
-      conn = get conn, user_path(conn, :index)
-      assert redirected_to(conn, 302) =~ "/"
-      assert conn.halted
-    end
-
-    test "/user/:id not logged in ", %{conn: conn} do
-      conn = get conn, user_path(conn, :show, 123456)
-      assert redirected_to(conn, 302) =~ "/"
-      assert conn.halted
-    end
-
     test "create new user", %{conn: conn} do
       conn = post conn, user_path(conn, :create,
       %{"user" => %{
           name: "Test Name",
           email: "test@test.com",
-          password: "secretpassword"
+          password: "secretpassword",
+          school_id: 1,
+          admin: true
         }})
-      assert redirected_to(conn, 302) =~ "/users"
+      assert redirected_to(conn, 302) =~ "/groups"
     end
 
     test "Sign up fail: existing email", %{conn: conn} do
@@ -48,53 +46,6 @@ defmodule Skillswheel.UserControllerTest do
           password: "secretpassword"
         }})
       assert html_response(conn, 200) =~ "New User"
-    end
-  end
-
-  describe "all user paths that need authentication" do
-    setup do
-      %User{
-        id: 12345,
-        name: "My Name",
-        email: "email@test.com",
-        password_hash: Comeonin.Bcrypt.hashpwsalt("password")
-      } |> Repo.insert
-
-      {:ok, conn: build_conn() |> assign(:current_user, Repo.get(User, 12345))}
-    end
-
-    test "/users renders users", %{conn: conn} do
-      conn = get conn, user_path(conn, :index)
-      assert html_response(conn, 200) =~ "Users"
-    end
-
-    test "/user/:id logged in", %{conn: conn} do
-      conn = get conn, user_path(conn, :show, 12345)
-      assert html_response(conn, 200) =~ "User"
-    end
-  end
-
-  describe "admin authentication" do
-    setup do
-      %User{
-        id: 12345,
-        name: "My Name",
-        email: "email@test.com",
-        password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
-        admin: true
-      } |> Repo.insert
-
-      {:ok, conn: build_conn() |> assign(:current_user, Repo.get(User, 12345))}
-    end
-
-    test "/users admin redirect to index", %{conn: conn} do
-      conn = get conn, user_path(conn, :index)
-      assert redirected_to(conn, 302) =~ "/"
-    end
-
-    test "/users/:id admin redirect to index", %{conn: conn} do
-      conn = get conn, user_path(conn, :show, 12345)
-      assert redirected_to(conn, 302) =~ "/"
     end
   end
 end

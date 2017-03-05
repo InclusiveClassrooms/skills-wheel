@@ -1,6 +1,7 @@
 defmodule Skillswheel.SessionControllerTest do
-  use Skillswheel.ConnCase
+  use Skillswheel.ConnCase, async: false
   alias Skillswheel.User
+  alias Skillswheel.School
 
   describe "session routes that don't need authentication" do
     test "Get /sessions/new", %{conn: conn} do
@@ -11,11 +12,19 @@ defmodule Skillswheel.SessionControllerTest do
 
   describe "session routes that need authentication" do
     setup do
+      %School{
+        id: 1,
+        name: "Test School",
+        email_suffix: "test.com"
+      } |> Repo.insert
+      :ok
+
       %User{
         id: 12345,
         name: "My Name",
         email: "email@test.com",
-        password_hash: Comeonin.Bcrypt.hashpwsalt("password")
+        password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
+        school_id: 1
       } |> Repo.insert
 
       {:ok, conn: build_conn() |> assign(:current_user, Repo.get(User, 12345))}
@@ -23,7 +32,7 @@ defmodule Skillswheel.SessionControllerTest do
     test "Login: Valid session /sessions/new", %{conn: conn} do
       conn = post conn, session_path(conn, :create,
       %{"session" => %{"email" => "email@test.com", "password" => "password", "admin" => true}})
-      assert redirected_to(conn, 302) =~ "/users"
+      assert redirected_to(conn, 302) =~ "/groups"
     end
 
     test "Login: Invalid session /sessions/new", %{conn: conn} do

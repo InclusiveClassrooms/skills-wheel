@@ -2,6 +2,9 @@ defmodule Skillswheel.SchoolController do
   use Skillswheel.Web, :controller
   alias Skillswheel.School
 
+  plug :authenticate_user when action in [:create]
+  plug :authenticate_admin when action in [:create]
+
   def create(conn, %{"school" => school_params}) do
     changeset = School.changeset(%School{}, school_params)
     case Repo.insert(changeset) do

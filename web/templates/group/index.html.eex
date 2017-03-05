@@ -1,0 +1,14 @@
+<h1>GROUPS</h1>
+
+<%= for group <- @groups do %>
+  <div><%= link group.name, to: group_path(@conn, :show, group.id) %></div>
+<% end %>
+
+<%= form_for @changeset, group_path(@conn, :create), fn f -> %>
+  <div class="form-group">
+    <%= label f, :name, class: "control-label" %>
+    <%= text_input f, :name, placeholder: "Group 1", class: "form-control" %>
+    <%= error_tag f, :name %>
+  </div>
+  <%= submit "Create Group", class: "btn btn-primary" %>
+<% end %>

@@ -4,6 +4,7 @@ defmodule Skillswheel.School do
   schema "schools" do
     field :name, :string
     field :email_suffix, :string
+    has_many :users, Skillswheel.User
 
     timestamps()
   end

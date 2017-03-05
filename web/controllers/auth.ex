@@ -62,11 +62,11 @@ defmodule Skillswheel.Auth do
   def authenticate_admin(conn, _opts) do
     if conn.assigns.current_user.admin do
       conn
-      |> put_flash(:info, "You're logged in as an admin")
-      |> redirect(to: Helpers.page_path(conn, :index))
-      |> halt()
     else
       conn
+      |> put_flash(:error, "You don't have admin access")
+      |> redirect(to: Helpers.page_path(conn, :index))
+      |> halt()
     end
   end
 

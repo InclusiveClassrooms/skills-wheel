@@ -4,8 +4,9 @@ defmodule Skillswheel.TestHelpers do
   def insert_user(attrs \\ %{}) do
     changes = Map.merge(%{
       name: "user #{Base.encode16(:crypto.strong_rand_bytes(7))}",
-      email: "random@user.com",
-      password: "supersecret"
+      email: "random@test.com",
+      password: "supersecret",
+      school_id: 1
     }, attrs)
 
     %Skillswheel.User{}
@@ -13,4 +14,3 @@ defmodule Skillswheel.TestHelpers do
     |> Repo.insert!()
   end
 end
-
