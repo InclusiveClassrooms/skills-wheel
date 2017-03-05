@@ -1,5 +1,6 @@
 defmodule Skillswheel.ForgotpassController do
   use Skillswheel.Web, :controller
+  require IEx
 
   alias Skillswheel.{User, RedisCli, Auth}
   alias Ecto.Changeset
@@ -36,8 +37,8 @@ defmodule Skillswheel.ForgotpassController do
     update
       =  get_email_from_hash(hash)
       |> get_user_from_email()
+      |> validate_password(password)
       |> replace_password_in_struct(password)
-      |> validate_password()
       |> store_new_user()
 
     case update do
@@ -56,54 +57,53 @@ defmodule Skillswheel.ForgotpassController do
   end
 
   defp get_email_from_hash(hash) do
-    IO.puts "+++++++++get_email_from_hash"
-    case RedisCli.query(["GET", hash]) do
-      {:ok, nil} -> {:error, "User not in database"}
+    case RedisCli.get(hash) do
+      {:ok, nil} -> {:error, "User not in redis"}
       {:ok, email} -> {:ok, email}
       {:error, msg} -> {:error, msg}
     end
   end
 
   defp get_user_from_email(tuple) do
-    IO.puts "+++++++++get_user_from_email"
     case tuple do
       {:ok, email} ->
-        IO.puts "{{{{{{{{{{{{{{"
-        IO.inspect email
-        Repo.get_by(User, email: email)
-      {:error, error} -> {:error, error}
-      other ->
-        IO.puts "+++++++++++"
-        IO.inspect other
-        IO.puts "+++++++++++"
-    end
-  end
-
-  defp replace_password_in_struct(tuple, _password) do
-    IO.puts "++++++replace_password_in_struct"
-    case tuple do
-      {:ok, user} ->
-        IO.puts "+++++++++++++"
-        IO.puts "Change the user struct to replace the old password"
-        IO.inspect user
-        IO.puts "+++++++++++++"
-        %User{}
-        |> Changeset.cast(user, [:email])
-        |> Changeset.validate_length(:password, min: 6, max: 100)
+        case Repo.get_by(User, email: email) do
+          user ->
+            IEx.pry
+            {:ok, user}
+          nil -> {:error, "User not in postgres"}
+        end
       {:error, error} -> {:error, error}
     end
   end
 
   defp validate_password(tuple) do
-    IO.puts "+++++++++++validate_password"
     case tuple do
       {:ok, changeset} -> {:ok, User.put_pass_hash(changeset)}
       {:error, error} -> {:error, error}
     end
   end
 
+  defp replace_password_in_struct(tuple, _password) do
+    case tuple do
+      {:ok, nil} -> {:error, "NIL VAL"}
+      {:ok, user} ->
+        pass = "newpass"
+        struct(
+          user,
+          [
+            password: pass,
+            password_hash: Comeonin.Bcrypt.hashpwsalt(pass)
+          ]
+        )
+        # %User{}
+        # |> Changeset.cast(user, [:email])
+        # |> Changeset.validate_length(:password, min: 6, max: 100)
+      {:error, error} -> {:error, error}
+    end
+  end
+
   defp store_new_user(tuple) do
-    IO.puts "+++++++++store_new_user"
     case tuple do
       {:ok, changeset} -> Repo.insert(changeset)
       {:error, error} -> {:error, error}
