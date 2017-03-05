@@ -114,19 +114,6 @@ defmodule Skillswheel.ForgotpassController do
     end
   end
 
-  def validate_password(tuple) do
-    case tuple do
-      {:ok, user} ->
-        params = %{
-          "name" => user.name,
-          "password" => user.password,
-          "email" => user.email
-        }
-        {:ok, User.validate_password(user, params)}
-      {:error, error} -> {:error, error}
-    end
-  end
-
   defp gen_rand_string(length) do
     :crypto.strong_rand_bytes(length)
     |> Base.url_encode64()

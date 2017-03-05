@@ -1,7 +1,7 @@
 defmodule Skillswheel.ForgotpassControllerTest do
   use Skillswheel.ConnCase, async: false
-
   import Mock
+
   alias Skillswheel.{RedisCli, ForgotpassController, User}
 
   test "/forgotpass :: index", %{conn: conn} do
@@ -26,12 +26,19 @@ defmodule Skillswheel.ForgotpassControllerTest do
   end
 
   describe "/forgotpass :: update_password" do
+    setup do
+      RedisCli.flushdb()
+    end
+
     test "forgot password working flow", %{conn: conn} do
       insert_user(%{email: "me@me.com", password: "secret"})
       RedisCli.set("s00Rand0m", "me@me.com")
   
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
-        %{"forgotpass" => %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}}
+        %{"forgotpass" => %{
+          "hash" => "s00Rand0m",
+          "newpass" => %{"password" => "mypass"}
+        }}
 
       assert redirected_to(conn, 302) =~ "/users"
 
@@ -41,29 +48,6 @@ defmodule Skillswheel.ForgotpassControllerTest do
       assert Comeonin.Bcrypt.checkpw("mypass", user.password_hash)
     end
   end
-
-  # describe "update password" do
-  #   setup do
-  #     RedisCli.flushdb()
-  #   end
-
-  #   test "test", %{conn: conn}  do
-  #     RedisCli.set("s00Rand0m", "me@me.com")
-  #     insert_user(%{email: "me@me.com", password: "secret"})
-  #     
-  #     params = %{
-  #       "forgotpass" => %{
-  #         "hash" => "s00Rand0m",
-  #         "newpass" => %{"password" => "newpass"}
-  #       }
-  #     }
-
-  #     actual = ForgotpassController.update_password(conn, params)
-  #     expected = "hi"
-
-  #     assert actual == expected
-  #   end
-  # end
 
   describe "get_email_from_hash" do
     setup do
@@ -107,21 +91,5 @@ defmodule Skillswheel.ForgotpassControllerTest do
       assert elem(actual, 1).password == elem(expected, 1).password
     end
   end
-
-  # describe "replace_password_in_struct" do
-  #   test "replaces password in struct" do
-  #     email = "me@me.com"
-  #     insert_user(%{email: email, password: "secret"})
-  #     user = Repo.get_by(User, email: email)
-
-  #     actual = ForgotpassController.replace_password_in_struct({:ok, user}, "pass")
-  #     expected = {:ok, %User{email: email, name: "user ", password: "pass"}}
-
-  #     assert elem(actual, 0) == elem(expected, 0)
-  #     assert elem(actual, 1).email == elem(expected, 1).email
-  #     assert elem(actual, 1).name =~ elem(expected, 1).name
-  #     assert elem(actual, 1).password == elem(expected, 1).password
-  #   end
-  # end
 end
 
