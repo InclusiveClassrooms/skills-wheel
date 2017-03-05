@@ -13,4 +13,12 @@ defmodule Skillswheel.TestHelpers do
     |> Skillswheel.User.registration_changeset(changes)
     |> Repo.insert!()
   end
+
+  def insert_group(id, name) do
+    %Skillswheel.Group{
+      name: name,
+      id: id
+    } |> Repo.insert
+    :ok
+  end
 end

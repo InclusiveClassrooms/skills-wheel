@@ -1,8 +1,6 @@
 defmodule Skillswheel.GroupController do
   use Skillswheel.Web, :controller
-  alias Skillswheel.Group
-  alias Skillswheel.UserGroup
-  alias Skillswheel.Student
+  alias Skillswheel.{Group, Student, UserGroup}
 
   plug :authenticate_user when action in [:index, :create, :delete, :show]
 

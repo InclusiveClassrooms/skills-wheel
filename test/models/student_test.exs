@@ -1,8 +1,6 @@
 defmodule Skillswheel.StudentTest do
    use Skillswheel.ModelCase, async: false
-
-   alias Skillswheel.Group
-   alias Skillswheel.Student
+   alias Skillswheel.{Group, Student}
 
    setup do
      %Group{

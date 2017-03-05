@@ -1,9 +1,6 @@
 defmodule Skillswheel.StudentControllerTest do
   use Skillswheel.ConnCase
-  alias Skillswheel.Group
-  alias Skillswheel.Student
-  alias Skillswheel.User
-  alias Skillswheel.UserGroup
+  alias Skillswheel.{ConnCase, Group, Student, User, UserGroup}
 
   test "create new student", %{conn: conn} do
     %Group{
