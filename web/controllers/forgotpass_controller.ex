@@ -49,10 +49,8 @@ defmodule Skillswheel.ForgotpassController do
         |> redirect(to: user_path(conn, :index))
       {:error, message} ->
         case message do
-          "Password Validation Fail" -> display_error(conn, message, &user_path/2)
           _ -> display_error(conn, message, &user_path/2)
         end
-      _ -> display_error(conn, "Unknown Error", &user_path/2)
     end
   end
 

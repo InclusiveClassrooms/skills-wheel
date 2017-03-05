@@ -30,7 +30,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
       RedisCli.flushdb()
     end
 
-    test "forgot password working flow", %{conn: conn} do
+    test "working flow", %{conn: conn} do
       insert_user(%{email: "me@me.com", password: "secret"})
       RedisCli.set("s00Rand0m", "me@me.com")
   
@@ -41,11 +41,31 @@ defmodule Skillswheel.ForgotpassControllerTest do
         }}
 
       assert redirected_to(conn, 302) =~ "/users"
+      assert get_flash(conn, :info) == "Password Changed"
 
       user = Repo.get_by(User, email: "me@me.com")
       
       refute Comeonin.Bcrypt.checkpw("secret", user.password_hash)
       assert Comeonin.Bcrypt.checkpw("mypass", user.password_hash)
+    end
+
+    test "password too short", %{conn: conn} do
+      insert_user(%{email: "me@me.com", password: "secret"})
+      RedisCli.set("s00Rand0m", "me@me.com")
+
+      conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
+        %{"forgotpass" => %{
+          "hash" => "s00Rand0m",
+          "newpass" => %{"password" => "short"}
+        }}
+
+      assert redirected_to(conn, 302) =~ "/users"
+      assert get_flash(conn, :error) == "should be at least %{count} character(s)"
+
+      user = Repo.get_by(User, email: "me@me.com")
+      
+      assert Comeonin.Bcrypt.checkpw("secret", user.password_hash)
+      refute Comeonin.Bcrypt.checkpw("mypass", user.password_hash)
     end
   end
 
