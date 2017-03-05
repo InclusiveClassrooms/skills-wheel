@@ -12,6 +12,12 @@ defmodule Skillswheel.User do
     timestamps()
   end
 
+  def validate_password(changeset, params) do
+    changeset
+    |> cast(params, [:password])
+    |> validate_length(:password, min: 6, max: 100)
+  end
+
   def changeset(struct, params \\ :invalid) do
     struct
     |> cast(params, [:email, :name])
@@ -23,8 +29,7 @@ defmodule Skillswheel.User do
   def registration_changeset(struct, params) do
     struct
     |> changeset(params)
-    |> cast(params, [:password])
-    |> validate_length(:password, min: 6, max: 100)
+    |> validate_password(params)
     |> put_pass_hash()
   end
 
