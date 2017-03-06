@@ -1,19 +1,4 @@
-# Script for populating the database. You can run it as:
-#
-#     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     Skillswheel.Repo.insert!(%Skillswheel.SomeModel{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
-
-alias Skillswheel.Repo
-alias Skillswheel.User
-
-require IEx
+alias Skillswheel.{Repo, User}
 
 case Repo.get_by(User, name: "Admin") do
   nil -> 
