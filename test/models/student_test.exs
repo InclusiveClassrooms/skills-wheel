@@ -28,4 +28,11 @@ defmodule Skillswheel.StudentTest do
      changeset = Student.changeset(%Student{}, @invalid_attrs)
      refute changeset.valid?
    end
+
+  test "student schema" do
+    actual = Student.__schema__(:fields)
+    expected = [:id, :first_name, :last_name, :sex, :year_group, :group_id, :inserted_at, :updated_at]
+
+    assert actual == expected
+  end
 end

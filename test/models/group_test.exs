@@ -14,4 +14,10 @@ defmodule Skillswheel.GroupTest do
     changeset = Group.changeset(%Group{}, @invalid_attrs)
     refute changeset.valid?
   end
+
+  test "group schema" do
+    actual = Group.__schema__(:fields)
+    expected = [:id, :name, :inserted_at, :updated_at]
+    assert actual == expected
+  end
 end

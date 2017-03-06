@@ -16,4 +16,10 @@ defmodule Skillswheel.SchoolTest do
       refute changeset.valid?
     end
   end
+
+  test "school schema" do
+    actual = School.__schema__(:fields)
+    expected = [:id, :name, :email_suffix, :inserted_at, :updated_at]
+    assert actual == expected
+  end
 end
