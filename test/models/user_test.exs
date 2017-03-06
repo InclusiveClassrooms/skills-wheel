@@ -1,8 +1,7 @@
 defmodule Skillswheel.UserTest do
    use Skillswheel.ModelCase, async: false
 
-   alias Skillswheel.User
-   alias Skillswheel.School
+   alias Skillswheel.{User, School}
 
    setup do
      %School{
@@ -50,5 +49,11 @@ defmodule Skillswheel.UserTest do
    test "registration_changeset with invalid school attributes" do
      changeset = User.registration_changeset(%User{}, @invalid_school)
      refute changeset.valid?
+   end
+
+   test "user schema" do
+     actual = User.__schema__(:fields)
+     expected = [:id, :name, :email, :password_hash, :admin, :school_id, :inserted_at, :updated_at]
+     assert actual == expected
    end
 end

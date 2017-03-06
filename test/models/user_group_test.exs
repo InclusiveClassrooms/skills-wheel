@@ -15,4 +15,10 @@ defmodule Skillswheel.UserGroupTest do
     refute changeset.valid?
   end
 
+  test "user schema" do
+    actual = UserGroup.__schema__(:fields)
+    expected = [:user_id, :group_id]
+
+    assert actual == expected
+  end
 end
