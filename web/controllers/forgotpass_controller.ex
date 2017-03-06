@@ -73,7 +73,6 @@ defmodule Skillswheel.ForgotpassController do
 
   def validate_password(tuple, password) do
     case tuple do
-      {:ok, nil} -> {:error, "NIL"}
       {:ok, user} ->
         params = %{
           "email" => user.email,
@@ -82,10 +81,8 @@ defmodule Skillswheel.ForgotpassController do
         }
         changeset = User.validate_password(%User{}, params)
         cond do
-          changeset.valid? ->
-            {:ok, changeset}
-          true ->
-            {:error, elem(elem(hd(changeset.errors), 1), 0)}
+          changeset.valid? -> {:ok, changeset}
+          true -> {:error, "Invalid password"}
         end
       {:error, struct} -> {:error, struct}
     end

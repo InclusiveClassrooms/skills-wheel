@@ -65,7 +65,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "short"}}
 
       assert redirected_to(conn, 302) =~ "/users"
-      assert get_flash(conn, :error) == "should be at least %{count} character(s)"
+      assert get_flash(conn, :error) == "Invalid password"
 
       user = Repo.get_by(User, email: "me@me.com")
 
@@ -155,6 +155,13 @@ defmodule Skillswheel.ForgotpassControllerTest do
   end
 
   describe "get_user_from_email" do
+    test "passes on the error" do
+      actual = ForgotpassController.get_user_from_email({:error, "errr"})
+      expected = {:error, "errr"}
+
+      assert actual == expected
+    end
+
     test "user not found in postgres" do
       %School{
         id: 1,
@@ -175,13 +182,105 @@ defmodule Skillswheel.ForgotpassControllerTest do
       } |> Repo.insert
       insert_user(%{email: "me@me.com", password: "secret"})
 
-      actual = ForgotpassController.get_user_from_email({:ok, "me@me.com"})
-      expected = {:ok, %User{email: "me@me.com", name: "user ", password: nil}}
+      {:ok, actual} = ForgotpassController.get_user_from_email({:ok, "me@me.com"})
+      {:ok, expected} = {:ok, %User{email: "me@me.com", name: "user ", password: nil}}
 
-      assert elem(actual, 0) == elem(expected, 0)
-      assert elem(actual, 1).email == elem(expected, 1).email
-      assert elem(actual, 1).name =~ elem(expected, 1).name
-      assert elem(actual, 1).password == elem(expected, 1).password
+      assert actual.email == expected.email
+      assert actual.name =~ expected.name
+      assert actual.password == expected.password
+    end
+  end
+
+  describe "validate_password" do
+    test "passes on the error" do
+      actual = ForgotpassController.get_user_from_email({:error, "errr"})
+      expected = {:error, "errr"}
+
+      assert actual == expected
+    end
+
+    test "returns changeset when password is valid" do
+      %School{
+        id: 1,
+        name: "My school",
+        email_suffix: "me.com"
+      } |> Repo.insert
+      insert_user(%{email: "me@me.com", password: "secret"})
+      user = Repo.get_by(User, email: "me@me.com")
+
+      {:ok, result} = ForgotpassController.validate_password({:ok, user}, "validpass")
+
+      assert result.changes == %{email: "me@me.com", password: "validpass"}
+      assert result.valid?
+    end
+  end
+
+  describe "put_pass_hash" do
+    test "passes on the error" do
+      actual = ForgotpassController.put_pass_hash({:error, "errr"})
+      expected = {:error, "errr"}
+
+      assert actual == expected
+    end
+
+    test "returns a new pass hash" do
+      %School{
+        id: 1,
+        name: "My school",
+        email_suffix: "me.com"
+      } |> Repo.insert
+      insert_user(%{email: "me@me.com", password: "secret"})
+      user = Repo.get_by(User, email: "me@me.com")
+
+      old_password_hash = user.password_hash
+      params = %{
+        "email" => user.email,
+        "name" => user.name,
+        "password" => "newpass"
+      }
+      changeset = User.validate_password(%User{}, params)
+      {:ok, result} = ForgotpassController.put_pass_hash({:ok, changeset})
+
+      refute result.changes.password_hash == old_password_hash
+    end
+  end
+
+  describe "update_user" do
+    test "passes on the error" do
+      actual = ForgotpassController.put_pass_hash({:error, "errr"})
+      expected = {:error, "errr"}
+
+      assert actual == expected
+    end
+
+    test "updates user in the database" do
+      %School{
+        id: 1,
+        name: "My school",
+        email_suffix: "me.com"
+      } |> Repo.insert
+      insert_user(%{email: "me@me.com", password: "secret"})
+      user = Repo.get_by(User, email: "me@me.com")
+
+      old_password_hash = user.password_hash
+      params = %{
+        "email" => user.email,
+        "name" => user.name,
+        "password" => "newpass"
+      }
+      changeset = User.validate_password(%User{}, params)
+        |> User.put_pass_hash
+      password_hash = Repo.get_by(User, email: "me@me.com").password_hash
+
+      assert password_hash == old_password_hash
+
+      {:ok, new_user} = ForgotpassController.update_user({:ok, changeset})
+
+      refute new_user.password_hash == old_password_hash
+
+      password_hash = Repo.get_by(User, email: "me@me.com").password_hash
+
+      refute password_hash == old_password_hash
     end
   end
 end
