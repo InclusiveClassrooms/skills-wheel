@@ -1,1 +1,30 @@
 <h1><%= @group.name %></h1>
+
+<%= for student <- @students do %>
+<div><%= link (student.first_name <> " " <> student.last_name), to: student_path(@conn, :show, student.id) %></div>
+<% end %>
+
+<%= form_for @changeset, student_path(@conn, :create), fn f -> %>
+  <div class="form-group">
+    <%= label f, :first_name, class: "control-label" %>
+    <%= text_input f, :first_name, placeholder: "First Name", class: "form-control" %>
+    <%= error_tag f, :first_name %>
+  </div>
+  <div class="form-group">
+    <%= label f, :last_name, class: "control-label" %>
+    <%= text_input f, :last_name, placeholder: "Last Name", class: "form-control" %>
+    <%= error_tag f, :last_name %>
+  </div>
+  <div class="form-group">
+    <%= label f, :sex, class: "control-label" %>
+    <%= select f, :sex, ["male", "female"], class: "form-control"%>
+    <%= error_tag f, :sex %>
+  </div>
+  <div class="form-group">
+    <%= label f, :year_group, class: "control-label" %>
+    <%= select f, :year_group, 1..6, class: "form-control" %>
+    <%= error_tag f, :year_group %>
+  </div>
+  <%= hidden_input f, :group_id, value: @group.id %>
+  <%= submit "Create Student", class: "btn btn-primary" %>
+<% end %>
