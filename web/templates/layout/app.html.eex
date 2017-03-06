@@ -8,6 +8,7 @@
     <meta name="author" content="">
 
     <title>Hello Skillswheel!</title>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 

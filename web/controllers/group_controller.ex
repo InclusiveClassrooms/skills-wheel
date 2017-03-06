@@ -6,6 +6,8 @@ defmodule Skillswheel.GroupController do
 
   def index(conn, _params, user) do
     groups = Repo.all(user_groups(user))
+    groups = Repo.preload(groups, :students)
+    IO.inspect groups
     changeset =
       user
       |> build_assoc(:groups)
