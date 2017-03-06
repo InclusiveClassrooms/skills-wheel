@@ -1,1 +1,1 @@
-web: sudo mix ecto.setup
+web: MIX_ENV=prod mix phoenix.server
