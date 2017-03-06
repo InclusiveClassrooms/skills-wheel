@@ -72,6 +72,64 @@ defmodule Skillswheel.ForgotpassControllerTest do
       assert Bcrypt.checkpw("secret", user.password_hash)
       refute Bcrypt.checkpw("mypass", user.password_hash)
     end
+
+    test "user not in postgres", %{conn: conn} do
+      %School{
+        id: 1,
+        name: "My school",
+        email_suffix: "me.com"
+      } |> Repo.insert
+      RedisCli.set("s00Rand0m", "me@me.com")
+
+      conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
+        %{"hash" => "s00Rand0m", "newpass" => %{"password" => "short"}}
+
+      assert redirected_to(conn, 302) =~ "/users"
+      assert get_flash(conn, :error) == "User not in Postgres"
+
+      assert Repo.get_by(User, email: "me@me.com") == nil
+    end
+
+    test "user not in redis", %{conn: conn} do
+      %School{
+        id: 1,
+        name: "My school",
+        email_suffix: "me.com"
+      } |> Repo.insert
+      insert_user(%{email: "me@me.com", password: "secret"})
+
+      conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
+        %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}
+
+      assert redirected_to(conn, 302) =~ "/users"
+      assert get_flash(conn, :error) == "User not in Redis"
+
+      user = Repo.get_by(User, email: "me@me.com")
+
+      assert Bcrypt.checkpw("secret", user.password_hash)
+      refute Bcrypt.checkpw("mypass", user.password_hash)
+    end
+
+    test "unregistered user without correct suffix", %{conn: conn} do
+      conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
+        %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}
+
+      assert redirected_to(conn, 302) =~ "/users"
+      assert get_flash(conn, :error) == "User not in Redis"
+    end
+
+    test "unregistered user with correct suffix", %{conn: conn}do
+      %School{
+        id: 1,
+        name: "My school",
+        email_suffix: "me.com"
+      } |> Repo.insert
+      conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
+        %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}
+
+      assert redirected_to(conn, 302) =~ "/users"
+      assert get_flash(conn, :error) == "User not in Redis"
+    end
   end
 
   describe "get_email_from_hash" do
