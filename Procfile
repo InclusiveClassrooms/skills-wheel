@@ -1,1 +1,1 @@
-web: MIX_ENV=prod mix do phoenix.server, ecto.setup
+web: MIX_ENV=prod mix do ecto.setup, phoenix.server
