@@ -1,15 +1,15 @@
 defmodule Skillswheel.GroupControllerTest do
   use Skillswheel.ConnCase, async: false
-  alias Skillswheel.User
-  alias Skillswheel.Group
-  alias Skillswheel.UserGroup
+
+  alias Skillswheel.{User, Group, UserGroup}
+  alias Comeonin.Bcrypt
 
   defp admin_auth(admin?) do
     %User{
       id: 12345,
       name: "My Name",
       email: "email@test.com",
-      password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
+      password_hash: Bcrypt.hashpwsalt("password"),
       admin: admin?
     } |> Repo.insert
 
@@ -38,7 +38,7 @@ defmodule Skillswheel.GroupControllerTest do
         id: 123456,
         name: "My Name",
         email: "email@test2.com",
-        password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
+        password_hash: Bcrypt.hashpwsalt("password"),
         admin: true
       } |> Repo.insert
 
@@ -83,7 +83,7 @@ defmodule Skillswheel.GroupControllerTest do
     test "/groups create assign unsuccessful", %{conn: conn} do
       conn =
         conn
-        |> assign(:current_user, %Skillswheel.User{})
+        |> assign(:current_user, %User{})
       conn = post conn, group_path(conn, :create, %{"group" => %{name: "Test Group"}})
       assert redirected_to(conn, 302) =~ "/groups"
     end

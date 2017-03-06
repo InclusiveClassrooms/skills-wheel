@@ -2,6 +2,7 @@ defmodule Skillswheel.UserTest do
    use Skillswheel.ModelCase, async: false
 
    alias Skillswheel.{User, School}
+   alias Comeonin.Bcrypt
 
    setup do
      %School{
@@ -15,7 +16,7 @@ defmodule Skillswheel.UserTest do
    @valid_attrs %{
      email: "email@test.com",
      password: "secretshhh",
-     password_hash: Comeonin.Bcrypt.hashpwsalt("secretshhh"),
+     password_hash: Bcrypt.hashpwsalt("secretshhh"),
      admin: true,
      school_id: 1,
      name: "test"

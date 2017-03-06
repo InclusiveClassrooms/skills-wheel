@@ -2,7 +2,8 @@ defmodule Skillswheel.ForgotpassControllerTest do
   use Skillswheel.ConnCase, async: false
   import Mock
 
-  alias Skillswheel.{RedisCli, ForgotpassController, User, School}
+  alias Skillswheel.{RedisCli, ForgotpassController, User, School, Mailer}
+  alias Comeonin.Bcrypt
 
   test "/forgotpass :: index", %{conn: conn} do
     conn = get conn, forgotpass_path(conn, :index)
@@ -11,7 +12,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
   end
 
   test "/forgotpass :: create", %{conn: conn} do
-    with_mock Skillswheel.Mailer, [deliver_now: fn(_) -> nil end] do
+    with_mock Mailer, [deliver_now: fn(_) -> nil end] do
       conn = post conn, forgotpass_path(conn, :create,
         %{"forgotpass" => %{"email" => "sehouston3@gmail.com"}})
 
@@ -50,8 +51,8 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
       user = Repo.get_by(User, email: "me@me.com")
 
-      refute Comeonin.Bcrypt.checkpw("secret", user.password_hash)
-      assert Comeonin.Bcrypt.checkpw("mypass", user.password_hash)
+      refute Bcrypt.checkpw("secret", user.password_hash)
+      assert Bcrypt.checkpw("mypass", user.password_hash)
     end
 
     test "password too short", %{conn: conn} do
@@ -74,8 +75,8 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
       user = Repo.get_by(User, email: "me@me.com")
 
-      assert Comeonin.Bcrypt.checkpw("secret", user.password_hash)
-      refute Comeonin.Bcrypt.checkpw("mypass", user.password_hash)
+      assert Bcrypt.checkpw("secret", user.password_hash)
+      refute Bcrypt.checkpw("mypass", user.password_hash)
     end
   end
 
