@@ -3,6 +3,8 @@ elixir:
   - 1.4.1
 addons:
   postgresql: '9.4'
+services:
+  - redis-server
 env:
   - MIX_ENV=test
 before_script:

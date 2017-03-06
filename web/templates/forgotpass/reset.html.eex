@@ -1,0 +1,11 @@
+<h1>Reset Password</h1>
+
+<%= form_for @conn, forgotpass_path(@conn, :update_password, @hash), [as: :newpass], fn f -> %>
+  <h6>Please enter your new password:</h6>
+  <div class="form-group">
+    <%= label f, :email, class: "control-label" %>
+    <%= password_input f, :password, class: "form-control" %>
+  </div>
+  <%= submit "Send", class: "btn btn-primary" %>
+<% end %>
+

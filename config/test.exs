@@ -16,7 +16,8 @@ config :skillswheel, Skillswheel.Repo,
   password: "postgres",
   database: "skillswheel_test",
   hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  ownership_timeout: 10 * 60 * 1000
 
 # Configure password hashing
 
