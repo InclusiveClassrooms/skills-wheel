@@ -9,3 +9,15 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias Skillswheel.Repo
+alias Skillswheel.User
+
+Repo.insert! %User{
+  name: "Admin",
+  email: System.get_env("ADMIN_EMAIL"),
+  password: System.get_env("ADMIN_PASSWORD"),
+  password_hash: Comeonin.Bcrypt.hashpwsalt(System.get_env("ADMIN_PASSWORD")),
+  admin: true
+}
+
