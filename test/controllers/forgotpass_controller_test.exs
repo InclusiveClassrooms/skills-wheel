@@ -2,7 +2,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
   use Skillswheel.ConnCase, async: false
   import Mock
 
-  alias Skillswheel.{RedisCli, ForgotpassController, User}
+  alias Skillswheel.{RedisCli, ForgotpassController, User, School}
 
   test "/forgotpass :: index", %{conn: conn} do
     conn = get conn, forgotpass_path(conn, :index)
@@ -31,9 +31,14 @@ defmodule Skillswheel.ForgotpassControllerTest do
     end
 
     test "working flow", %{conn: conn} do
+      %School{
+        id: 1,
+        name: "My school",
+        email_suffix: "me.com"
+      } |> Repo.insert
       insert_user(%{email: "me@me.com", password: "secret"})
       RedisCli.set("s00Rand0m", "me@me.com")
-  
+
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
         %{"forgotpass" => %{
           "hash" => "s00Rand0m",
@@ -44,12 +49,17 @@ defmodule Skillswheel.ForgotpassControllerTest do
       assert get_flash(conn, :info) == "Password Changed"
 
       user = Repo.get_by(User, email: "me@me.com")
-      
+
       refute Comeonin.Bcrypt.checkpw("secret", user.password_hash)
       assert Comeonin.Bcrypt.checkpw("mypass", user.password_hash)
     end
 
     test "password too short", %{conn: conn} do
+      %School{
+        id: 1,
+        name: "My school",
+        email_suffix: "me.com"
+      } |> Repo.insert
       insert_user(%{email: "me@me.com", password: "secret"})
       RedisCli.set("s00Rand0m", "me@me.com")
 
@@ -63,7 +73,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
       assert get_flash(conn, :error) == "should be at least %{count} character(s)"
 
       user = Repo.get_by(User, email: "me@me.com")
-      
+
       assert Comeonin.Bcrypt.checkpw("secret", user.password_hash)
       refute Comeonin.Bcrypt.checkpw("mypass", user.password_hash)
     end
@@ -75,7 +85,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
     end
 
     test "user not found in redis" do
-      actual = ForgotpassController.get_email_from_hash("s00Rand0m") 
+      actual = ForgotpassController.get_email_from_hash("s00Rand0m")
       expected = {:error, "User not in Redis"}
 
       assert actual == expected
@@ -93,6 +103,11 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
   describe "get_user_from_email" do
     test "user not found in postgres" do
+      %School{
+        id: 1,
+        name: "My school",
+        email_suffix: "me.com"
+      } |> Repo.insert
       actual = ForgotpassController.get_user_from_email({:ok, "me@me.com"})
       expected = {:error, "User not in Postgres"}
 
@@ -100,6 +115,11 @@ defmodule Skillswheel.ForgotpassControllerTest do
     end
 
     test "user found in postgres" do
+      %School{
+        id: 1,
+        name: "My school",
+        email_suffix: "me.com"
+      } |> Repo.insert
       insert_user(%{email: "me@me.com", password: "secret"})
 
       actual = ForgotpassController.get_user_from_email({:ok, "me@me.com"})
@@ -112,4 +132,3 @@ defmodule Skillswheel.ForgotpassControllerTest do
     end
   end
 end
-

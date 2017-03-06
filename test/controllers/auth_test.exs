@@ -70,9 +70,14 @@ defmodule Skillswheel.AuthTest do
   end
 
   test "login with a valid username and pass", %{conn: conn} do
-    user = insert_user(%{email: "me@me.com", password: "secret"})
+    %School{
+      id: 2,
+      name: "Test Schools",
+      email_suffix: "test2.com"
+    } |> Repo.insert
+    user = insert_user(%{email: "me@test2.com", password: "secret", school_id: 2})
     {:ok, conn} =
-      Auth.login_by_email_and_pass(conn, "me@test.com", "secret", repo: Repo)
+      Auth.login_by_email_and_pass(conn, "me@test2.com", "secret", repo: Repo)
 
     assert conn.assigns.current_user.id == user.id
   end
@@ -83,8 +88,13 @@ defmodule Skillswheel.AuthTest do
   end
 
   test "login with password mismatch", %{conn: conn} do
-    _ = insert_user(%{email: "me@me.com", password: "secret"})
+    %School{
+      id: 3,
+      name: "Test School2",
+      email_suffix: "test2.com"
+    } |> Repo.insert
+    _ = insert_user(%{email: "me@test2.com", password: "secret"})
     assert {:error, :unauthorized, _conn} =
-      Auth.login_by_email_and_pass(conn, "me@test.com", "wrong", repo: Repo)
+      Auth.login_by_email_and_pass(conn, "me@test2.com", "wrong", repo: Repo)
   end
 end
