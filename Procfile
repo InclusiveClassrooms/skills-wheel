@@ -1,1 +1,1 @@
-web: mix do ecto.setup
+web: sudo mix ecto.setup
