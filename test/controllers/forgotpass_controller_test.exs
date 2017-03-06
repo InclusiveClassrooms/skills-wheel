@@ -41,10 +41,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
       RedisCli.set("s00Rand0m", "me@me.com")
 
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
-        %{"forgotpass" => %{
-          "hash" => "s00Rand0m",
-          "newpass" => %{"password" => "mypass"}
-        }}
+        %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}
 
       assert redirected_to(conn, 302) =~ "/users"
       assert get_flash(conn, :info) == "Password Changed"
@@ -65,10 +62,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
       RedisCli.set("s00Rand0m", "me@me.com")
 
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
-        %{"forgotpass" => %{
-          "hash" => "s00Rand0m",
-          "newpass" => %{"password" => "short"}
-        }}
+        %{"hash" => "s00Rand0m", "newpass" => %{"password" => "short"}}
 
       assert redirected_to(conn, 302) =~ "/users"
       assert get_flash(conn, :error) == "should be at least %{count} character(s)"

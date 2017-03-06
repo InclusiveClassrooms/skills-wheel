@@ -1,6 +1,5 @@
 defmodule Skillswheel.ForgotpassController do
   use Skillswheel.Web, :controller
-  require IEx
 
   alias Skillswheel.{User, RedisCli, Auth}
   alias Ecto.Changeset
@@ -12,7 +11,7 @@ defmodule Skillswheel.ForgotpassController do
   def create(conn, %{"forgotpass" => %{"email" => email}}) do
     rand_string = gen_rand_string(30)
 
-    RedisCli.query(["SET", rand_string, email])
+    RedisCli.set(rand_string, email)
 
     email
     |> Skillswheel.Email.forgotten_password_email(rand_string)
@@ -33,7 +32,7 @@ defmodule Skillswheel.ForgotpassController do
     |> redirect(to: path.(conn, :new))
   end
 
-  def update_password(conn, %{"forgotpass" => %{"hash" => hash, "newpass" => %{"password" => password}}}) do
+  def update_password(conn, %{"hash" => hash, "newpass" => %{"password" => password}}) do
     update
       =  get_email_from_hash(hash)
       |> get_user_from_email()
