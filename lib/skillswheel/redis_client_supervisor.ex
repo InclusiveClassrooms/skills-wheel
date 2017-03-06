@@ -9,7 +9,7 @@ defmodule Skillswheel.RedisClientSupervisor do
 
   def init(_) do
     children = [
-      worker(RedisCli, ["redis://localhost:6379", :redix], [])
+      worker(RedisCli, [System.get_env("REDIS_URL"), :redix], [])
     ]
     supervise(children, strategy: :one_for_one)
   end
