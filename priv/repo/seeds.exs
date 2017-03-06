@@ -13,9 +13,10 @@
 alias Skillswheel.Repo
 alias Skillswheel.User
 
+require IEx
+
 case Repo.get_by(User, name: "Admin") do
-  {:ok, _user} -> IO.puts "Admin already in database"
-  _ -> 
+  nil -> 
     Repo.insert! %User{
       name: "Admin",
       email: System.get_env("ADMIN_EMAIL"),
@@ -23,5 +24,6 @@ case Repo.get_by(User, name: "Admin") do
       password_hash: Comeonin.Bcrypt.hashpwsalt(System.get_env("ADMIN_PASSWORD")),
       admin: true
     }
+  _user -> IO.puts "Admin already in database"
 end
 
