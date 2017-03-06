@@ -1,7 +1,6 @@
 defmodule Skillswheel.GroupController do
   use Skillswheel.Web, :controller
-  alias Skillswheel.Group
-  alias Skillswheel.UserGroup
+  alias Skillswheel.{Group, Student, UserGroup}
 
   plug :authenticate_user when action in [:index, :create, :delete, :show]
 
@@ -45,10 +44,12 @@ defmodule Skillswheel.GroupController do
     case Repo.get(user_groups(user), group_id) do
       nil ->
         conn
-        |> put_flash(:error, "You do not have permission to view that group")
+        |> put_flash(:error, "Group does not exist")
         |> redirect(to: group_path(conn, :index))
       group ->
-        render conn, "show.html", group: group
+        students = Repo.all(group_students(group))
+        changeset = Student.changeset(%Student{})
+        render conn, "show.html", group: group, changeset: changeset, students: students
     end
 
 
@@ -61,5 +62,9 @@ defmodule Skillswheel.GroupController do
 
   defp user_groups(user) do
     assoc(user, :groups)
+  end
+
+  defp group_students(group) do
+    assoc(group, :students)
   end
 end

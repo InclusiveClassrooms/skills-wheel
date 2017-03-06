@@ -4,6 +4,7 @@ defmodule Skillswheel.Group do
   schema "groups" do
     field :name, :string
     many_to_many :users, Skillswheel.User, join_through: "users_groups"
+    has_many :students, Skillswheel.Student
 
     timestamps()
   end
