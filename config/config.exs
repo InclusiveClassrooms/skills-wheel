@@ -12,7 +12,7 @@ config :skillswheel,
 # Configures the endpoint
 config :skillswheel, Skillswheel.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "RoBmHpD9fll4Z+i9J/yort8U3AEelmCaphcUmQBHlimDvAeGmdzxYuVrL7BbsczP",
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   render_errors: [view: Skillswheel.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Skillswheel.PubSub,
            adapter: Phoenix.PubSub.PG2]
