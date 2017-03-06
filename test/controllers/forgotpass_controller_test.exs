@@ -21,7 +21,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
   test "/forgotpass :: show", %{conn: conn} do
     conn = get conn, forgotpass_path(conn, :show, "s00Rand0m")
-    assert html_response(conn, 200) =~ "Hello Reset"
+    assert html_response(conn, 200) =~ "Reset Password"
     assert html_response(conn, 200) =~ "s00Rand0m"
   end
 
