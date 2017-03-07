@@ -3,12 +3,17 @@
 
 <div class="group-wrapper">
   <%= form_for @changeset, group_path(@conn, :create), fn f -> %>
-    <div class="form-group">
-      <%= label f, "Group Name", class: "control-label" %>
-      <%= text_input f, :name, placeholder: "Group 1", class: "form-control group-input" %>
-      <%= error_tag f, :name %>
+    <div class="group-container">
+      <div class="form-group">
+        <%= label f, "Group Name", class: "control-label" %>
+        <%= text_input f, :name, placeholder: "Group 1", class: "form-control group-input" %>
+        <%= error_tag f, :name %>
+      </div>
+      <div class="group-divide-new"></div>
+      <div style="text-align:center;">
+        <%= submit "Add Group", class: "group-add-button" %>
+      </div>
     </div>
-    <%= submit "Add Group", class: "group-add-button" %>
   <% end %>
 
 
@@ -20,6 +25,11 @@
         <div class="group-members">You and John Wilkes</div>
       </div>
       <div class="group-divide"></div>
+      <div>
+        <%= for student <- group.students do %>
+        <div><%= link student.first_name, to: student_path(@conn, :show, student.id), class: "group-student" %></div>
+        <% end %>
+      </div>
     </div>
   <% end %>
 </div>
