@@ -3,7 +3,7 @@ defmodule Skillswheel.Auth do
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
   import Phoenix.Controller
 
-  alias Skillswheel.Router.Helpers
+  alias Skillswheel.{User, Router.Helpers}
 
   def init(opts) do
     Keyword.fetch!(opts, :repo)
@@ -13,9 +13,9 @@ defmodule Skillswheel.Auth do
     user_id = get_session(conn, :user_id)
 
     cond do
-      user = conn.assigns[:current_user] ->
+      conn.assigns[:current_user] ->
         conn
-      user = user_id && repo.get(Skillswheel.User, user_id) ->
+      user = user_id && repo.get(User, user_id) ->
         assign(conn, :current_user, user)
       true ->
         assign(conn, :current_user, nil)
@@ -31,7 +31,7 @@ defmodule Skillswheel.Auth do
 
   def login_by_email_and_pass(conn, email, given_pass, opts) do
     repo = Keyword.fetch!(opts, :repo)
-    user = repo.get_by(Skillswheel.User, email: email)
+    user = repo.get_by(User, email: email)
 
     cond do
       user && checkpw(given_pass, user.password_hash) ->
@@ -48,26 +48,21 @@ defmodule Skillswheel.Auth do
     configure_session(conn, drop: true)
   end
 
-  def authenticate_user(conn, _opts) do
-    if conn.assigns.current_user do
-      conn
+  defp authenticate(conn, type) do
+    message = %{:user => "You must be logged in to view that page",
+                :admin => "You don't have admin access"}
+
+    if type == :user && conn.assigns.current_user
+    || type == :admin && conn.assigns.current_user.admin do
+        conn
     else
       conn
-      |> put_flash(:error, "You must be logged in to view that page")
+      |> put_flash(:error, message[type])
       |> redirect(to: Helpers.page_path(conn, :index))
       |> halt()
     end
   end
 
-  def authenticate_admin(conn, _opts) do
-    if conn.assigns.current_user.admin do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You don't have admin access")
-      |> redirect(to: Helpers.page_path(conn, :index))
-      |> halt()
-    end
-  end
-
+  def authenticate_user(conn, _opts), do: conn |> authenticate(:user)
+  def authenticate_admin(conn, _opts), do: conn |> authenticate(:admin)
 end
