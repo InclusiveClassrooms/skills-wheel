@@ -16,6 +16,22 @@ This project uses:
 ```bash
 export POSTGRES_USERNAME=<psql_username>
 export POSTGRES_PASSWORD=<psql_password>
+export SMTP_USERNAME=AKIAJTAJDKM4LEZYXFUA
+export SMTP_PASSWORD=As1PNrgowukauAigSvNBFXgHuqGShjcC9PRV7zzW3XJr
+export SES_SERVER=email-smtp.eu-west-1.amazonaws.com
+export SES_PORT=25
+export ADMIN_EMAIL=inclusiveclassroomstest@gmail.com
+export ADMIN_PASSWORD=inclusiveclassrooms123
+export REDIS_URL=redis://localhost:6379
+export SECRET_KEY_BASE=RoBmHpD9fll4Z+i9J/yort8U3AEelmCaphcUmQBHlimDvAeGmdzxYuVrL7BbsczP
+```
+* Start a postgres server in a seperate terminal with:
+```
+$ postgres -D /usr/local/var/postgres
+```
+* Start a redis server in a seperate terminal with:
+```
+$ redis-server
 ```
 * Install dependencies with `mix deps.get`
 * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
