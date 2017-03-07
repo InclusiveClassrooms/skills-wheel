@@ -9,7 +9,6 @@ defmodule Skillswheel.GroupController do
       Repo.all(user_groups(user))
       |> Repo.preload(:students)
       |> Repo.preload(:users)
-    IO.inspect groups
     changeset =
       user
       |> build_assoc(:groups)
