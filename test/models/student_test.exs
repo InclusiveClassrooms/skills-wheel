@@ -18,7 +18,14 @@ defmodule Skillswheel.StudentTest do
      year_group: "4",
      group_id: 7
    }
-   @invalid_attrs %{first_name: "", last_name: "", sex: "", year_group: "", group_id: ""}
+
+   @invalid_attrs %{
+    first_name: "",
+    last_name: "",
+    sex: "",
+    year_group: "",
+    group_id: ""
+  }
 
    test "changeset with valid attributes" do
      changeset = Student.changeset(%Student{}, @valid_attrs)

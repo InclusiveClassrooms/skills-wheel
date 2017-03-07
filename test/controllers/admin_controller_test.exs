@@ -27,7 +27,6 @@ defmodule Skillswheel.AdminControllerTest do
     end
   end
 
-
   describe "admin unauthorised" do
     setup do
       admin_auth(false)
