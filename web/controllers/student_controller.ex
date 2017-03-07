@@ -26,7 +26,7 @@ defmodule Skillswheel.StudentController do
         |> redirect(to: group_path(conn, :index))
       {:error, _changeset} ->
         conn
-        |> put_flash(:error, "Error creating student!")
+        |> put_flash(:error, "Oops, all fields must be filled in to add a student!")
         |> redirect(to: group_path(conn, :index))
     end
   end
