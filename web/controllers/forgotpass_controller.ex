@@ -1,4 +1,41 @@
 defmodule Skillswheel.ForgotpassController do
+  @moduledoc """
+  # Forgotten Password
+
+  ### Views:
+  * index
+  Where a user can send an email to their email address
+  This will send a link for them to reset their password with
+  * show
+  Where a user can reset their password
+  ### Endpoints
+  * create
+  The endpoint for recieving the form from `index`
+  - Generates a random hash
+  - Stores this temporary hash in redis
+  - Sends a link to the user corresponding to this hash
+  * update_password
+  The endpoint for recievign the form from `show`
+  - Validates incoming hash
+  - Fetches user from postgres
+  - Validates password
+  - Replaces old password with new one
+
+  ### How to manual test
+  * Log in as admin
+  * Go to `/admin`
+  * Ensure that your email suffix is registered
+  * Log out
+  * Try forgotten password flow:
+  - with an unregistered domain
+  - with a non registered user, but registered domain
+  - with an incorrect hash
+  - check that the users you have been trying with don't exist in the database
+  - with a properly registered user
+  - check that the new password works
+  - check that the old password doesnt
+  """
+
   use Skillswheel.Web, :controller
 
   alias Skillswheel.{User, RedisCli, Auth}
