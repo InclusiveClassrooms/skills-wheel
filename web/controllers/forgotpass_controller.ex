@@ -90,7 +90,7 @@ defmodule Skillswheel.ForgotpassController do
         conn
         |> Auth.login(user)
         |> put_flash(:info, "Password Changed")
-        |> redirect(to: user_path(conn, :index))
+        |> redirect(to: group_path(conn, :index))
       {:error, message} ->
         case message do
           "invalid_pass" ->

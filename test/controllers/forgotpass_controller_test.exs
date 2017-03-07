@@ -43,7 +43,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}
 
-      assert redirected_to(conn, 302) =~ "/users"
+      assert redirected_to(conn, 302) =~ "/groups"
       assert get_flash(conn, :info) == "Password Changed"
 
       user = Repo.get_by(User, email: "me@me.com")
