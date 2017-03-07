@@ -64,8 +64,8 @@ defmodule Skillswheel.ForgotpassControllerTest do
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "short"}}
 
-      assert redirected_to(conn, 302) =~ "/users"
-      assert get_flash(conn, :error) == "Invalid password"
+      assert redirected_to(conn, 302) =~ "/forgotpass/s00Rand0m"
+      assert get_flash(conn, :error) == "Invalid, ensure your password is 6-20 characters"
 
       user = Repo.get_by(User, email: "me@me.com")
 
@@ -85,7 +85,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "short"}}
 
       assert redirected_to(conn, 302) =~ "/users"
-      assert get_flash(conn, :error) == "User not in Postgres"
+      assert get_flash(conn, :error) == "User has not been registered"
 
       assert Repo.get_by(User, email: "me@me.com") == nil
     end
@@ -102,7 +102,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}
 
       assert redirected_to(conn, 302) =~ "/users"
-      assert get_flash(conn, :error) == "User not in Redis"
+      assert get_flash(conn, :error) == "The email link has expired"
 
       user = Repo.get_by(User, email: "me@me.com")
 
@@ -115,7 +115,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}
 
       assert redirected_to(conn, 302) =~ "/users"
-      assert get_flash(conn, :error) == "User not in Redis"
+      assert get_flash(conn, :error) == "The email link has expired"
     end
 
     test "unregistered user with correct suffix", %{conn: conn}do
@@ -128,7 +128,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "mypass"}}
 
       assert redirected_to(conn, 302) =~ "/users"
-      assert get_flash(conn, :error) == "User not in Redis"
+      assert get_flash(conn, :error) == "The email link has expired"
     end
   end
 
@@ -139,7 +139,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
     test "user not found in redis" do
       actual = ForgotpassController.get_email_from_hash("s00Rand0m")
-      expected = {:error, "User not in Redis"}
+      expected = {:error, "The email link has expired"}
 
       assert actual == expected
     end
@@ -169,7 +169,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
         email_suffix: "me.com"
       } |> Repo.insert
       actual = ForgotpassController.get_user_from_email({:ok, "me@me.com"})
-      expected = {:error, "User not in Postgres"}
+      expected = {:error, "User has not been registered"}
 
       assert actual == expected
     end

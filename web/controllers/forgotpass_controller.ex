@@ -38,7 +38,7 @@ defmodule Skillswheel.ForgotpassController do
 
   use Skillswheel.Web, :controller
 
-  alias Skillswheel.{User, RedisCli, Auth}
+  alias Skillswheel.{User, RedisCli, Auth, Email, Mailer}
   alias Ecto.Changeset
 
   def index(conn, _params) do
@@ -53,8 +53,8 @@ defmodule Skillswheel.ForgotpassController do
     RedisCli.expire(rand_string, one_day)
 
     email
-    |> Skillswheel.Email.forgotten_password_email(rand_string)
-    |> Skillswheel.Mailer.deliver_now()
+    |> Email.forgotten_password_email(rand_string)
+    |> Mailer.deliver_now()
 
     conn
     |> put_flash(:info, "Email Sent")
@@ -63,6 +63,12 @@ defmodule Skillswheel.ForgotpassController do
 
   def show(conn, %{"id" => hash}) do
     render conn, "reset.html", hash: hash
+  end
+
+  defp display_error(conn, message, path, hash) do
+    conn
+    |> put_flash(:error, message)
+    |> redirect(to: path.(conn, :show, hash))
   end
 
   defp display_error(conn, message, path) do
@@ -87,6 +93,9 @@ defmodule Skillswheel.ForgotpassController do
         |> redirect(to: user_path(conn, :index))
       {:error, message} ->
         case message do
+          "invalid_pass" ->
+            message = "Invalid, ensure your password is 6-20 characters"
+            display_error(conn, message, &forgotpass_path/3, hash)
           _ -> display_error(conn, message, &user_path/2)
         end
     end
@@ -94,7 +103,8 @@ defmodule Skillswheel.ForgotpassController do
 
   def get_email_from_hash(hash) do
     case RedisCli.get(hash) do
-      {:ok, nil} -> {:error, "User not in Redis"}
+      {:ok, nil} ->
+        {:error, "The email link has expired"}
       {:ok, email} -> {:ok, email}
     end
   end
@@ -103,7 +113,8 @@ defmodule Skillswheel.ForgotpassController do
     case tuple do
       {:ok, email} ->
         case Repo.get_by(User, email: email) do
-          nil -> {:error, "User not in Postgres"}
+          nil ->
+            {:error, "User has not been registered"}
           user -> {:ok, user}
         end
       {:error, error} -> {:error, error}
@@ -119,9 +130,10 @@ defmodule Skillswheel.ForgotpassController do
           "password" => password
         }
         changeset = User.validate_password(%User{}, params)
-        cond do
-          changeset.valid? -> {:ok, changeset}
-          true -> {:error, "Invalid password"}
+        if changeset.valid? do
+          {:ok, changeset}
+        else
+          {:error, "invalid_pass"}
         end
       {:error, struct} -> {:error, struct}
     end
