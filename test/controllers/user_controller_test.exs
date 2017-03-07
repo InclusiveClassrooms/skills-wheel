@@ -1,7 +1,8 @@
 defmodule Skillswheel.UserControllerTest do
   use Skillswheel.ConnCase, async: false
-  alias Skillswheel.User
-  alias Skillswheel.School
+
+  alias Skillswheel.{User, School}
+  alias Comeonin.Bcrypt
 
   describe "all user paths that don't need authentication" do
     setup do
@@ -16,7 +17,7 @@ defmodule Skillswheel.UserControllerTest do
         id: 12345,
         name: "My Name",
         email: "email@test.com",
-        password_hash: Comeonin.Bcrypt.hashpwsalt("password")
+        password_hash: Bcrypt.hashpwsalt("password")
       } |> Repo.insert
       :ok
     end

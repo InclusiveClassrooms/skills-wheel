@@ -2,6 +2,7 @@ defmodule Skillswheel.SchoolControllerTest do
   use Skillswheel.ConnCase, async: false
 
   alias Skillswheel.User
+  alias Comeonin.Bcrypt
 
   @valid_attrs %{name: "Test", email_suffix: "test.org"}
   @invalid_attrs %{name: "", email_suffix: ""}
@@ -11,7 +12,7 @@ defmodule Skillswheel.SchoolControllerTest do
       id: 12345,
       name: "My Name",
       email: "email@test.com",
-      password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
+      password_hash: Bcrypt.hashpwsalt("password"),
       admin: true
     } |> Repo.insert
 
