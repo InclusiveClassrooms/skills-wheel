@@ -10,8 +10,10 @@ defmodule Skillswheel.ForgotpassController do
 
   def create(conn, %{"forgotpass" => %{"email" => email}}) do
     rand_string = gen_rand_string(30)
+    one_day = 24 * 60 * 60
 
     RedisCli.set(rand_string, email)
+    RedisCli.expire(rand_string, one_day)
 
     email
     |> Skillswheel.Email.forgotten_password_email(rand_string)
