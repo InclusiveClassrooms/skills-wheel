@@ -1,7 +1,7 @@
 defmodule Skillswheel.AuthTest do
   use Skillswheel.ConnCase, async: false
-  alias Skillswheel.Auth
-  alias Skillswheel.School
+
+  alias Skillswheel.{Auth, School, Router, User}
 
   setup %{conn: conn} do
     %School{
@@ -12,7 +12,7 @@ defmodule Skillswheel.AuthTest do
 
     conn =
       conn
-      |> bypass_through(Skillswheel.Router, :browser)
+      |> bypass_through(Router, :browser)
       |> get("/")
     {:ok, %{conn: conn}}
   end
@@ -29,7 +29,7 @@ defmodule Skillswheel.AuthTest do
   test "authenticate_user continues when the current_user exists", %{conn: conn} do
     conn =
       conn
-      |> assign(:current_user, %Skillswheel.User{})
+      |> assign(:current_user, %User{})
       |> Auth.authenticate_user([])
     refute conn.halted
   end
@@ -37,7 +37,7 @@ defmodule Skillswheel.AuthTest do
   test "login puts the user in the session", %{conn: conn} do
     login_conn =
       conn
-      |> Auth.login(%Skillswheel.User{id: 123})
+      |> Auth.login(%User{id: 123})
       |> send_resp(:ok, "")
     next_conn = get(login_conn, "/")
     assert get_session(next_conn, :user_id) == 123

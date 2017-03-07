@@ -1,5 +1,6 @@
 defmodule Skillswheel.GroupTest do
   use Skillswheel.ModelCase, async: false
+
   alias Skillswheel.Group
 
   @valid_attrs %{name: "Test"}

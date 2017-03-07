@@ -1,5 +1,6 @@
 defmodule Skillswheel.SchoolTest do
   use Skillswheel.ModelCase, async: false
+
   alias Skillswheel.School
 
   describe "School model" do
