@@ -18,8 +18,6 @@ defmodule Skillswheel.GroupControllerTest do
     else
       :ok
     end
-
-
   end
 
   describe "group paths with authentication" do
