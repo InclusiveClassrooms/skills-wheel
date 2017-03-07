@@ -1,6 +1,3 @@
-<h1>GROUPS</h1>
-
-
 <div class="group-wrapper">
   <%= form_for @changeset, group_path(@conn, :create), fn f -> %>
     <div class="group-container">
@@ -16,13 +13,12 @@
     </div>
   <% end %>
 
-
   <%= for group <- @groups do %>
     <div class="group-container">
       <div><%= link group.name, to: group_path(@conn, :show, group.id), class: "group-title" %></div>
       <div>
         <img src="/images/users-icon.png" class="group-icon" />
-        <div class="group-members">You and John Wilkes</div>
+        <div class="group-members"><%= format_owners(@current_user, group.users) %></div>
       </div>
       <div class="group-divide"></div>
       <div>

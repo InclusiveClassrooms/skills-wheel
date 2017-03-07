@@ -5,8 +5,10 @@ defmodule Skillswheel.GroupController do
   plug :authenticate_user when action in [:index, :create, :delete, :show]
 
   def index(conn, _params, user) do
-    groups = Repo.all(user_groups(user))
-    groups = Repo.preload(groups, :students)
+    groups =
+      Repo.all(user_groups(user))
+      |> Repo.preload(:students)
+      |> Repo.preload(:users)
     IO.inspect groups
     changeset =
       user
