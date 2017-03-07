@@ -116,6 +116,20 @@ body {
   text-align: center;
   float: left;
   margin-top: 1rem;
+  position: relative;
+}
+
+.group-student-form-button {
+  position: absolute;
+  right: 0.7rem;
+  top: 0.7rem;
+  border: 2px solid #ffffff;
+  border-radius: 100%;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 18px;
 }
 
 .group-student-form-group {

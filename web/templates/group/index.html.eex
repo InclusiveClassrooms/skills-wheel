@@ -30,6 +30,7 @@
         </div>
         <div id="form<%= group.id %>" class="group-student-form hidden">
           <%= form_for @student_changeset, student_path(@conn, :create), fn f -> %>
+            <div class="group-student-form-button" onclick=require("web/static/js/app").App.reverse_toggle(<%= group.id %>)>x</div>
             <div class="form-group group-student-form-group">
               <%= label f, :first_name, class: "control-label" %>
               <%= text_input f, :first_name, placeholder: "First Name", class: "form-control" %>

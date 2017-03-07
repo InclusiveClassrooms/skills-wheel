@@ -27,9 +27,17 @@ function toggle_visibility(id) {
   new_student_form.className = new_student_form.className.replace(" hidden", "");
 }
 
+function reverse_toggle(id) {
+  var new_student_button = document.getElementById(`button${id}`);
+  new_student_button.className = new_student_button.className.replace(" hidden", "");
+  var new_student_form = document.getElementById(`form${id}`);
+  new_student_form.className += " hidden"
+}
+
 export var App = {
   run: function () {
     console.log("hello")
   },
-  toggle_visibility: toggle_visibility
+  toggle_visibility: toggle_visibility,
+  reverse_toggle: reverse_toggle
 }
