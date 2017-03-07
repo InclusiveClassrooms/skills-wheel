@@ -49,12 +49,19 @@ defmodule Skillswheel.ForgotpassController do
     rand_string = gen_rand_string(30)
     one_day = 24 * 60 * 60
 
-    RedisCli.set(rand_string, email)
-    RedisCli.expire(rand_string, one_day)
+    redis_task = Task.async(fn ->
+      RedisCli.set(rand_string, email)
+      RedisCli.expire(rand_string, one_day)
+    end)
 
-    email
-    |> Email.forgotten_password_email(rand_string)
-    |> Mailer.deliver_now()
+    email_task = Task.async(fn ->
+      email
+      |> Email.forgotten_password_email(rand_string)
+      |> Mailer.deliver_now()
+    end)
+
+    Task.await(redis_task)
+    Task.await(email_task)
 
     conn
     |> put_flash(:info, "Email Sent")
@@ -77,13 +84,26 @@ defmodule Skillswheel.ForgotpassController do
     |> redirect(to: path.(conn, :new))
   end
 
+  defp error_handle(tuple, func, arg \\ nil) do
+    case tuple do
+      {:ok, data} ->
+        if arg do
+          func.(data, arg)
+        else
+          func.(data)
+        end
+      {:error, error} -> {:error, error}
+    end
+  end
+
   def update_password(conn, %{"hash" => hash, "newpass" => %{"password" => password}}) do
     update
-      =  get_email_from_hash(hash)
-      |> get_user_from_email()
-      |> validate_password(password)
-      |> put_pass_hash()
-      |> update_user()
+      =  {:ok, hash}
+      |> error_handle(&get_email_from_hash/1)
+      |> error_handle(&get_user_from_email/1)
+      |> error_handle(&validate_password/2, password)
+      |> error_handle(&put_pass_hash/1)
+      |> error_handle(&update_user/1)
 
     case update do
       {:ok, user} ->
@@ -103,60 +123,39 @@ defmodule Skillswheel.ForgotpassController do
 
   def get_email_from_hash(hash) do
     case RedisCli.get(hash) do
-      {:ok, nil} ->
-        {:error, "The email link has expired"}
+      {:ok, nil} -> {:error, "The email link has expired"}
       {:ok, email} -> {:ok, email}
     end
   end
 
-  def get_user_from_email(tuple) do
-    case tuple do
-      {:ok, email} ->
-        case Repo.get_by(User, email: email) do
-          nil ->
-            {:error, "User has not been registered"}
-          user -> {:ok, user}
-        end
-      {:error, error} -> {:error, error}
+  def get_user_from_email(email) do
+    case Repo.get_by(User, email: email) do
+      nil -> {:error, "User has not been registered"}
+      user -> {:ok, user}
     end
   end
 
-  def validate_password(tuple, password) do
-    case tuple do
-      {:ok, user} ->
-        params = %{
-          "email" => user.email,
-          "name" => user.name,
-          "password" => password
-        }
-        changeset = User.validate_password(%User{}, params)
-        if changeset.valid? do
-          {:ok, changeset}
-        else
-          {:error, "invalid_pass"}
-        end
-      {:error, struct} -> {:error, struct}
+  def validate_password(user, password) do
+    params = %{
+      "email" => user.email,
+      "name" => user.name,
+      "password" => password
+    }
+    changeset = User.validate_password(%User{}, params)
+
+    case changeset.valid? do
+      true -> {:ok, changeset}
+      false -> {:error, "invalid_pass"}
     end
   end
 
-  def put_pass_hash(tuple) do
-    case tuple do
-      {:ok, changeset} -> {:ok, User.put_pass_hash(changeset)}
-      {:error, error} -> {:error, error}
-    end
-  end
+  def put_pass_hash(changeset), do: {:ok, User.put_pass_hash(changeset)}
 
-  def update_user(tuple) do
-    case tuple do
-      {:ok, changeset} ->
-        user = Repo.get_by(User, email: changeset.changes.email)
-        user = Changeset.change(user, password_hash: changeset.changes.password_hash)
-        case Repo.update user do
-          {:ok, struct} -> {:ok, struct}
-          {:error, error} -> {:error, error}
-        end
-      {:error, error} -> {:error, error}
-    end
+  def update_user(changeset) do
+    User
+    |> Repo.get_by(email: changeset.changes.email)
+    |> Changeset.change(password_hash: changeset.changes.password_hash)
+    |> Repo.update()
   end
 
   defp gen_rand_string(length) do
