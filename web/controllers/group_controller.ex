@@ -14,7 +14,9 @@ defmodule Skillswheel.GroupController do
       user
       |> build_assoc(:groups)
       |> Group.changeset()
-    render conn, "index.html", changeset: changeset, groups: groups
+
+    student_changeset = Student.changeset(%Student{})
+    render conn, "index.html", changeset: changeset, groups: groups, student_changeset: student_changeset
   end
 
   def create(conn, %{"group" => group_params}, user) do
@@ -38,7 +40,7 @@ defmodule Skillswheel.GroupController do
         end
       {:error, _changeset} ->
         conn
-        |> put_flash(:error, "Error creating group!")
+        |> put_flash(:error, "Oops, the group name can't be empty!")
         |> redirect(to: group_path(conn, :index))
     end
   end

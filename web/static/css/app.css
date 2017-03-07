@@ -5,20 +5,26 @@ body {
   background-color: #e1e1e1;
 }
 
+.breadcrumb {
+  background-color: #ffffff;
+}
+
+.container {
+  max-width: 896px;
+}
+
 .group-add-button {
-  width: 408px;
+  width: 100%;
   height: 48px;
-  background-color: #009DE4;
+  background-color: #E7007D;
   border:none;
   color: #ffffff;
   font-size: 2rem;
-  margin-top: 2rem;
-  margin-right: 3rem;
 }
 
 .group-container {
   width: 100%;
-  min-height: 227px;
+  min-height: 190px;
   background-color: #FFFFFF;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
   border-radius: 2px;
@@ -29,15 +35,24 @@ body {
   display: inline-block;
 }
 
+.group-container-new {
+  width: 54%;
+  min-height: 160px;
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+  border-radius: 2px;
+  margin-bottom: 3rem;
+  padding-left: 3rem;
+  padding-top: 2rem;
+  padding-right: 3rem;
+  padding-bottom: 2rem;
+  text-align: left;
+  display: inline-block;
+}
+
 .group-divide {
   width: 95%;
   height: 24px;
-  box-shadow: inset 0 -1px 0 0 #808080;
-}
-
-.group-divide-new {
-  width: 95%;
-  height: 2px;
   box-shadow: inset 0 -1px 0 0 #808080;
 }
 
@@ -47,7 +62,15 @@ body {
 }
 
 .group-input {
-  width: 34%;
+  width: 100%;
+  background-color: #FFFFFF;
+  box-shadow: inset 0 2px 3px 0 #808080;
+  border: 1px solid #222222;
+  border-radius: 2px;
+}
+
+.group-label {
+  text-transform: capitalize;
 }
 
 .group-members {
@@ -73,6 +96,74 @@ body {
   margin-bottom: 1rem;
 }
 
+.group-student-add-button {
+  width: 222px;
+  height: 48px;
+  background-color: #009DE4;
+  color: #ffffff;
+  border:none;
+  font-size: 21px;
+}
+
+.group-student-form {
+  width: 451px;
+  background-color: #E1E1E1;
+  box-shadow: inset 0 2px 3px 0 #808080;
+  border: 1px solid #666666;
+  border-radius: 10px;
+  /*display: inline-block;*/
+  margin-bottom: 2rem;
+  text-align: center;
+  float: left;
+  margin-top: 1rem;
+}
+
+.group-student-form-group {
+  width: 46%;
+  float: left;
+  margin-left: 1rem;
+  text-align: left;
+}
+
+.group-student-new {
+  width: 96px;
+  height: 96px;
+  background-color: #FFFFFF;
+  box-shadow: inset 0 2px 3px 0 #808080;
+  border: 1px solid #666666;
+  font-size: 13px;
+  text-align: center;
+  line-height: 90px;
+  display: inline-block;
+  border-radius: 100%;
+  margin-right: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.group-student-new:hover {
+  cursor: pointer;
+}
+
+.group-student-new-icon {
+  position: absolute;
+  top: 2.5rem;
+  width: 16px;
+  right: 50%;
+  margin-right: -8px;
+}
+
+.group-student-new-text {
+  width: 75px;
+  line-height: 14px;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 5rem;
+  color: #009EE3;
+  font-size: 14px;
+}
+
 .group-title {
   font-size: 20px;
   color: #222222;
@@ -82,9 +173,19 @@ body {
   text-align: center;
 }
 
+.header {
+  background-color: #ffffff;
+  margin-top: -2rem;
+  margin-bottom: 2rem;
+}
+
 .help-block {
   color: red;
   text-transform: capitalize;
+}
+
+.hidden {
+  display: none;
 }
 
 .skillswheel-school-access {

@@ -19,3 +19,17 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
+
+function toggle_visibility(id) {
+  var new_student_button = document.getElementById(`button${id}`);
+  new_student_button.className += " hidden";
+  var new_student_form = document.getElementById(`form${id}`);
+  new_student_form.className = new_student_form.className.replace(" hidden", "");
+}
+
+export var App = {
+  run: function () {
+    console.log("hello")
+  },
+  toggle_visibility: toggle_visibility
+}
