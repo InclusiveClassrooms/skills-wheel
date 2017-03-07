@@ -1,14 +1,61 @@
-<h1>GROUPS</h1>
+<div class="group-wrapper">
+  <%= form_for @changeset, group_path(@conn, :create), fn f -> %>
+    <div class="group-container-new">
+      <div class="form-group">
+        <%= label f, "New Group Name", class: "control-label group-label" %>
+        <%= text_input f, :name, placeholder: "e.g. Group 1", class: "form-control group-input" %>
+        <%= error_tag f, :name %>
+      </div>
+      <div style="text-align:center;">
+        <%= submit "Add Group", class: "group-add-button" %>
+      </div>
+    </div>
+  <% end %>
 
-<%= for group <- @groups do %>
-  <div><%= link group.name, to: group_path(@conn, :show, group.id) %></div>
-<% end %>
-
-<%= form_for @changeset, group_path(@conn, :create), fn f -> %>
-  <div class="form-group">
-    <%= label f, :name, class: "control-label" %>
-    <%= text_input f, :name, placeholder: "Group 1", class: "form-control" %>
-    <%= error_tag f, :name %>
-  </div>
-  <%= submit "Create Group", class: "btn btn-primary" %>
-<% end %>
+  <%= for group <- @groups do %>
+    <div class="group-container">
+      <div><%= link group.name, to: group_path(@conn, :show, group.id), class: "group-title" %></div>
+      <div>
+        <img src="/images/users-icon.png" class="group-icon" />
+        <div class="group-members"><%= format_owners(@current_user, group.users) %></div>
+      </div>
+      <div class="group-divide"></div>
+      <div>
+        <%= for student <- group.students do %>
+        <div><%= link student.first_name, to: student_path(@conn, :show, student.id), class: "group-student" %></div>
+        <% end %>
+        <div id="button<%= group.id %>" class="group-student-new" onclick=require("web/static/js/app").App.toggle_visibility(<%= group.id %>)>
+          <img src="/images/plus-symbol.png" class="group-student-new-icon"/>
+          <div class="group-student-new-text">Add Student</div>
+        </div>
+        <div id="form<%= group.id %>" class="group-student-form hidden">
+          <%= form_for @student_changeset, student_path(@conn, :create), fn f -> %>
+            <div class="group-student-form-button" onclick=require("web/static/js/app").App.reverse_toggle(<%= group.id %>)>x</div>
+            <div class="form-group group-student-form-group">
+              <%= label f, :first_name, class: "control-label" %>
+              <%= text_input f, :first_name, placeholder: "First Name", class: "form-control" %>
+              <%= error_tag f, :first_name %>
+            </div>
+            <div class="form-group group-student-form-group">
+              <%= label f, :last_name, class: "control-label" %>
+              <%= text_input f, :last_name, placeholder: "Last Name", class: "form-control" %>
+              <%= error_tag f, :last_name %>
+            </div>
+            <div class="form-group group-student-form-group">
+              <%= label f, :sex, class: "control-label" %>
+              <%= select f, :sex, ["male", "female"], class: "form-control"%>
+              <%= error_tag f, :sex %>
+            </div>
+            <div class="form-group group-student-form-group">
+              <%= label f, :year_group, class: "control-label" %>
+              <%= select f, :year_group, 1..6, class: "form-control" %>
+              <%= error_tag f, :year_group %>
+            </div>
+            <%= hidden_input f, :group_id, value: group.id %>
+            <%= submit "Add Student", class: "group-student-add-button" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
