@@ -4,8 +4,15 @@ defmodule Skillswheel.SurveyController do
   alias Skillswheel.{Student, Survey}
 
   def create(conn, %{"survey" => survey}, _user) do
+    IO.puts "++++++++++++++"
+    IO.inspect survey
+    IO.puts "++++++++++++++"
+
     student_id = survey["student_id"]
-    attrs = Map.delete(survey, "student_id")
+    attrs
+      =  survey
+      |> Map.new(fn {key, val} -> {String.to_atom(key), val} end)
+      |> Map.delete(:student_id)
     student = Repo.get!(Student, student_id)
     changeset = Ecto.build_assoc(student, :surveys) |> Student.changeset(attrs)
 
