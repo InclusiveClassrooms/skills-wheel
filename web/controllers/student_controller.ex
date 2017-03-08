@@ -43,6 +43,8 @@ defmodule Skillswheel.StudentController do
       student ->
         case Enum.member?(user_groups, student.group_id) do
           true ->
+            student = Repo.preload(student, :group)
+            IO.inspect student
             render conn, "show.html", student: student
           _ ->
             conn
