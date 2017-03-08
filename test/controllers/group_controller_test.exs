@@ -28,7 +28,7 @@ defmodule Skillswheel.GroupControllerTest do
 
     test "/groups", %{conn: conn} do
       conn = get conn, group_path(conn, :index)
-      assert html_response(conn, 200) =~ "GROUPS"
+      assert html_response(conn, 200) =~ "Add Group"
     end
 
     test "/groups/:id", %{conn: conn} do
@@ -47,7 +47,7 @@ defmodule Skillswheel.GroupControllerTest do
       %Group{
         name: "Group 1",
         id: 1
-      } |> Repo.insert 
+      } |> Repo.insert
 
       %UserGroup{
         group_id: 1,

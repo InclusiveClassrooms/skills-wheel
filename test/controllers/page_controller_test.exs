@@ -3,7 +3,7 @@ defmodule Skillswheel.PageControllerTest do
 
   test "Get / User not logged in", %{conn: conn} do
     conn = get conn, page_path(conn, :index)
-    assert html_response(conn, 200) =~ "Inclusive Classrooms"
-    assert html_response(conn, 200) =~ "Hello, World"
+    assert html_response(conn, 200) =~ "Register"
+    assert html_response(conn, 200) =~ "Log in"
   end
 end

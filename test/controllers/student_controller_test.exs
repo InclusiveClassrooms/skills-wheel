@@ -16,7 +16,7 @@ defmodule Skillswheel.StudentControllerTest do
         year_group: "5",
         group_id: 1
       }})
-    assert redirected_to(conn, 302) =~ "/groups/1"
+    assert redirected_to(conn, 302) =~ "/groups"
   end
 
   test "create new student error", %{conn: conn} do
@@ -33,7 +33,7 @@ defmodule Skillswheel.StudentControllerTest do
         year_group: "5",
         group_id: 5
       }})
-    assert redirected_to(conn, 302) =~ "/groups/5"
+    assert redirected_to(conn, 302) =~ "/groups"
   end
 
   test "show student", %{conn: conn} do
