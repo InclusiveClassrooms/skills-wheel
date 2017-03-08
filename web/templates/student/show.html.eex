@@ -1,3 +1,5 @@
-<h1>Student</h1>
-
-<h1><%= @student.first_name <> " " <> @student.last_name %></h1>
+<div class="student-header">
+  <div class="student-name"><%= @student.first_name <> " " <> @student.last_name %></div>
+  <div class="student-group"><%= @student.group.name %></div>
+  <div class="student-assessment-button">Start Assessment</div>
+</div>

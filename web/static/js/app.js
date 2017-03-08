@@ -35,9 +35,6 @@ function reverse_toggle(id) {
 }
 
 export var App = {
-  run: function () {
-    console.log("hello")
-  },
   toggle_visibility: toggle_visibility,
   reverse_toggle: reverse_toggle
 }

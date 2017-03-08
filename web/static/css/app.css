@@ -7,10 +7,11 @@ body {
 
 .breadcrumb {
   background-color: #ffffff;
+  padding-top: 2rem;
 }
 
 .container {
-  max-width: 896px;
+  max-width: 90%;
 }
 
 .group-add-button {
@@ -23,7 +24,7 @@ body {
 }
 
 .group-container {
-  width: 100%;
+  width: 76%;
   min-height: 190px;
   background-color: #FFFFFF;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
@@ -36,7 +37,7 @@ body {
 }
 
 .group-container-new {
-  width: 54%;
+  width: 38%;
   min-height: 160px;
   background-color: #FFFFFF;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
@@ -48,6 +49,7 @@ body {
   padding-bottom: 2rem;
   text-align: left;
   display: inline-block;
+  margin-top: 3rem;
 }
 
 .group-divide {
@@ -190,7 +192,7 @@ body {
 .header {
   background-color: #ffffff;
   margin-top: -2rem;
-  margin-bottom: 2rem;
+  margin-bottom: -0.1rem;
 }
 
 .help-block {
@@ -208,4 +210,35 @@ body {
   padding: 1em;
   border-radius: 4px;
   font-size: 1.2em;
+}
+
+.student-assessment-button {
+  background-color: #009DE4;
+  position: absolute;
+  color: #ffffff;
+  font-size: 2rem;
+  right: 13rem;
+  padding: 1rem;
+  padding-left: 4rem;
+  padding-right: 4rem;
+  bottom: 3rem;
+}
+
+.student-name {
+  font-size: 7rem;
+  color: #ffffff;
+}
+
+.student-group {
+  color: #222222;
+  font-size: 2rem;
+  line-height: 8px;
+}
+
+.student-header {
+  background-color: #FAB119;
+  padding-left: 6rem;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  position: relative;
 }
