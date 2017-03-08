@@ -1,7 +1,7 @@
 defmodule Skillswheel.StudentController do
   use Skillswheel.Web, :controller
-  alias Skillswheel.Student
-  alias Skillswheel.Group
+
+  alias Skillswheel.{Student, Group}
 
   def create(conn, %{"student" => %{
     "group_id" => group_id,
@@ -44,7 +44,6 @@ defmodule Skillswheel.StudentController do
         case Enum.member?(user_groups, student.group_id) do
           true ->
             student = Repo.preload(student, :group)
-            IO.inspect student
             render conn, "show.html", student: student
           _ ->
             conn
