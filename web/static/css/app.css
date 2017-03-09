@@ -204,6 +204,13 @@ body {
   display: none;
 }
 
+.inclusive-logo {
+  width: 12rem;
+  float: left;
+  margin-top: 0.5rem;
+  margin-left: 1.5rem;
+}
+
 .skillswheel-school-access {
   background-color: #e74c3c;
   color: #ffffff;
