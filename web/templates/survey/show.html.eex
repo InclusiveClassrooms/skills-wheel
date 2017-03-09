@@ -1,3 +1,14 @@
 <h1>Survey</h1>
 
 <h3>Survey subheading</h3>
+
+<div>
+  <%= for section <- @form do %>
+    <h3><%= section.title %></h3>
+    <%= for question <- section.questions do %>
+      <h5><%= question.question_title %></h5>
+      <p><%= question.question_subtitle %></p>
+    <% end %>
+  <% end %>
+</div>
+
