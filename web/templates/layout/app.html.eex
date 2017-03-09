@@ -8,6 +8,7 @@
     <meta name="author" content="">
 
     <title>Hello Skillswheel!</title>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
@@ -15,7 +16,9 @@
     <div class="container">
       <header class="header">
         <nav role="navigation">
-          <h1>Inclusive Classrooms</h1>
+          <a href="/groups">
+            <img class="inclusive-logo" src="/images/inclusive-classrooms-logo-grey.png" />
+          </a>
           <ol class="breadcrumb text-right">
             <%= if @current_user do %>
             <li><%= @current_user.email %></li>
@@ -32,11 +35,11 @@
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
-
+      <div>
+        <main role="main">
+          <%= render @view_module, @view_template, assigns %>
+        </main>
+      </div>
     </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>

@@ -1,7 +1,7 @@
 defmodule Skillswheel.StudentController do
   use Skillswheel.Web, :controller
-  alias Skillswheel.Student
-  alias Skillswheel.Group
+
+  alias Skillswheel.{Student, Group}
 
   def create(conn, %{"student" => %{
     "group_id" => group_id,
@@ -23,11 +23,11 @@ defmodule Skillswheel.StudentController do
       {:ok, _student} ->
         conn
         |> put_flash(:info, "Student created!")
-        |> redirect(to: group_path(conn, :show, group_id))
+        |> redirect(to: group_path(conn, :index))
       {:error, _changeset} ->
         conn
-        |> put_flash(:error, "Error creating student!")
-        |> redirect(to: group_path(conn, :show, group_id))
+        |> put_flash(:error, "Oops! All fields must be filled in to add a student!")
+        |> redirect(to: group_path(conn, :index))
     end
   end
 
@@ -43,6 +43,7 @@ defmodule Skillswheel.StudentController do
       student ->
         case Enum.member?(user_groups, student.group_id) do
           true ->
+            student = Repo.preload(student, :group)
             render conn, "show.html", student: student
           _ ->
             conn
