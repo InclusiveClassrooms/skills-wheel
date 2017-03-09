@@ -12,8 +12,10 @@
             <h2 class="questions-heading"><i class="material-icons heading-icon">comment</i> Assessment Questionaire</h2>
 
             <%= for section <- Enum.with_index(@form) do %>
-              <div id="section-<%=Integer.to_string(elem(section, 1) + 1)%>">
-              <h3 id="heading-<%=Integer.to_string(elem(section, 1) + 1)%>" class="heading head<%=Integer.to_string(elem(section, 1) + 1)%>"><%= elem(section, 0).title %><span class="glyphicon glyphicon-chevron-down"></span></h3>
+              <div id="section-<%=get_int_string(section)%>">
+                <h3 id="heading-<%=get_int_string(section)%>" class="heading head<%=get_int_string(section)%>">
+                  <%= elem(section, 0).title %><span class="glyphicon glyphicon-chevron-down"></span>
+                </h3>
               <%= for question <- Enum.with_index(elem(section, 0).questions) do %>
                 <div class="question">
                   <h4><%=
@@ -22,23 +24,21 @@
                   %></h4>
                   <h5><%=elem(question, 0).question_subtitle%></h5>
                   <div class="answers">
-                    <%= for mymap <- [%{name: "name", class: "always"}, %{name: "name2", class: "sometimes"}, %{name: "name3", class: "rarely"}, %{name: "name4", class: "never"}] do %>
-                      
+                    <%= for emotion <- Enum.with_index(@emotions) do %>
                       <%=radio_button(
                          f,
-                         String.to_atom(String.replace(String.downcase(elem(section, 0).title), " ", "-")),
-                         mymap.name,
-                         [class: mymap.class])%>
+                         String.to_atom(elem(question, 0).question_tag),
+                         (3 - elem(emotion, 1)),
+                         [class: elem(emotion, 0)])%>
+                      <%= label f, String.to_atom(elem(question, 0).question_tag), "" %>
                     <% end %>
                   </div>
                 </div>
               <% end %>
             <% end %>
-
           </div>
         </div>
       </div>
     </div>
   <% end %>
 </div>
-
