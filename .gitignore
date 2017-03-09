@@ -26,3 +26,5 @@ cover
 
 .env
 dump.rdb
+
+npm-debug.log*
