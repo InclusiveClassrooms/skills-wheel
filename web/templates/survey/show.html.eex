@@ -3,12 +3,42 @@
 <h3>Survey subheading</h3>
 
 <div>
-  <%= for section <- @form do %>
-    <h3><%= section.title %></h3>
-    <%= for question <- section.questions do %>
-      <h5><%= question.question_title %></h5>
-      <p><%= question.question_subtitle %></p>
-    <% end %>
+  <%= form_for @changeset, survey_path(@conn, :create), fn f -> %>
+    <div class="all-inputs">
+      <div class="container-fluid">
+        <div class="row">
+          <div id="all-questions" class="all-questions col-md-10 col-md-offset-1">
+
+            <h2 class="questions-heading"><i class="material-icons heading-icon">comment</i> Assessment Questionaire</h2>
+
+            <%= for section <- Enum.with_index(@form) do %>
+              <div id="section-<%=Integer.to_string(elem(section, 1) + 1)%>">
+              <h3 id="heading-<%=Integer.to_string(elem(section, 1) + 1)%>" class="heading head<%=Integer.to_string(elem(section, 1) + 1)%>"><%= elem(section, 0).title %><span class="glyphicon glyphicon-chevron-down"></span></h3>
+              <%= for question <- Enum.with_index(elem(section, 0).questions) do %>
+                <div class="question">
+                  <h4><%=
+                    {map, index} = question
+                    Integer.to_string(index + 1) <> ". " <> map.question_title
+                  %></h4>
+                  <h5><%=elem(question, 0).question_subtitle%></h5>
+                  <div class="answers">
+                    <%= for mymap <- [%{name: "name", class: "always"}, %{name: "name2", class: "sometimes"}, %{name: "name3", class: "rarely"}, %{name: "name4", class: "never"}] do %>
+                      
+                      <%=radio_button(
+                         f,
+                         String.to_atom(String.replace(String.downcase(elem(section, 0).title), " ", "-")),
+                         mymap.name,
+                         [class: mymap.class])%>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+
+          </div>
+        </div>
+      </div>
+    </div>
   <% end %>
 </div>
 

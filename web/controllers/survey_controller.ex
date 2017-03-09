@@ -27,6 +27,7 @@ defmodule Skillswheel.SurveyController do
   end
 
   def show(conn, %{"id" => _student_id}, user) do
+    changeset = Survey.changeset(%Survey{})
     form = [
       %{ 
         title: "Self Awareness & Self-Esteem",
@@ -180,7 +181,7 @@ defmodule Skillswheel.SurveyController do
       }
     ]
 
-    render conn, "show.html", form: form
+    render conn, "show.html", form: form, changeset: changeset
   end
 
   def action(conn, _) do
