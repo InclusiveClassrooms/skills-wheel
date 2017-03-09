@@ -16,6 +16,9 @@
     <div class="container">
       <header class="header">
         <nav role="navigation">
+          <a href="/groups">
+            <img class="inclusive-logo" src="/images/inclusive-classrooms-logo-grey.png" />
+          </a>
           <ol class="breadcrumb text-right">
             <%= if @current_user do %>
             <li><%= @current_user.email %></li>
