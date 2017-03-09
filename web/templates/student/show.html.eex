@@ -7,8 +7,8 @@
   <div class="student-assessment-button">Start Assessment</div>
 </div>
 
-<!-- <div id="wheel-container"></div>
+<div id="wheel-container"></div>
 
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 
-<script>require("web/static/js/app").App.mockWheel()</script> -->
+<script>require("web/static/js/app").App.mockWheel()</script>
