@@ -29,8 +29,8 @@ defmodule Skillswheel.Survey do
     field :problems_solved_appropriately, :string
     field :make_a_plan, :string
     field :follow_a_plan, :string
-    field :built_one_friendship, :string
-    field :built_multiple_friendships, :string
+    field :build_one_friendship, :string
+    field :build_multiple_friendships, :string
     field :express_thoughts_to_others, :string
     field :disagree_with_others, :string
     field :apologise_appropriately, :string
@@ -72,8 +72,8 @@ defmodule Skillswheel.Survey do
      :problems_solved_appropriately,
      :make_a_plan,
      :follow_a_plan,
-     :built_one_friendship,
-     :built_multiple_friendships,
+     :build_one_friendship,
+     :build_multiple_friendships,
      :express_thoughts_to_others,
      :disagree_with_others,
      :apologise_appropriately,

@@ -28,8 +28,8 @@ defmodule Skillswheel.Repo.Migrations.AddSurveys do
       add :problems_solved_appropriately, :string
       add :make_a_plan, :string
       add :follow_a_plan, :string
-      add :built_one_friendship, :string
-      add :built_multiple_friendships, :string
+      add :build_one_friendship, :string
+      add :build_multiple_friendships, :string
       add :express_thoughts_to_others, :string
       add :disagree_with_others, :string
       add :apologise_appropriately, :string

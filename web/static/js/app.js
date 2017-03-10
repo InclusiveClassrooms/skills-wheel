@@ -74,8 +74,8 @@ function mockWheel() {
     {question:"problems_solved_appropriately",answer:"3"},
     {question:"make_a_plan",answer:"1"},
     {question:"follow_a_plan",answer:"1"},
-    {question:"built_one_friendship",answer:"1"},
-    {question:"built_multiple_friendships",answer:"2"},
+    {question:"build_one_friendship",answer:"1"},
+    {question:"build_multiple_friendships",answer:"2"},
     {question:"express_thoughts_to_others",answer:"1"},
     {question:"disagree_with_others",answer:"2"},
     {question:"apologise_appropriately",answer:"1"}
