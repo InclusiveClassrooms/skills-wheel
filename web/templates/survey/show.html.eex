@@ -40,7 +40,7 @@
                            f,
                            String.to_atom(elem(question, 0).question_tag),
                            (3 - elem(emotion, 1)),
-                           [class: elem(emotion, 0) <> " emotion", id: "survey_" <> elem(question, 0).question_tag <> "-" <> (Integer.to_string(3 - elem(emotion, 1)))])%>
+                           [class: elem(emotion, 0), id: "survey_" <> elem(question, 0).question_tag <> "-" <> (Integer.to_string(3 - elem(emotion, 1)))])%>
                         <%=
                           label f,
                           elem(question, 0).question_tag <> "-" <> (Integer.to_string(3 - elem(emotion, 1))),
