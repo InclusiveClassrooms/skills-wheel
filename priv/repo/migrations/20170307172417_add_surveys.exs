@@ -3,12 +3,6 @@ defmodule Skillswheel.Repo.Migrations.AddSurveys do
 
   def change do
     create table(:surveys) do
-      add :ta_name, :string
-      add :student_name, :string
-      add :school_name, :string
-      add :school_year, :string
-      add :group_name, :string
-      add :date, :string
       add :personal_appearance, :string
       add :appearance_others, :string
       add :likes, :string

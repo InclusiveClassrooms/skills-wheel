@@ -3,19 +3,13 @@ defmodule Skillswheel.StudentController do
 
   alias Skillswheel.{Student, Group}
 
-  def create(conn, %{"student" => %{
-    "group_id" => group_id,
-    "first_name" => first_name,
-    "last_name" => last_name,
-    "sex" => sex,
-    "year_group" => year_group,
-    }}, _user) do
-    attrs = %{
-      first_name: first_name,
-      last_name: last_name,
-      sex: sex,
-      year_group: year_group
-    }
+  def create(conn, %{"student" => student}, _user) do
+   group_id = student["group_id"]
+   attrs
+     =  student
+     |> Map.new(fn {key, val} -> {String.to_atom(key), val} end)
+     |> Map.delete(:group_id) 
+
     group = Repo.get!(Group, group_id)
     changeset = Ecto.build_assoc(group, :students) |> Student.changeset(attrs)
 
@@ -57,8 +51,4 @@ defmodule Skillswheel.StudentController do
     apply(__MODULE__, action_name(conn),
           [conn, conn.params, conn.assigns.current_user])
   end
-
-  # defp group_students(group) do
-  #   assoc(group, :students)
-  # end
 end

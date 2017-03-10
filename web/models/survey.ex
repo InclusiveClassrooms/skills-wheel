@@ -1,13 +1,9 @@
 defmodule Skillswheel.Survey do
   use Skillswheel.Web, :model
 
+  alias Skillswheel.Student
+
   schema "surveys" do
-    field :ta_name, :string
-    field :student_name, :string
-    field :school_name, :string
-    field :school_year, :string
-    field :group_name, :string
-    field :date, :string
     field :personal_appearance, :string
     field :appearance_others, :string
     field :likes, :string
@@ -38,7 +34,7 @@ defmodule Skillswheel.Survey do
     field :express_thoughts_to_others, :string
     field :disagree_with_others, :string
     field :apologise_appropriately, :string
-    belongs_to :student, Skillswheel.Student
+    belongs_to :student, Student
 
     timestamps()
   end
@@ -80,6 +76,7 @@ defmodule Skillswheel.Survey do
      :built_multiple_friendships,
      :express_thoughts_to_others,
      :disagree_with_others,
-     :apologise_appropriately]
+     :apologise_appropriately,
+     :student_id]
   end
 end

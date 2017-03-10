@@ -9,8 +9,9 @@ defmodule Skillswheel.SurveyController do
       =  survey
       |> Map.new(fn {key, val} -> {String.to_atom(key), val} end)
       |> Map.delete(:student_id)
+
     student = Repo.get!(Student, student_id)
-    changeset = Ecto.build_assoc(student, :surveys) |> Student.changeset(attrs)
+    changeset = Ecto.build_assoc(student, :surveys) |> Survey.changeset(attrs)
 
     case Repo.insert(changeset) do
       {:ok, _student} ->
@@ -26,7 +27,7 @@ defmodule Skillswheel.SurveyController do
     |> redirect(to: student_path(conn, :show, student_id))
   end
 
-  def show(conn, %{"id" => _student_id}, user) do
+  def show(conn, %{"id" => _student_id}, _user) do
     changeset = Survey.changeset(%Survey{})
     form = [
       %{

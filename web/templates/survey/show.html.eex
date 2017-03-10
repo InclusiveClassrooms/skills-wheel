@@ -33,9 +33,6 @@
                     <h5><%=elem(question, 0).question_subtitle%></h5>
                     <div class="answers">
                       <%= for emotion <- Enum.with_index(@emotions) do %>
-                        <%
-                          IO.inspect elem(question, 0).question_tag <> "-" <> (Integer.to_string(3 - elem(emotion, 1)))
-                        %>
                         <%=radio_button(
                            f,
                            String.to_atom(elem(question, 0).question_tag),
