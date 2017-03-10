@@ -51,7 +51,7 @@ defmodule Skillswheel.SurveyControllerTest do
     end
   end
 
-  describe "/survey/:survey_id :: show" do
+  describe "/survey/:student_id :: show" do
     test "shows the form", %{conn: conn} do
       %User{
         id: 1234,
@@ -84,6 +84,74 @@ defmodule Skillswheel.SurveyControllerTest do
       conn = get conn, survey_path(conn, :show, 1)
 
       assert html_response(conn, 200) =~ "Assessment Questionaire"
+    end
+
+    test "unknown student id redirects back to groups", %{conn: conn} do
+      %User{
+        id: 1234,
+        name: "My Name",
+        email: "email@test.com",
+        password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
+        admin: true
+      } |> Repo.insert
+
+      conn =
+        conn
+        |> assign(:current_user, Repo.get(User, 1234))
+
+      conn = get conn, survey_path(conn, :show, 1)
+
+      assert redirected_to(conn, 302) =~ "/groups"
+    end
+
+    test "known student which is not yours redirects back to groups" , %{conn: conn} do
+      %User{
+        id: 123,
+        name: "My Name",
+        email: "email@test.com",
+        password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
+        admin: true
+      } |> Repo.insert
+
+      %Group{
+        name: "Test Group 3",
+        id: 3
+      } |> Repo.insert
+
+      %Group{
+        name: "Test Group 4",
+        id: 4
+      } |> Repo.insert
+
+      %UserGroup{
+        group_id: 3,
+        user_id: 123
+      } |> Repo.insert
+
+      %Student{
+        id: 3,
+        first_name: "First",
+        last_name: "Last",
+        sex: "male",
+        year_group: "2",
+        group_id: 3
+      } |> Repo.insert
+
+      %Student{
+        id: 4,
+        first_name: "First",
+        last_name: "Last",
+        sex: "male",
+        year_group: "2",
+        group_id: 4
+      } |> Repo.insert
+
+      conn =
+        conn
+        |> assign(:current_user, Repo.get(User, 123))
+
+      conn = get conn, survey_path(conn, :show, 4)
+      assert redirected_to(conn, 302) =~ "/groups"
     end
   end
 end
