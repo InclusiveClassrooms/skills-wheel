@@ -1,3 +1,11 @@
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:700" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+
 <h1>Survey</h1>
 
 <h3>Survey subheading</h3>
@@ -12,29 +20,37 @@
             <h2 class="questions-heading"><i class="material-icons heading-icon">comment</i> Assessment Questionaire</h2>
 
             <%= for section <- Enum.with_index(@form) do %>
-              <div id="section-<%=get_int_string(section)%>">
+              <div id="section-<%=get_int_string(section)%>" class="section collapsed">
                 <h3 id="heading-<%=get_int_string(section)%>" class="heading head<%=get_int_string(section)%>">
                   <%= elem(section, 0).title %><span class="glyphicon glyphicon-chevron-down"></span>
                 </h3>
-              <%= for question <- Enum.with_index(elem(section, 0).questions) do %>
-                <div class="question">
-                  <h4><%=
-                    {map, index} = question
-                    Integer.to_string(index + 1) <> ". " <> map.question_title
-                  %></h4>
-                  <h5><%=elem(question, 0).question_subtitle%></h5>
-                  <div class="answers">
-                    <%= for emotion <- Enum.with_index(@emotions) do %>
-                      <%=radio_button(
-                         f,
-                         String.to_atom(elem(question, 0).question_tag),
-                         (3 - elem(emotion, 1)),
-                         [class: elem(emotion, 0)])%>
-                      <%= label f, String.to_atom(elem(question, 0).question_tag), "" %>
-                    <% end %>
+                <%= for question <- Enum.with_index(elem(section, 0).questions) do %>
+                  <div class="question">
+                    <h4><%=
+                      {map, index} = question
+                      Integer.to_string(index + 1) <> ". " <> map.question_title
+                    %></h4>
+                    <h5><%=elem(question, 0).question_subtitle%></h5>
+                    <div class="answers">
+                      <%= for emotion <- Enum.with_index(@emotions) do %>
+                        <%
+                          IO.inspect elem(question, 0).question_tag <> "-" <> (Integer.to_string(3 - elem(emotion, 1)))
+                        %>
+                        <%=radio_button(
+                           f,
+                           String.to_atom(elem(question, 0).question_tag),
+                           (3 - elem(emotion, 1)),
+                           [class: elem(emotion, 0) <> " emotion", id: "survey_" <> elem(question, 0).question_tag <> "-" <> (Integer.to_string(3 - elem(emotion, 1)))])%>
+                        <%=
+                          label f,
+                          elem(question, 0).question_tag <> "-" <> (Integer.to_string(3 - elem(emotion, 1))),
+                          ""
+                        %>
+                      <% end %>
+                    </div>
                   </div>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
             <% end %>
           </div>
         </div>
@@ -42,3 +58,7 @@
     </div>
   <% end %>
 </div>
+
+<script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+
+<script>require("web/static/js/app").App.collapse()</script>

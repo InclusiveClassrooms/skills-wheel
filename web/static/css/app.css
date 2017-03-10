@@ -341,7 +341,7 @@ body {
   position: absolute;
   /* Remove input from document flow */
 }
-input + label {
+input.emotion + label {
   /* IMAGE STYLES */
   cursor: pointer;
   background-size: contain;
@@ -353,13 +353,13 @@ input + label {
   height: 6em;
   width: 6em;
 }
-label + input:hover {
+label + input.emotion:hover {
   /* HIDE RADIO */
   -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
   -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
   filter: brightness(1.2) grayscale(.5) opacity(.9);
 }
-input:checked + label {
+input.emotion:checked + label {
   /* (RADIO CHECKED) IMAGE STYLES */
   -webkit-filter: none;
   -moz-filter: none;
