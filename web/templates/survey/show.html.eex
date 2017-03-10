@@ -11,7 +11,7 @@
 <h3>Survey subheading</h3>
 
 <div>
-  <%= form_for @changeset, survey_path(@conn, :create), fn f -> %>
+  <%= form_for @changeset, survey_path(@conn, :create_survey, @student_id), fn f -> %>
     <div class="all-inputs">
       <div class="container-fluid">
         <div class="row">
@@ -53,9 +53,13 @@
         </div>
       </div>
     </div>
+    <%= submit "Submit", [class: "btn btn-primary", id: "survey_submit_button"] %>
   <% end %>
 </div>
 
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 
 <script>require("web/static/js/app").App.collapse()</script>
+<script>require("web/static/js/app").App.addLabelListeners()</script>
+<script>require("web/static/js/app").App.disableSubmitUnlessAllAreChecked()</script>
+

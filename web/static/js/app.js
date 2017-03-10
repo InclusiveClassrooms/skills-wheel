@@ -38,7 +38,9 @@ export var App = {
   toggle_visibility: toggle_visibility,
   reverse_toggle: reverse_toggle,
   mockWheel: mockWheel,
-  collapse: collapse
+  collapse: collapse,
+  addLabelListeners: addLabelListeners,
+  disableSubmitUnlessAllAreChecked: disableSubmitUnlessAllAreChecked
 }
 
 function mockWheel() {
@@ -119,5 +121,29 @@ function collapse () {
       });
     });
   })();
+}
+
+function addLabelListeners() {
+  [].forEach.call(
+    document.querySelectorAll('.answers label'),
+    function (label_elem) {
+      label_elem.addEventListener('click', function () {
+        var id = label_elem.getAttribute('for');
+        var input_elem = document.querySelector('#' + id);
+        input_elem.checked = !input_elem.checked;
+        disableSubmitUnlessAllAreChecked();
+      })
+    }
+  )
+}
+
+function disableSubmitUnlessAllAreChecked() {
+  var inputs = document.querySelectorAll('.answers input')
+  var answered = [].filter.call(inputs, function (sel) {
+    return sel.checked
+  })
+
+  var submit = document.querySelector('#survey_submit_button');
+  submit.disabled = answered.length !== 30
 }
 
