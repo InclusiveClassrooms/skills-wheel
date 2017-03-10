@@ -26,7 +26,8 @@ defmodule Skillswheel.Router do
     post "/forgotpass/:hash", ForgotpassController, :update_password
     resources "/groups", GroupController, only: [:index, :create, :show, :delete]
     resources "/students", StudentController, only: [:create, :show, :delete]
-    resources "/survey", SurveyController, only: [:show, :create]
+    resources "/survey", SurveyController, only: [:show]
+    post "/survey/:student_id", SurveyController, :create_survey
   end
 
   # Other scopes may use custom stacks.

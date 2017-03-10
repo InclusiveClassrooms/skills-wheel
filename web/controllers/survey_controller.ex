@@ -3,8 +3,7 @@ defmodule Skillswheel.SurveyController do
 
   alias Skillswheel.{Student, Survey}
 
-  def create(conn, %{"survey" => survey}, _user) do
-    student_id = survey["student_id"]
+  def create_survey(conn, %{"student_id" => student_id, "survey" => survey}, _user) do
     attrs
       =  survey
       |> Map.new(fn {key, val} -> {String.to_atom(key), val} end)
@@ -15,8 +14,9 @@ defmodule Skillswheel.SurveyController do
 
     case Repo.insert(changeset) do
       {:ok, _student} ->
-        handle_redirect(conn, :info, "Survey created!", student_id)
-      {:error, _changeset} ->
+        handle_redirect(conn, :info, "Survey submitted", student_id)
+      {:error, changeset} ->
+        IO.inspect changeset
         handle_redirect(conn, :error, "Error creating survey", student_id)
     end
   end
@@ -27,7 +27,7 @@ defmodule Skillswheel.SurveyController do
     |> redirect(to: student_path(conn, :show, student_id))
   end
 
-  def show(conn, %{"id" => _student_id}, _user) do
+  def show(conn, %{"id" => student_id}, user) do
     changeset = Survey.changeset(%Survey{})
     form = [
       %{
@@ -219,7 +219,24 @@ defmodule Skillswheel.SurveyController do
       "never"
     ]
 
-    render conn, "show.html", form: form, changeset: changeset, emotions: emotions
+    user = Repo.preload(user, :groups)
+    user_groups = Enum.map(user.groups, fn group -> group.id end)
+
+    case Repo.get(Student, student_id) do
+      nil ->
+        conn
+        |> put_flash(:error, "Student does not exist")
+        |> redirect(to: group_path(conn, :index))
+      student ->
+        case Enum.member?(user_groups, student.group_id) do
+          true ->
+            render conn, "show.html", form: form, changeset: changeset, emotions: emotions, student_id: student_id
+          _ ->
+            conn
+            |> put_flash(:error, "You do not have permission to view this student's profile")
+            |> redirect(to: group_path(conn, :index))
+        end
+    end
   end
 
   def action(conn, _) do
