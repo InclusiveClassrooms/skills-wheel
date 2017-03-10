@@ -28,6 +28,42 @@ defmodule Skillswheel.SurveyController do
 
   def show(conn, %{"id" => student_id}, user) do
     changeset = Survey.changeset(%Survey{})
+
+    form = form()
+
+    emotions = [
+      "always",
+      "sometimes",
+      "rarely",
+      "never"
+    ]
+
+    user = Repo.preload(user, :groups)
+    user_groups = Enum.map(user.groups, fn group -> group.id end)
+
+    case Repo.get(Student, student_id) do
+      nil ->
+        conn
+        |> put_flash(:error, "Student does not exist")
+        |> redirect(to: group_path(conn, :index))
+      student ->
+        case Enum.member?(user_groups, student.group_id) do
+          true ->
+            render conn, "show.html", form: form, changeset: changeset, emotions: emotions, student_id: student_id
+          _ ->
+            conn
+            |> put_flash(:error, "You do not have permission to view this student's profile")
+            |> redirect(to: group_path(conn, :index))
+        end
+    end
+  end
+
+  def action(conn, _) do
+    apply(__MODULE__, action_name(conn),
+          [conn, conn.params, conn.assigns.current_user])
+  end
+
+  defp form do
     form = [
       %{
         title: "Self Awareness & Self-Esteem",
@@ -211,35 +247,6 @@ defmodule Skillswheel.SurveyController do
       }
     ]
 
-    emotions = [
-      "always",
-      "sometimes",
-      "rarely",
-      "never"
-    ]
-
-    user = Repo.preload(user, :groups)
-    user_groups = Enum.map(user.groups, fn group -> group.id end)
-
-    case Repo.get(Student, student_id) do
-      nil ->
-        conn
-        |> put_flash(:error, "Student does not exist")
-        |> redirect(to: group_path(conn, :index))
-      student ->
-        case Enum.member?(user_groups, student.group_id) do
-          true ->
-            render conn, "show.html", form: form, changeset: changeset, emotions: emotions, student_id: student_id
-          _ ->
-            conn
-            |> put_flash(:error, "You do not have permission to view this student's profile")
-            |> redirect(to: group_path(conn, :index))
-        end
-    end
-  end
-
-  def action(conn, _) do
-    apply(__MODULE__, action_name(conn),
-          [conn, conn.params, conn.assigns.current_user])
+    form
   end
 end

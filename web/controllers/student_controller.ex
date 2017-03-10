@@ -1,7 +1,11 @@
 defmodule Skillswheel.StudentController do
   use Skillswheel.Web, :controller
 
-  alias Skillswheel.{Student, Group}
+  alias Skillswheel.{Student, Group, Survey}
+
+  import Ecto.Query
+
+  require IEx
 
   def create(conn, %{"student" => student}, _user) do
    group_id = student["group_id"]
@@ -37,14 +41,36 @@ defmodule Skillswheel.StudentController do
       student ->
         case Enum.member?(user_groups, student.group_id) do
           true ->
+
+            surveys = Repo.all(
+              from s in Survey,
+              where: s.student_id == ^student_id,
+              select: s
+            )
+
+            surveys
+              =  surveys
+              |> sanitize()
+
             student = Repo.preload(student, :group)
-            render conn, "show.html", student: student
+            render conn, "show.html", student: student, surveys: surveys
           _ ->
             conn
             |> put_flash(:error, "You do not have permission to view this student's profile")
             |> redirect(to: group_path(conn, :index))
         end
     end
+  end
+
+  defp sanitize(struct) do
+    Enum.map(
+      struct,
+      fn survey ->
+        survey
+        |> Map.from_struct()
+        |> Map.drop([:__meta__, :__struct__, :student])
+      end
+    )
   end
 
   def action(conn, _) do
