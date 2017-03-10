@@ -211,6 +211,34 @@ body {
   margin-left: 1.5rem;
 }
 
+.login-container {
+  background-color: #E7007D;
+  color: #ffffff;
+  margin-top: -4rem;
+  height: 435px;
+  z-index: 1;
+}
+
+.login-form {
+  z-index: 10;
+}
+
+.login-input {
+  width: 384px;
+  height: 43px;
+  background-color: #FCFCFC;
+  border: 1px solid #E1E1E1;
+  border-radius: 2px;
+  z-index: 10;
+}
+
+.login-logo {
+  width: 73rem;
+  position: absolute;
+  top: -38rem;
+  z-index: 2;
+}
+
 .skillswheel-school-access {
   background-color: #e74c3c;
   color: #ffffff;

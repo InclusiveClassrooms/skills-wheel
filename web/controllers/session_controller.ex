@@ -2,7 +2,7 @@ defmodule Skillswheel.SessionController do
   use Skillswheel.Web, :controller
 
   def new(conn, _params) do
-    render conn, "new.html"
+    render conn, "new.html", layout: {Skillswheel.LayoutView, "login_layout.html"}
   end
 
   def create(conn, %{"session" => %{"email" => email, "password" => password}}) do
