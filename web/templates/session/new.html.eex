@@ -1,5 +1,9 @@
 <div class="login-container">
   <img src="/images/inclusive-classrooms-icon-big.png" class="login-logo" />
+  <div class="login-title-container">
+    <div class="login-title">Skillswheel</div>
+    <div class="login-subtitle">Tracking the social development and well-being of children of primary school age</div>
+  </div>
   <div class="login-form">
     <%= form_for @conn, session_path(@conn, :create), [as: :session], fn f -> %>
       <div class="form-group">
@@ -10,8 +14,15 @@
         <%= label f, :password, class: "control-label" %>
         <%= text_input f, :password, placeholder: "Password", class: "form-control login-input", type: :password %>
       </div>
-      <%= submit "Log in", class: "btn btn-primary" %>
+      <%= submit "Login", class: "login-button" %>
     <% end %>
+    <%= link "Forgotten Password?", to: forgotpass_path(@conn, :index), class: "login-forgot-pass" %>
   </div>
-  <%= link "Forgot Password", to: forgotpass_path(@conn, :index) %>
+  <div class="login-arrow"></div>
+</div>
+<div class="register-container">
+  <h3>Don't have a login?</h3>
+  <div>
+    <div></div>
+  </div>
 </div>

@@ -211,16 +211,49 @@ body {
   margin-left: 1.5rem;
 }
 
+.login-arrow {
+  -ms-transform: rotate(45deg); /* IE 9 */
+  -webkit-transform: rotate(45deg); /* Safari */
+  transform: rotate(45deg); /* Standard syntax */
+  position: absolute;
+  width: 4rem;
+  height: 4rem;
+  bottom: -2rem;
+  background-color: #E7007D;
+  left: 50%;
+  margin-left: -21.215px;
+  z-index: 1;
+}
+
+.login-button {
+  width: 100%;
+  height: 48px;
+  background-color: #009DE4;
+  border:none;
+  color: #ffffff;
+  font-size: 2rem;
+  margin-top: 1rem;
+}
+
 .login-container {
   background-color: #E7007D;
   color: #ffffff;
   margin-top: -4rem;
   height: 435px;
   z-index: 1;
+  position: relative;
+}
+
+.login-forgot-pass {
+  color: #ffffff;
+  text-decoration: underline;
 }
 
 .login-form {
   z-index: 10;
+  position: absolute;
+  right: 6rem;
+  bottom: 3rem;
 }
 
 .login-input {
@@ -237,6 +270,23 @@ body {
   position: absolute;
   top: -38rem;
   z-index: 2;
+}
+
+.login-title {
+  font-size: 7rem;
+  font-weight: 100;
+}
+
+.login-title-container {
+  position: absolute;
+  bottom: 17rem;
+  left: 5%;
+  z-index: 2;
+}
+
+.register-container {
+  text-align: center;
+  padding-top: 3rem;
 }
 
 .skillswheel-school-access {
