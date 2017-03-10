@@ -2,7 +2,7 @@ defmodule Skillswheel.SurveyControllerTest do
   use Skillswheel.ConnCase
   alias Skillswheel.{User, Student, Group, Survey, UserGroup}
 
-  describe "/survey :: create" do
+  describe "/survey :: create_survey" do
     test "Successful new survey", %{conn: conn} do
       %Group{
         name: "Test Group 1",
@@ -17,17 +17,14 @@ defmodule Skillswheel.SurveyControllerTest do
           year_group: "5",
           group_id: 1
         })
+
       {:ok, student} = changeset |> Repo.insert
 
-      conn = post conn, survey_path(conn, :create,
-        %{"survey" => Map.new(Survey.elems, fn atom -> {
-            atom,
-            if atom == :student_id do student.id else Atom.to_string(atom) end
-          } end)
-        })
+      conn = post conn, survey_path(conn, :create_survey, student.id),
+        %{"survey" => Map.new(Survey.elems, fn atom -> {atom, Atom.to_string(atom)} end)}
 
       assert redirected_to(conn, 302) == "/students/" <> Integer.to_string(student.id)
-      assert get_flash(conn, :info) == "Survey created!"
+      assert get_flash(conn, :info) == "Survey submitted"
     end
 
     test "Unsuccessful survey request", %{conn: conn} do
@@ -46,12 +43,8 @@ defmodule Skillswheel.SurveyControllerTest do
         })
       {:ok, student} = changeset |> Repo.insert
 
-      conn = post conn, survey_path(conn, :create,
-        %{"survey" => Map.new(Survey.elems, fn atom -> {
-            atom,
-            if atom == :student_id do student.id else "" end
-          } end)
-        })
+      conn = post conn, survey_path(conn, :create_survey, student.id),
+        %{"survey" => Map.new(Survey.elems, fn atom -> {atom, ""} end)}
 
       assert redirected_to(conn, 302) == "/students/" <> Integer.to_string(student.id)
       assert get_flash(conn, :error) == "Error creating survey"

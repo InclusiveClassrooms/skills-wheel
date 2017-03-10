@@ -15,8 +15,7 @@ defmodule Skillswheel.SurveyController do
     case Repo.insert(changeset) do
       {:ok, _student} ->
         handle_redirect(conn, :info, "Survey submitted", student_id)
-      {:error, changeset} ->
-        IO.inspect changeset
+      {:error, _changeset} ->
         handle_redirect(conn, :error, "Error creating survey", student_id)
     end
   end
