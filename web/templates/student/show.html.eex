@@ -11,4 +11,13 @@
 
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 
+<script>
+  var surveys = JSON.parse(
+    "<%= Poison.encode!(@surveys) %>"
+    .split("&quot;")
+    .join("\"")
+  )
+  console.log(surveys);
+</script>
+
 <script>require("web/static/js/app").App.mockWheel()</script>
