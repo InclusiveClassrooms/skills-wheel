@@ -1,12 +1,15 @@
 defmodule Skillswheel.Student do
   use Skillswheel.Web, :model
 
+  alias Skillswheel.{Group, Survey}
+
   schema "students" do
     field :first_name, :string
     field :last_name, :string
     field :sex, :string
     field :year_group, :string
-    belongs_to :group, Skillswheel.Group
+    belongs_to :group, Group
+    has_many :surveys, Survey
 
     timestamps()
   end

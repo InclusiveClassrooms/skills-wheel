@@ -37,7 +37,10 @@ function reverse_toggle(id) {
 export var App = {
   toggle_visibility: toggle_visibility,
   reverse_toggle: reverse_toggle,
-  mockWheel: mockWheel
+  mockWheel: mockWheel,
+  collapse: collapse,
+  addLabelListeners: addLabelListeners,
+  disableSubmitUnlessAllAreChecked: disableSubmitUnlessAllAreChecked
 }
 
 function mockWheel() {
@@ -73,8 +76,8 @@ function mockWheel() {
     {question:"problems_solved_appropriately",answer:"3"},
     {question:"make_a_plan",answer:"1"},
     {question:"follow_a_plan",answer:"1"},
-    {question:"built_one_friendship",answer:"1"},
-    {question:"built_multiple_friendships",answer:"2"},
+    {question:"build_one_friendship",answer:"1"},
+    {question:"build_multiple_friendships",answer:"2"},
     {question:"express_thoughts_to_others",answer:"1"},
     {question:"disagree_with_others",answer:"2"},
     {question:"apologise_appropriately",answer:"1"}
@@ -87,3 +90,60 @@ function mockWheel() {
     '../images/'
   )
 }
+
+function collapse () {
+  var oneToSix = [1, 2, 3, 4, 5, 6];
+  var headingIdArr = oneToSix.map(function (num) { return "#heading-" + num});
+
+  function hiddenToggle(headingId) {
+    var section = "#section" + headingId.slice(8);
+    $(".glyphicon").addClass("glyphicon-chevron-down");
+    $(".glyphicon").removeClass("glyphicon-chevron-up");
+
+    if ($(section).hasClass("active")){
+      $(section).removeClass("active");
+      $(section).addClass("collapsed");
+    } else {
+      $(".section").addClass("collapsed");
+      $(".section").removeClass("active");
+      $(section).addClass('active');
+      $(section).removeClass('collapsed');
+      $(section + " .glyphicon").removeClass("glyphicon-chevron-down");
+      $(section + " .glyphicon").addClass("glyphicon-chevron-up");
+    }
+  }
+
+  (function expandListener(){
+    headingIdArr.forEach(function(sectionId) {
+      var section = document.querySelector(sectionId);
+      section.addEventListener('click', function() {
+        hiddenToggle(sectionId);
+      });
+    });
+  })();
+}
+
+function addLabelListeners() {
+  [].forEach.call(
+    document.querySelectorAll('.answers label'),
+    function (label_elem) {
+      label_elem.addEventListener('click', function () {
+        var id = label_elem.getAttribute('for');
+        var input_elem = document.querySelector('#' + id);
+        input_elem.checked = !input_elem.checked;
+        disableSubmitUnlessAllAreChecked();
+      })
+    }
+  )
+}
+
+function disableSubmitUnlessAllAreChecked() {
+  var inputs = document.querySelectorAll('.answers input')
+  var answered = [].filter.call(inputs, function (sel) {
+    return sel.checked
+  })
+
+  var submit = document.querySelector('#survey_submit_button');
+  submit.disabled = answered.length !== 30
+}
+

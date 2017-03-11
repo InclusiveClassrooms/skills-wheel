@@ -249,3 +249,174 @@ body {
   padding-bottom: 4rem;
   position: relative;
 }
+
+/* taken from skills-wheel-old */
+
+.active {
+  padding: 1em;
+}
+.inactive, .inactive:hover {
+  background-color: grey;
+  border-color: grey;
+}
+.highlight {
+  opacity: 0.5;
+}
+.glyphicon {
+  font-size: 0.8em;
+  padding-right: 0.5em;
+  float: right;
+}
+.head1 {
+  color: #fabb4d;
+}
+.head2 {
+  color: #e5007d;
+}
+.head3 {
+  color: #7f569f;
+}
+.head4 {
+  color: #75bb49;
+}
+.head5 {
+  color: #50b9a7;
+}
+.head6 {
+  color: #009ee3;
+}
+.row {
+  color: #6d6d6b;
+}
+.row > input {
+  border: 0.1em solid #6d6d6b;
+  background-color: #FFF6FB;
+  border-radius: 2px;
+  padding: 0.25em;
+}
+.row > input:focus {
+  outline: 2px solid #FF65BB;
+}
+
+.all-questions {
+  margin-bottom: 1em;
+  padding: 0;
+}
+
+.questions-heading {
+  text-transform: uppercase;
+  color: #EA5C37;
+  margin-bottom: 1em;
+}
+
+.heading-icon{
+  position: relative;;
+  top: 0.2em;
+  font-size: 1.3em;
+}
+
+.heading:hover {
+  cursor: pointer;
+  background-color: #E8E8E8;
+}
+
+.heading {
+  margin-top: 0;
+  margin-bottom: 1.5em;
+  text-transform: uppercase;
+}
+.question {
+  margin-left: 1em;
+}
+.answers {
+  width: 50%;
+  margin: auto;
+  /*margin-top: -2em;*/
+}
+
+.always, .sometimes, .rarely, .never {
+  /* HIDE RADIO */
+  visibility: hidden;
+  /* Makes input not-clickable */
+  position: absolute;
+  /* Remove input from document flow */
+}
+input + label {
+  /* IMAGE STYLES */
+  cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  -webkit-o-transition: all 100ms ease-in;
+  -moz-o-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  height: 6em;
+  width: 6em;
+}
+label + input:hover {
+  /* HIDE RADIO */
+  -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+  -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+  filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+input:checked + label {
+  /* (RADIO CHECKED) IMAGE STYLES */
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+  background-color: rgb(234, 130, 75);
+  background-color: rgba(234, 92, 55, 0.4);
+  border-radius: 50%;
+}
+
+/*collapsing*/
+
+.collapsed {
+  height: 3em;
+  overflow: hidden;
+  padding-top: 0.5em;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.always + label {
+  background-image: url("/images/face-always.svg");
+}
+
+.sometimes + label {
+  background-image: url("/images/face-sometimes.svg");
+}
+
+.rarely + label {
+  background-image: url("/images/face-rarely.svg");
+}
+
+.never + label {
+  background-image: url("/images/face-never.svg");
+}
+
+.always + label::after {
+  content: 'always';
+}
+
+.sometimes + label::after {
+  content: 'sometimes';
+}
+
+.rarely + label::after {
+  content: 'rarely';
+}
+
+.never + label::after {
+  content: 'never';
+}
+
+.always + label::after, .sometimes + label::after, .rarely + label::after, .never + label::after {
+  text-align: center;
+  width: 100%;
+  position: relative;
+  display: block;
+  color: #EA5C37;
+}
+
+/* Taken from skills-wheel-old */
