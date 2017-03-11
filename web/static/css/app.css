@@ -232,7 +232,6 @@ body {
   border:none;
   color: #ffffff;
   font-size: 2rem;
-  margin-top: 1rem;
 }
 
 .login-container {
@@ -272,6 +271,11 @@ body {
   z-index: 2;
 }
 
+.login-subtitle {
+  color: rgba(255,255,255,0.7);
+  line-height: 0px;
+}
+
 .login-title {
   font-size: 7rem;
   font-weight: 100;
@@ -284,9 +288,46 @@ body {
   z-index: 2;
 }
 
+.login-wrapper {
+  background-color: #ffffff;
+  margin-top: -2rem;
+  padding-bottom: 3rem;
+}
+
+.register-button {
+  width: 100%;
+  height: 48px;
+  background-color: #009DE4;
+  color: #ffffff;
+  border:none;
+  font-size: 21px;
+}
+
 .register-container {
   text-align: center;
   padding-top: 3rem;
+}
+
+.register-info-container {
+  width: 50%;
+  float: left;
+  text-align: left;
+  padding-left: 11rem;
+  padding-top: 3rem;
+}
+
+.register-input {
+  width: 100%;
+}
+
+.register-input-container {
+  width: 50%;
+  float: left;
+  padding-top: 3rem;
+  padding-right: 11rem;
+  padding-left: 6rem;
+  text-align: left;
+  color: #666666;
 }
 
 .skillswheel-school-access {

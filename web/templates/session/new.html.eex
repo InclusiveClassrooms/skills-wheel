@@ -2,7 +2,7 @@
   <img src="/images/inclusive-classrooms-icon-big.png" class="login-logo" />
   <div class="login-title-container">
     <div class="login-title">Skillswheel</div>
-    <div class="login-subtitle">Tracking the social development and well-being of children of primary school age</div>
+    <div class="login-subtitle">Tracking social and emotional development in Primary aged children</div>
   </div>
   <div class="login-form">
     <%= form_for @conn, session_path(@conn, :create), [as: :session], fn f -> %>
@@ -22,7 +22,39 @@
 </div>
 <div class="register-container">
   <h3>Don't have a login?</h3>
-  <div>
-    <div></div>
+  <div class="register-info-container">
+    <div style="color:#E7007D">Skillswheel is only available in certain schools.</div>
+    </br>
+    <div style="color:#666666">If you’d like to get SkillsWheel in to your school please </br> get in touch by emailing:</div>
+    <div style="color:#009EE3">helen@inclusiveclassrooms.co.uk</div>
+  </div>
+  <div class="register-input-container">
+    <div style="color:#666666;text-align:left;">If SkillsWheel is already in your school you can register with your school email address.</div>
+    <div>
+      <%= if @registration_changeset.action do %>
+        <div class="alert alert-danger">
+          <p>Oops, something went wrong! Please check the errors below.</p>
+        </div>
+      <% end %>
+
+      <%= form_for @registration_changeset, user_path(@conn, :create), fn f -> %>
+        <div class="form-group">
+          <%= label f, :name, class: "control-label" %>
+          <%= text_input f, :name, placeholder: "John Doe", class: "form-control login-input register-input" %>
+          <%= error_tag f, :name %>
+        </div>
+        <div class="form-group">
+          <%= label f, :email, class: "control-label" %>
+          <%= text_input f, :email, placeholder: "email@example.com", class: "form-control login-input register-input" %>
+          <%= error_tag f, :email %>
+        </div>
+        <div class="form-group">
+          <%= label f, :password, class: "control-label" %>
+          <%= text_input f, :password, placeholder: "Password", class: "form-control login-input register-input", type: :password %>
+          <%= error_tag f, :password %>
+        </div>
+        <%= submit "Register", class: "register-button" %>
+      <% end %>
+    </div>
   </div>
 </div>
