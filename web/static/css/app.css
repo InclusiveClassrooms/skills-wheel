@@ -211,6 +211,125 @@ body {
   margin-left: 1.5rem;
 }
 
+.login-arrow {
+  -ms-transform: rotate(45deg); /* IE 9 */
+  -webkit-transform: rotate(45deg); /* Safari */
+  transform: rotate(45deg); /* Standard syntax */
+  position: absolute;
+  width: 4rem;
+  height: 4rem;
+  bottom: -2rem;
+  background-color: #E7007D;
+  left: 50%;
+  margin-left: -21.215px;
+  z-index: 1;
+}
+
+.login-button {
+  width: 100%;
+  height: 48px;
+  background-color: #009DE4;
+  border:none;
+  color: #ffffff;
+  font-size: 2rem;
+}
+
+.login-container {
+  background-color: #E7007D;
+  color: #ffffff;
+  margin-top: -4rem;
+  height: 435px;
+  z-index: 1;
+  position: relative;
+}
+
+.login-forgot-pass {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.login-form {
+  z-index: 10;
+  position: absolute;
+  right: 6rem;
+  bottom: 3rem;
+}
+
+.login-input {
+  width: 384px;
+  height: 43px;
+  background-color: #FCFCFC;
+  border: 1px solid #E1E1E1;
+  border-radius: 2px;
+  z-index: 10;
+}
+
+.login-logo {
+  width: 73rem;
+  position: absolute;
+  top: -38rem;
+  z-index: 2;
+}
+
+.login-subtitle {
+  color: rgba(255,255,255,0.7);
+  line-height: 0px;
+}
+
+.login-title {
+  font-size: 7rem;
+  font-weight: 100;
+}
+
+.login-title-container {
+  position: absolute;
+  bottom: 17rem;
+  left: 5%;
+  z-index: 2;
+}
+
+.login-wrapper {
+  background-color: #ffffff;
+  margin-top: -2rem;
+  padding-bottom: 3rem;
+}
+
+.register-button {
+  width: 100%;
+  height: 48px;
+  background-color: #009DE4;
+  color: #ffffff;
+  border:none;
+  font-size: 21px;
+}
+
+.register-container {
+  text-align: center;
+  padding-top: 3rem;
+}
+
+.register-info-container {
+  width: 50%;
+  float: left;
+  text-align: left;
+  padding-left: 11rem;
+  padding-top: 3rem;
+}
+
+.register-input {
+  width: 100%;
+}
+
+.register-input-container {
+  width: 50%;
+  float: left;
+  padding-top: 3rem;
+  padding-right: 11rem;
+  padding-left: 6rem;
+  text-align: left;
+  color: #666666;
+}
+
 .skillswheel-school-access {
   background-color: #e74c3c;
   color: #ffffff;

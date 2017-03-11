@@ -40,13 +40,13 @@ defmodule Skillswheel.SessionControllerTest do
     test "Login: Invalid session /sessions/new", %{conn: conn} do
       conn = post conn, session_path(conn, :create,
       %{"session" => %{"email" => "invalid@test.com", "password" => "invalid"}})
-      assert html_response(conn, 200) =~ "Login"
+      assert html_response(conn, 302) =~ "/sessions/new"
     end
 
     test "Login: Invalid password", %{conn: conn} do
       conn = post conn, session_path(conn, :create,
       %{"session" => %{"email" => "email@test.com", "password" => "invalid"}})
-      assert html_response(conn, 200) =~ "Login"
+      assert html_response(conn, 302) =~ "/sessions/new"
     end
 
     test "Logout", %{conn: conn} do

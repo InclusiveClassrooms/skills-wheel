@@ -1,8 +1,10 @@
 defmodule Skillswheel.SessionController do
   use Skillswheel.Web, :controller
+  alias Skillswheel.User
 
   def new(conn, _params) do
-    render conn, "new.html"
+    registration_changeset = User.changeset(%User{})
+    render conn, "new.html", layout: {Skillswheel.LayoutView, "login_layout.html"}, registration_changeset: registration_changeset
   end
 
   def create(conn, %{"session" => %{"email" => email, "password" => password}}) do
@@ -14,7 +16,7 @@ defmodule Skillswheel.SessionController do
       {:error, _reason, conn} ->
         conn
         |> put_flash(:error, "Invalid email/password combination")
-        |> render("new.html")
+        |> redirect(to: session_path(conn, :new))
     end
   end
 
