@@ -17,7 +17,37 @@
     .split("&quot;")
     .join("\"")
   )
-  console.log(surveys);
+
+  function relevant_keys(survey) {
+    return Object.keys(survey).reduce(function (prev, curr) {
+      return curr === "id"
+          || curr === "student_id"
+          || curr === "inserted_at"
+          || curr === "updated_at"
+          ?  prev
+          :  Object.assign({}, prev, {[curr]: survey[curr]});
+    }, {});
+  }
+
+  function format(survey) {
+    return Object.keys(survey).map(function (question) {
+      return {question: question, answer: survey[question]}
+    });
+  }
+
+  var format_surveys = surveys.map(relevant_keys).map(format)
+
+  format_surveys.forEach(function (el, i) {
+    var div = document.createElement('div')
+    div.classList = "wheel-" + i
+    document.querySelector('#wheel-container').appendChild(div)
+    Wheel.draw(
+      format_surveys[0],
+      '.wheel-' + i,
+      {centre: 250, height: 500, width: 500},
+      '../images/'
+    )
+  });
+
 </script>
 
-<script>require("web/static/js/app").App.mockWheel()</script>
