@@ -8,6 +8,7 @@
 </div>
 
 <div id="wheels-container"></div>
+<h3 class="generate_download_link">Generate Download Link</h3>
 <hr>
 <h4>History</h4>
 <div id="wheels-history"></div>
@@ -89,6 +90,12 @@
         unique_string: 'wheel-history' + i
       }
     );
+  });
+
+  document.querySelector('.generate_download_link').addEventListener('click', function () {
+    Req.post('/api/pdf/123', 'hi', function (res) {
+      console.log('RES: ', res);
+    });
   });
 
 </script>

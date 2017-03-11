@@ -77,4 +77,14 @@ defmodule Skillswheel.StudentController do
     apply(__MODULE__, action_name(conn),
           [conn, conn.params, conn.assigns.current_user])
   end
+
+  def post_pdf(conn, params, current_user) do
+    IO.inspect params
+    render conn, "post.json", key: "worlds"
+  end
+
+  def get_pdf(conn, params, current_user) do
+    IO.inspect params
+    render conn, "get.json", key: [%{"hello" => "world"}]
+  end
 end
