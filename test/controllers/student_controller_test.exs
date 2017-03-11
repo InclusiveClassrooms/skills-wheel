@@ -1,6 +1,6 @@
 defmodule Skillswheel.StudentControllerTest do
   use Skillswheel.ConnCase
-  alias Skillswheel.{Group, Student, User, UserGroup}
+  alias Skillswheel.{Group, Student, User, UserGroup, Survey}
 
   test "create new student", %{conn: conn} do
     %Group{
@@ -63,6 +63,10 @@ defmodule Skillswheel.StudentControllerTest do
       year_group: "2",
       group_id: 2
     } |> Repo.insert
+
+    struct(Survey, Map.new(Survey.elems() ++ [:id], fn x ->
+      {x, if x == :id || x == :student_id do 2 else Atom.to_string(x) end}
+    end)) |> Repo.insert
 
     conn =
       conn
