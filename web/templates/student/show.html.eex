@@ -7,7 +7,10 @@
   <div class="student-assessment-button">Start Assessment</div>
 </div>
 
-<div id="wheel-container"></div>
+<div id="wheels-container"></div>
+<hr>
+<h4>History</h4>
+<div id="wheels-history"></div>
 
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 
@@ -37,21 +40,43 @@
 
   var format_surveys = surveys.map(relevant_keys).map(format)
 
-  format_surveys.forEach(function (el, i) {
-    var div = document.createElement('div')
-    div.classList = "wheel-" + i
-    document.querySelector('#wheel-container').appendChild(div)
+  // draw in all the wheels to the wheels-container
+  format_surveys.forEach(function (survey, i) {
+    var div = document.createElement('div');
+    div.classList = "wheel wheel-" + i;
+    
+    document.querySelector('#wheels-container').appendChild(div);
+
     Wheel.draw(
-      format_surveys[i],
+      survey,
       '.wheel-' + i,
+      '../images/',
+      {
+        centre: 250,
+        height: 500,
+        ratio: 1.2,
+        unique_string: 'wheel' + i
+      }
+    );
+  });
+
+  format_surveys.forEach(function (survey, i) {
+    var div = document.createElement('div');
+    div.classList = "wheel-history wheel-history-" + i;
+    
+    document.querySelector('#wheels-history').appendChild(div);
+
+    Wheel.draw(
+      survey,
+      '.wheel-history-' + i,
       '../images/',
       {
         centre: 180,
         height: 350,
         ratio: 0.8,
-        unique_string: 'num' + i
+        unique_string: 'wheel-history' + i
       }
-    )
+    );
   });
 
 </script>
