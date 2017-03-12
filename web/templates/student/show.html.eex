@@ -153,5 +153,79 @@
     });
   });
 
+  // takes a survey in the form: [{question: '', answer: "1"}, ...] and returns the total of each of the 5 questions
+  function get_scores(survey) {
+    return survey
+      .map(function (s) { return parseInt(s.answer); })
+      .reduce(function (prev, curr) {
+        return prev[prev.length - 1].length === 5
+        ? prev.concat([[curr]])
+        : prev.map(function (group, i) {
+          return i === prev.length - 1
+          ? prev[prev.length - 1].concat(curr)
+          : group;
+        });
+      }, [[]])
+      .map(function (group) {
+        return group.reduce(function (prev, curr) {
+          return prev + curr;
+        }, 0);
+      });
+  }
+
+  // takes current survey and previous survey and returns {score: [17, 12, 10, 6, 11, 12], change: [1, 2, 1, -2, 0, -1]}
+  function gen_table(survey, old_survey) {
+    if (!old_survey) {
+      return {score: get_scores(survey), change: ["-", "-", "-", "-", "-", "-"]}
+    }
+    var old_scores = get_scores(old_survey);
+    var scores = get_scores(survey);
+    return {score: get_scores(survey), change: old_scores.map(function (score, i) {return scores[i] - score})};
+  }
+
+  [].forEach.call(document.querySelectorAll('.wheel-history'), function (container, i) {
+    var survey_table = gen_table(format_surveys[i], format_surveys[i + 1]);
+    console.log(survey_table);
+    var date = surveys[i].inserted_at;
+    var div = document.createElement('div');
+    var table = document.createElement('table');
+
+    var row = document.createElement('tr');
+    var data1 = document.createElement('td');
+    var data2 = document.createElement('td');
+    var data3 = document.createElement('td');
+    data1.innerHTML = date;
+    data2.innerHTML = 'Score';
+    data3.innerHTML = 'Change';
+    row.appendChild(data1);
+    row.appendChild(data2);
+    row.appendChild(data3);
+    table.appendChild(row);
+
+    ['Self-Awareness & Self-Esteem',
+     'Managing Feelings',
+     'Non-Verbal Communication',
+     'Verbal Communication',
+     'Planning & Problem Solving',
+     'Relationships, Leadership & Assertiveness'
+    ].forEach(function (section, j) {
+      row = document.createElement('tr');
+      data1 = document.createElement('td');
+      data2 = document.createElement('td');
+      data3 = document.createElement('td');
+
+      data1.innerHTML = section;
+      data2.innerHTML = survey_table.score[j];
+      data3.innerHTML = survey_table.change[j];
+      row.appendChild(data1);
+      row.appendChild(data2);
+      row.appendChild(data3);
+      table.appendChild(row);
+    });
+
+    div.appendChild(table);
+    container.appendChild(div);
+  });
+
 </script>
 
