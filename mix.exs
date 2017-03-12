@@ -24,7 +24,7 @@ defmodule Skillswheel.Mixfile do
   def application do
     [mod: {Skillswheel, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :comeonin, :bamboo]]
+                    :phoenix_ecto, :postgrex, :comeonin, :bamboo, :pdf_generator]]
   end
 
   # Specifies which paths to compile per environment.
@@ -49,7 +49,8 @@ defmodule Skillswheel.Mixfile do
      {:bamboo, "~> 0.7"},
      {:bamboo_smtp, "~> 1.2.1"},
      {:mock, "~> 0.2.0", only: :test},
-     {:redix, ">= 0.0.0"}]
+     {:redix, ">= 0.0.0"},
+     {:pdf_generator, ">= 0.3.5"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

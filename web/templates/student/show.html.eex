@@ -8,8 +8,11 @@
 </div>
 
 <div id="wheels-container"></div>
-<h3 class="generate_download_link">Generate Download Link</h3>
+<h3 class="generate-download-link">Generate Download Link</h3>
+<a id="file_link" class="download-link" href="" download target="_blank">Download as PDF</a>
+
 <hr>
+
 <h4>History</h4>
 <div id="wheels-history"></div>
 
@@ -39,7 +42,51 @@
     });
   }
 
-  var format_surveys = surveys.map(relevant_keys).map(format)
+  function order(survey) {
+    return survey.reduce(function (prev, curr) {
+      return prev.map(function (q, i) {
+        return prev.indexOf(curr.question) === i
+          ? {question: q.question, answer: curr.answer}
+          : q
+      });
+    }, [
+     "personal_appearance",
+     "appearance_others",
+     "likes",
+     "dislikes",
+     "strengths",
+     "identify_emotions_self",
+     "identify_emotions_others",
+     "bodily_reaction_emotions",
+     "identify_response_emotions",
+     "plan_respond_emotions",
+     "good_eye_contact",
+     "good_distance_touch",
+     "identify_expressions",
+     "body_language_self",
+     "body_language_others",
+     "good_volume",
+     "good_pace",
+     "clear_speech",
+     "speak_with_relevance",
+     "identify_good_speech",
+     "think_before_react",
+     "understand_problems_occurred",
+     "problems_solved_appropriately",
+     "make_a_plan",
+     "follow_a_plan",
+     "build_one_friendship",
+     "build_multiple_friendships",
+     "express_thoughts_to_others",
+     "disagree_with_others",
+     "apologise_appropriately"
+    ]);
+  }
+
+  var format_surveys = surveys
+    .map(relevant_keys)
+    .map(format)
+    .map(order);
 
   // draw in all the wheels to the wheels-container
   format_surveys.forEach(function (survey, i) {
@@ -51,7 +98,7 @@
     Wheel.draw(
       survey,
       '.wheel-' + i,
-      '../images/',
+      '/images/',
       {
         centre: 250,
         height: 500,
@@ -82,7 +129,7 @@
     Wheel.draw(
       survey,
       '.wheel-history-wheel-' + i,
-      '../images/',
+      '/images/',
       {
         centre: 180,
         height: 350,
@@ -92,9 +139,17 @@
     );
   });
 
-  document.querySelector('.generate_download_link').addEventListener('click', function () {
-    Req.post('/api/pdf/123', 'hi', function (res) {
-      console.log('RES: ', res);
+  document.querySelector('.generate-download-link').addEventListener('click', function () {
+    var index = parseInt(
+      document.querySelector('.focused-wheel')
+        .classList[1]
+        .split('-')[1]
+    );
+    var survey_id = surveys[index].id;
+    var wheel_html = document.querySelector('.focused-wheel').innerHTML;
+    Req.post('/api/file/' + survey_id, wheel_html, function (res) {
+      console.log('RES: ', res, typeof res, JSON.parse(res));
+      document.querySelector('.download-link').href = "/file/" + JSON.parse(res).link
     });
   });
 

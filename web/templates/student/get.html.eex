@@ -1,0 +1,4 @@
+<div class="div_container"></div>
+<script>
+  document.querySelector('.div_container').innerHTML = "<%= @contents %>".split('&lt;').join('<').split('&gt;').join('>');
+</script>

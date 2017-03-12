@@ -30,12 +30,12 @@ defmodule Skillswheel.Router do
     resources "/students", StudentController, only: [:create, :show, :delete]
     resources "/survey", SurveyController, only: [:show]
     post "/survey/:student_id", SurveyController, :create_survey
+    get "/file/:file_id", StudentController, :get_file
   end
 
   scope "/api", Skillswheel do
     pipe_through :api
 
-    post "/pdf/:pdf_id", StudentController, :post_pdf
-    get "/pdf/:pdf_id", StudentController, :get_pdf
+    post "/file/:survey_id", StudentController, :post_file
   end
 end
