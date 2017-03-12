@@ -5,14 +5,11 @@ defmodule Skillswheel.Auth do
 
   alias Skillswheel.{User, Router.Helpers}
 
-  require IEx
-
   def init(opts) do
     Keyword.fetch!(opts, :repo)
   end
 
   def call(conn, repo) do
-    IEx.pry
     user_id = get_session(conn, :user_id)
 
     cond do

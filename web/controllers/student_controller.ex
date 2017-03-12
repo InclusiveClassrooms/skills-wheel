@@ -5,8 +5,6 @@ defmodule Skillswheel.StudentController do
 
   import Ecto.Query
 
-  require IEx
-
   def create(conn, %{"student" => student}, _user) do
    group_id = student["group_id"]
    attrs
@@ -84,7 +82,7 @@ defmodule Skillswheel.StudentController do
     |> binary_part(0, length)
   end
 
-  def post_file(conn, %{"_json" => html, "survey_id" => survey_id}, current_user) do
+  def post_file(conn, %{"_json" => html, "survey_id" => _survey_id}, _current_user) do
     rand_wheel = "skills_wheel_" <> gen_rand_string(12) <> ".pdf"
     link_changed_html = String.replace(html, "/images", "http://localhost:4000/images")
     pdf_binary = PdfGenerator.generate_binary!("<html><body><h1>Hello World</h1><div style='float: right'>" <> link_changed_html <> "</div></body></html>", page_size: "A6", shell_params: ["--orientation", "Landscape"])
@@ -93,10 +91,9 @@ defmodule Skillswheel.StudentController do
     render conn, "post.json", link: rand_wheel
   end
 
-  def get_file(conn, %{"file_id" => file}, current_user) do
+  def get_file(conn, %{"file_id" => file}, _current_user) do
     case RedisCli.get(file) do
       {:ok, nil} ->
-        IO.puts "Not found not found"
         contents = PdfGenerator.generate_binary!("<html><body><h1> Download Link has Expired </h1><h3> Please try again </h3></body></html>")
         render conn, "get.pdf", contents: contents, layout: {Skillswheel.LayoutView, "simple.pdf"}
       {:ok, f} -> 
