@@ -7,8 +7,225 @@
   <div class="student-assessment-button"><%= link ("Start Assessment"), to: survey_path(@conn, :show, @student.id) %></div>
 </div>
 
-<div id="wheel-container"></div>
+<div id="wheels-container"></div>
+<h3 class="generate-download-link">Generate Download Link</h3>
+<a id="file_link" class="download-link" href="" download target="_blank">Download as PDF</a>
+
+<hr>
+
+<h4>History</h4>
+<div id="wheels-history"></div>
 
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 
-<script>require("web/static/js/app").App.mockWheel()</script>
+<script>
+  var surveys = JSON.parse(
+    "<%= Poison.encode!(@surveys) %>"
+    .split("&quot;")
+    .join("\"")
+  )
+
+  function relevant_keys(survey) {
+    return Object.keys(survey).reduce(function (prev, curr) {
+      return curr === "id"
+          || curr === "student_id"
+          || curr === "inserted_at"
+          || curr === "updated_at"
+          ?  prev
+          :  Object.assign({}, prev, {[curr]: survey[curr]});
+    }, {});
+  }
+
+  function format(survey) {
+    return Object.keys(survey).map(function (question) {
+      return {question: question, answer: survey[question]}
+    });
+  }
+
+  function order(survey) {
+    return survey.reduce(function (prev, curr) {
+      return prev.map(function (q, i) {
+        return prev.indexOf(curr.question) === i
+          ? {question: q.question, answer: curr.answer}
+          : q
+      });
+    }, [
+     "personal_appearance",
+     "appearance_others",
+     "likes",
+     "dislikes",
+     "strengths",
+     "identify_emotions_self",
+     "identify_emotions_others",
+     "bodily_reaction_emotions",
+     "identify_response_emotions",
+     "plan_respond_emotions",
+     "good_eye_contact",
+     "good_distance_touch",
+     "identify_expressions",
+     "body_language_self",
+     "body_language_others",
+     "good_volume",
+     "good_pace",
+     "clear_speech",
+     "speak_with_relevance",
+     "identify_good_speech",
+     "think_before_react",
+     "understand_problems_occurred",
+     "problems_solved_appropriately",
+     "make_a_plan",
+     "follow_a_plan",
+     "build_one_friendship",
+     "build_multiple_friendships",
+     "express_thoughts_to_others",
+     "disagree_with_others",
+     "apologise_appropriately"
+    ]);
+  }
+
+  var format_surveys = surveys
+    .map(relevant_keys)
+    .map(format)
+    .map(order);
+
+  // draw in all the wheels to the wheels-container
+  format_surveys.forEach(function (survey, i) {
+    var div = document.createElement('div');
+    div.classList = "wheel wheel-" + i + (i === 0 ? ' focused-wheel' : '');
+    
+    document.querySelector('#wheels-container').appendChild(div);
+
+    Wheel.draw(
+      survey,
+      '.wheel-' + i,
+      '/images/',
+      {
+        centre: 250,
+        height: 500,
+        ratio: 1.2,
+        unique_string: 'wheel' + i
+      }
+    );
+  });
+
+  format_surveys.forEach(function (survey, i) {
+    var wheel_history = document.createElement('div');
+    var wheel_history_wheel = document.createElement('div');
+    var view_larger = document.createElement('div');
+
+    wheel_history.classList = "wheel-history wheel-history-" + i;
+    wheel_history_wheel.classList = "wheel-history-wheel-" + i;
+    view_larger.classList = "view-larger-" + i;
+    view_larger.innerHTML = 'View Larger';
+    view_larger.addEventListener('click', function () {
+      document.querySelector('.focused-wheel').classList.remove('focused-wheel');
+      document.querySelectorAll('.wheel')[i].classList.add('focused-wheel');
+    });
+
+    document.querySelector('#wheels-history').appendChild(wheel_history);
+    wheel_history.appendChild(wheel_history_wheel);
+    wheel_history.appendChild(view_larger);
+
+    Wheel.draw(
+      survey,
+      '.wheel-history-wheel-' + i,
+      '/images/',
+      {
+        centre: 180,
+        height: 350,
+        ratio: 0.8,
+        unique_string: 'wheel-history' + i
+      }
+    );
+  });
+
+  document.querySelector('.generate-download-link').addEventListener('click', function () {
+    var index = parseInt(
+      document.querySelector('.focused-wheel')
+        .classList[1]
+        .split('-')[1]
+    );
+    var survey_id = surveys[index].id;
+    var wheel_html = document.querySelector('.focused-wheel').innerHTML;
+    Req.post('/api/file/' + survey_id, wheel_html, function (res) {
+      console.log('RES: ', res, typeof res, JSON.parse(res));
+      document.querySelector('.download-link').href = "/file/" + JSON.parse(res).link
+    });
+  });
+
+  // takes a survey in the form: [{question: '', answer: "1"}, ...] and returns the total of each of the 5 questions
+  function get_scores(survey) {
+    return survey
+      .map(function (s) { return parseInt(s.answer); })
+      .reduce(function (prev, curr) {
+        return prev[prev.length - 1].length === 5
+        ? prev.concat([[curr]])
+        : prev.map(function (group, i) {
+          return i === prev.length - 1
+          ? prev[prev.length - 1].concat(curr)
+          : group;
+        });
+      }, [[]])
+      .map(function (group) {
+        return group.reduce(function (prev, curr) {
+          return prev + curr;
+        }, 0);
+      });
+  }
+
+  // takes current survey and previous survey and returns {score: [17, 12, 10, 6, 11, 12], change: [1, 2, 1, -2, 0, -1]}
+  function gen_table(survey, old_survey) {
+    if (!old_survey) {
+      return {score: get_scores(survey), change: ["-", "-", "-", "-", "-", "-"]}
+    }
+    var old_scores = get_scores(old_survey);
+    var scores = get_scores(survey);
+    return {score: get_scores(survey), change: old_scores.map(function (score, i) {return scores[i] - score})};
+  }
+
+  [].forEach.call(document.querySelectorAll('.wheel-history'), function (container, i) {
+    var survey_table = gen_table(format_surveys[i], format_surveys[i + 1]);
+    console.log(survey_table);
+    var date = surveys[i].inserted_at;
+    var div = document.createElement('div');
+    var table = document.createElement('table');
+
+    var row = document.createElement('tr');
+    var data1 = document.createElement('td');
+    var data2 = document.createElement('td');
+    var data3 = document.createElement('td');
+    data1.innerHTML = date;
+    data2.innerHTML = 'Score';
+    data3.innerHTML = 'Change';
+    row.appendChild(data1);
+    row.appendChild(data2);
+    row.appendChild(data3);
+    table.appendChild(row);
+
+    ['Self-Awareness & Self-Esteem',
+     'Managing Feelings',
+     'Non-Verbal Communication',
+     'Verbal Communication',
+     'Planning & Problem Solving',
+     'Relationships, Leadership & Assertiveness'
+    ].forEach(function (section, j) {
+      row = document.createElement('tr');
+      data1 = document.createElement('td');
+      data2 = document.createElement('td');
+      data3 = document.createElement('td');
+
+      data1.innerHTML = section;
+      data2.innerHTML = survey_table.score[j];
+      data3.innerHTML = survey_table.change[j];
+      row.appendChild(data1);
+      row.appendChild(data2);
+      row.appendChild(data3);
+      table.appendChild(row);
+    });
+
+    div.appendChild(table);
+    container.appendChild(div);
+  });
+
+</script>
+

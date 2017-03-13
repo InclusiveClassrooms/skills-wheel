@@ -3,11 +3,17 @@ elixir:
   - 1.4.1
 addons:
   postgresql: '9.4'
+  apt:
+    packages:
+      - wkhtmltopdf
 services:
   - redis-server
 env:
   - MIX_ENV=test
 before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
   - mix do ecto.create, ecto.migrate
   - mix run priv/repo/seeds.exs
 script:
