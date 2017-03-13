@@ -10,9 +10,11 @@ defmodule Skillswheel.Router do
     plug Skillswheel.Auth, repo: Skillswheel.Repo
   end
 
-  # pipeline :api do
-  #   plug :accepts, ["json"]
-  # end
+  pipeline :api do
+    plug :accepts, ["json"]
+    plug :fetch_session
+    plug Skillswheel.Auth, repo: Skillswheel.Repo
+  end
 
   scope "/", Skillswheel do
     pipe_through :browser # Use the default browser stack
@@ -28,10 +30,12 @@ defmodule Skillswheel.Router do
     resources "/students", StudentController, only: [:create, :show, :delete]
     resources "/survey", SurveyController, only: [:show]
     post "/survey/:student_id", SurveyController, :create_survey
+    get "/file/:file_id", StudentController, :get_file
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Skillswheel do
-  #   pipe_through :api
-  # end
+  scope "/api", Skillswheel do
+    pipe_through :api
+
+    post "/file/:survey_id", StudentController, :post_file
+  end
 end

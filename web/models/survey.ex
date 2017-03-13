@@ -4,31 +4,37 @@ defmodule Skillswheel.Survey do
   alias Skillswheel.Student
 
   schema "surveys" do
+    # SELF AWARENESS & SELF-ESTEEM
     field :personal_appearance, :string
     field :appearance_others, :string
     field :likes, :string
     field :dislikes, :string
     field :strengths, :string
+    # MANAGING FEELINGS
     field :identify_emotions_self, :string
     field :identify_emotions_others, :string
     field :bodily_reaction_emotions, :string
     field :identify_response_emotions, :string
     field :plan_respond_emotions, :string
+    # NON-VERBAL COMMUNICATION
     field :good_eye_contact, :string
     field :good_distance_touch, :string
     field :identify_expressions, :string
     field :body_language_self, :string
     field :body_language_others, :string
+    # VERBAL COMMUNICATION
     field :good_volume, :string
     field :good_pace, :string
     field :clear_speech, :string
     field :speak_with_relevance, :string
     field :identify_good_speech, :string
+    # PLANNING AND PROBLEM SOLVING
     field :think_before_react, :string
     field :understand_problems_occurred, :string
     field :problems_solved_appropriately, :string
     field :make_a_plan, :string
     field :follow_a_plan, :string
+    # RELATIONSHIPS, LEADERSHIPS AND ASSERTIVENESS
     field :build_one_friendship, :string
     field :build_multiple_friendships, :string
     field :express_thoughts_to_others, :string
