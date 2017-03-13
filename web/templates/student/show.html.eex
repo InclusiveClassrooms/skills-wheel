@@ -4,7 +4,7 @@
 <div class="student-header">
   <div class="student-name"><%= @student.first_name <> " " <> @student.last_name %></div>
   <div class="student-group"><%= @student.group.name %></div>
-  <div class="student-assessment-button">Start Assessment</div>
+  <div class="student-assessment-button"><%= link ("Start Assessment"), to: survey_path(@conn, :show, @student.id) %></div>
 </div>
 
 <div id="wheels-container"></div>
