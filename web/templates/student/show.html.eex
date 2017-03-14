@@ -8,8 +8,8 @@
 </div>
 
 <div id="wheels-container"></div>
-<h3 class="generate-download-link">Generate Download Link</h3>
-<a id="file_link" class="download-link" href="" download target="_blank">Download as PDF</a>
+<button class="generate-download-link">Generate Download Link</button>
+<a id="file_link" class="download-link hidden" href="" download target="_blank">Download as PDF</a>
 
 <hr>
 
@@ -149,6 +149,9 @@
     var wheel_html = document.querySelector('.focused-wheel').innerHTML;
     Req.post('/api/file/' + survey_id, wheel_html, function (res) {
       console.log('RES: ', res, typeof res, JSON.parse(res));
+      if(document.querySelector('.download-link').className.indexOf('hidden') > -1) {
+        document.querySelector('.download-link').className = 'download-link';
+      }
       document.querySelector('.download-link').href = "/file/" + JSON.parse(res).link
     });
   });
