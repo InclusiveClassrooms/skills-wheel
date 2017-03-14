@@ -5,9 +5,15 @@
 
 This project uses:
 [Elixir version 1.4.x](http://elixir-lang.org/)
+
 [PostgreSQL version 9.5.x](https://www.postgresql.org/)
+
 [Node version 6.10.x](https://nodejs.org/)
+
 [Redis version 3.2.4](https://redis.io/)
+
+[wkhtmltopdf version 0.12.4](http://wkhtmltopdf.org/)
+(Can be installed with `brew install brew install Caskroom/cask/wkhtmltopdf` on mac)
 
 ## Quick Start
 

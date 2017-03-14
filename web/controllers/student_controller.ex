@@ -84,8 +84,15 @@ defmodule Skillswheel.StudentController do
 
   def post_file(conn, %{"_json" => html, "survey_id" => _survey_id}, _current_user) do
     rand_wheel = "skills_wheel_" <> gen_rand_string(12) <> ".pdf"
-    link_changed_html = String.replace(html, "/images", "http://localhost:4000/images")
-    pdf_binary = PdfGenerator.generate_binary!("<html><body><h1>Hello World</h1><div style='float: right'>" <> link_changed_html <> "</div></body></html>", page_size: "A6", shell_params: ["--orientation", "Landscape"])
+    link_changed_html = String.replace(html, "/images",
+      if (System.get_env("MIX_ENV") == "prod") do
+        IO.puts "MIX ENV PROD"
+        "https://skillswheel.herokuapp.com/images"
+      else
+        IO.puts "MIX ENV NOT PROD"
+        "https://localhost:4000/images"
+      end)
+    pdf_binary = PdfGenerator.generate_binary!("<html><body><h1>Hello World</h1><div style='float: right'>" <> link_changed_html <> "</div></body></html>", shell_params: ["--orientation", "Landscape"])
     RedisCli.set(rand_wheel, pdf_binary)
     RedisCli.expire(rand_wheel, 60 * 60)
     render conn, "post.json", link: rand_wheel
