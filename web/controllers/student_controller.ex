@@ -90,7 +90,7 @@ defmodule Skillswheel.StudentController do
         "https://skillswheel.herokuapp.com/images"
       else
         IO.puts "MIX ENV NOT PROD"
-        "https://localhost:4000/images"
+        "http://localhost:4000/images"
       end)
     pdf_binary = PdfGenerator.generate_binary!("<html><body><h1>Hello World</h1><div style='float: right'>" <> link_changed_html <> "</div></body></html>", shell_params: ["--orientation", "Landscape"])
     RedisCli.set(rand_wheel, pdf_binary)
