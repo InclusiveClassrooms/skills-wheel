@@ -92,7 +92,7 @@ defmodule Skillswheel.StudentController do
         IO.puts "MIX ENV NOT PROD"
         "https://localhost:4000/images"
       end)
-    pdf_binary = PdfGenerator.generate_binary!("<html><body><h1>Hello World</h1><div style='float: right'>" <> link_changed_html <> "</div></body></html>", page_size: "A5", shell_params: ["--orientation", "Landscape"])
+    pdf_binary = PdfGenerator.generate_binary!("<html><body><h1>Hello World</h1><div style='float: right'>" <> link_changed_html <> "</div></body></html>", shell_params: ["--orientation", "Landscape"])
     RedisCli.set(rand_wheel, pdf_binary)
     RedisCli.expire(rand_wheel, 60 * 60)
     render conn, "post.json", link: rand_wheel
