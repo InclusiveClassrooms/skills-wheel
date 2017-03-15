@@ -82,7 +82,7 @@ defmodule Skillswheel.StudentController do
     |> binary_part(0, length)
   end
 
-  def post_file(conn, %{"_json" => html, "survey_id" => _survey_id}, _current_user) do
+  def post_file(conn, %{"_json" => html, "survey_id" => survey_id}, _current_user) do
     rand_wheel = "skills_wheel_" <> gen_rand_string(12) <> ".pdf"
     link_changed_html = String.replace(html, "/images",
       if (System.get_env("MIX_ENV") == "prod") do
@@ -92,7 +92,48 @@ defmodule Skillswheel.StudentController do
         IO.puts "MIX ENV NOT PROD"
         "http://localhost:4000/images"
       end)
-    pdf_binary = PdfGenerator.generate_binary!("<html><body><h1>Hello World</h1><div style='float: right'>" <> link_changed_html <> "</div></body></html>", shell_params: ["--orientation", "Landscape"])
+    form_data = [%{label: "Teaching Assistant:", name: "Sam"},
+    %{label: "Student:", name: "Katbow"},
+    %{label: "School:", name: "School_name"},
+    %{label: "School Year:", name: "1"},
+    %{label: "Group:", name: "Group"},
+    %{label: "Date:", name: "11/16"}]
+    form_string
+      =  form_data
+      |> Enum.map(fn (data) -> "<div style=\"margin: 5px\"><h4>" <> data.label <> "</h4><h4><strong>" <> data.name <> "</strong></h4></div>" end)
+      |> Enum.join("")
+
+    pdf_binary = PdfGenerator.generate_binary!("
+      <html>
+        <head>
+          <link href=\"https://fonts.googleapis.com/css?family=Open+Sans:700\" rel=\"stylesheet\" type=\"text/css\"><link href=\"https://fonts.googleapis.com/css?family=Varela+Round\" rel=\"stylesheet\" type=\"text/css\">
+        </head>
+        <body>
+          <header style=\"background-color: #E5007D; width: 100%; height: 4em;\">
+            <a href=\"http://inclusiveclassrooms.co.uk\">
+              <img src=\""
+                <>
+                  if (System.get_env("MIX_ENV") == "prod") do
+                    IO.puts "MIX ENV PROD"
+                    "https://skillswheel.herokuapp.com/images/inclusive-classrooms-300x126.png"
+                  else
+                    IO.puts "MIX ENV NOT PROD"
+                    "http://localhost:4000/images/inclusive-classrooms-300x126.png"
+                  end
+                <>
+              "\" alt=\"inclusive classrooms\" height=\"100%\"/>
+            </a>
+          </header>
+          <div style='float: left'>"
+            <> form_string <>
+          "</div>
+          <div style='float: right'>"
+            <> link_changed_html <>
+          "</div>
+        </body>
+      </html>",
+      shell_params: ["--orientation", "Landscape"]
+    )
     RedisCli.set(rand_wheel, pdf_binary)
     RedisCli.expire(rand_wheel, 60 * 60)
     render conn, "post.json", link: rand_wheel
