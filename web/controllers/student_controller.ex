@@ -103,7 +103,9 @@ defmodule Skillswheel.StudentController do
       |> Enum.map(fn (data) -> "<div style=\"margin: 5px\"><h4>" <> data.label <> "</h4><h4><strong>" <> data.name <> "</strong></h4></div>" end)
       |> Enum.join("")
 
-    pdf_binary = PdfGenerator.generate_binary!("<html><head><link href=\"https://fonts.googleapis.com/css?family=Open+Sans:700\" rel=\"stylesheet\" type=\"text/css\"><link href=\"https://fonts.googleapis.com/css?family=Varela+Round\" rel=\"stylesheet\" type=\"text/css\"></head><header style=\"background-color: #E5007D; width: 100%; height: 4em;\"><a href=\"http://inclusiveclassrooms.co.uk\"><body>" <> form_string <> "<div style='float: right'>" <> link_changed_html <> "</div></body></html>", shell_params: ["--orientation", "Landscape"])
+        var wheel = '<head><link href="https://fonts.googleapis.com/css?family=Open+Sans:700" rel="stylesheet" type="text/css"><link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" type="text/css"></head><body><header style="background-color: #E5007D; width: 100%; height: 4em;"><a href="http://inclusiveclassrooms.co.uk"><img class="home-link" src="../assets/inclusive-classrooms-300x126.png" alt="inclusive classrooms" height="100%"/></a></header>' +  $('#wheel-container').html() + '</body>';
+
+    pdf_binary = PdfGenerator.generate_binary!("<html><head><link href=\"https://fonts.googleapis.com/css?family=Open+Sans:700\" rel=\"stylesheet\" type=\"text/css\"><link href=\"https://fonts.googleapis.com/css?family=Varela+Round\" rel=\"stylesheet\" type=\"text/css\"></head><header style=\"background-color: #E5007D; width: 100%; height: 4em;\"></head><body><a href=\"http://inclusiveclassrooms.co.uk\"><img class=\"home-link\" src=\"../assets/inclusive-classrooms-300x126.png\" alt=\"inclusive classrooms\" height=\"100%\"/></a>" <> form_string <> "<div style='float: right'>" <> link_changed_html <> "</div></body></html>", shell_params: ["--orientation", "Landscape"])
     RedisCli.set(rand_wheel, pdf_binary)
     RedisCli.expire(rand_wheel, 60 * 60)
     render conn, "post.json", link: rand_wheel
