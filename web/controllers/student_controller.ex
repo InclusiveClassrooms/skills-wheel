@@ -111,7 +111,18 @@ defmodule Skillswheel.StudentController do
         <body>
           <header style=\"background-color: #E5007D; width: 100%; height: 4em;\">
             <a href=\"http://inclusiveclassrooms.co.uk\">
-            <img class=\"home-link\" src=\"../assets/inclusive-classrooms-300x126.png\" alt=\"inclusive classrooms\" height=\"100%\"/></a>\"
+              <img src=\""
+                <>
+                  if (System.get_env("MIX_ENV") == "prod") do
+                    IO.puts "MIX ENV PROD"
+                    "https://skillswheel.herokuapp.com/images/inclusive-classrooms-300x126.png"
+                  else
+                    IO.puts "MIX ENV NOT PROD"
+                    "http://localhost:4000/images/inclusive-classrooms-300x126.png"
+                  end
+                <>
+              "\" alt=\"inclusive classrooms\" height=\"100%\"/>
+            </a>
           </header>
           <div style='float: left'>"
             <> form_string <>
