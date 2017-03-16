@@ -1,7 +1,9 @@
 defmodule Skillswheel.StudentController do
   use Skillswheel.Web, :controller
 
-  alias Skillswheel.{Student, Group, Survey, RedisCli}
+  alias Skillswheel.{User, UserGroup, School, Student, Group, Survey, RedisCli, LayoutView}
+
+  require IEx
 
   import Ecto.Query
 
@@ -83,6 +85,18 @@ defmodule Skillswheel.StudentController do
   end
 
   def post_file(conn, %{"_json" => html, "survey_id" => survey_id}, _current_user) do
+    survey = Repo.get_by(Survey, id: survey_id)
+    date = Integer.to_string(survey.inserted_at.month) <> "/" <> String.slice(Integer.to_string(survey.inserted_at.year), 2, 4)
+    student = Repo.get(Student, survey.student_id)
+    name = student.first_name <> student.last_name
+    year = student.year_group
+    group = Repo.get(Group, student.group_id)
+    group_name = group.name
+    user_id = Repo.get_by(UserGroup, group_id: group.id).user_id
+    user = Repo.get(User, user_id)
+    user_name = user.name || "Unknown name"
+    school_name = user.school_id && Repo.get(School, user.school_id).name || "Admin School"
+
     rand_wheel = "skills_wheel_" <> gen_rand_string(12) <> ".pdf"
     link_changed_html = String.replace(html, "/images",
       if (System.get_env("MIX_ENV") == "prod") do
@@ -92,12 +106,15 @@ defmodule Skillswheel.StudentController do
         IO.puts "MIX ENV NOT PROD"
         "http://localhost:4000/images"
       end)
-    form_data = [%{label: "Teaching Assistant:", name: "Sam"},
-    %{label: "Student:", name: "Katbow"},
-    %{label: "School:", name: "School_name"},
-    %{label: "School Year:", name: "1"},
-    %{label: "Group:", name: "Group"},
-    %{label: "Date:", name: "11/16"}]
+
+    user_name = "user name"
+
+    form_data = [%{label: "Teaching Assistant:", name: user_name},
+    %{label: "Student:", name: name},
+    %{label: "School:", name: school_name},
+    %{label: "School Year:", name: year},
+    %{label: "Group:", name: group_name},
+    %{label: "Date:", name: date}]
     form_string
       =  form_data
       |> Enum.map(fn (data) -> "<div style=\"margin: 5px\"><h4>" <> data.label <> "</h4><h4><strong>" <> data.name <> "</strong></h4></div>" end)
@@ -143,9 +160,9 @@ defmodule Skillswheel.StudentController do
     case RedisCli.get(file) do
       {:ok, nil} ->
         contents = PdfGenerator.generate_binary!("<html><body><h1> Download Link has Expired </h1><h3> Please try again </h3></body></html>")
-        render conn, "get.pdf", contents: contents, layout: {Skillswheel.LayoutView, "simple.pdf"}
+        render conn, "get.pdf", contents: contents, layout: {LayoutView, "simple.pdf"}
       {:ok, f} -> 
-        render conn, "get.pdf", contents: f, layout: {Skillswheel.LayoutView, "simple.pdf"}
+        render conn, "get.pdf", contents: f, layout: {LayoutView, "simple.pdf"}
     end
   end
 end
