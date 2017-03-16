@@ -17,6 +17,10 @@ body {
   border-radius: 0px;
 }
 
+.approve-school-container {
+  
+}
+
 .breadcrumb {
   background-color: #ffffff;
   padding-top: 2rem;
@@ -342,6 +346,11 @@ body {
   color: #666666;
 }
 
+.school-input {
+  display: inline;
+  margin-right: 11rem;
+}
+
 .skillswheel-school-access {
   background-color: #e74c3c;
   color: #ffffff;
@@ -390,6 +399,10 @@ body {
   font-size: 21px;
   margin-bottom: 3rem;
   margin-right: 10%;
+}
+
+.table-heading {
+  font-size: 2rem;
 }
 
 /* taken from skills-wheel-old */
