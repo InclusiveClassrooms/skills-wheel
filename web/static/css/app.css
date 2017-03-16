@@ -5,6 +5,12 @@ body {
   background-color: #e1e1e1;
 }
 
+.admin-dashboard-button {
+  position: absolute;
+  top: 2.5rem;
+  left: 28%;
+}
+
 .alert-positioned {
   position: relative;
   z-index: 100;
@@ -373,6 +379,17 @@ body {
   padding-top: 2rem;
   padding-bottom: 4rem;
   position: relative;
+}
+
+.survey-submit-button {
+  width: 222px;
+  height: 48px;
+  background-color: #009DE4;
+  color: #ffffff;
+  border:none;
+  font-size: 21px;
+  margin-bottom: 3rem;
+  margin-right: 10%;
 }
 
 /* taken from skills-wheel-old */
