@@ -5,6 +5,12 @@ body {
   background-color: #e1e1e1;
 }
 
+.alert-positioned {
+  position: relative;
+  z-index: 100;
+  border-radius: 0px;
+}
+
 .breadcrumb {
   background-color: #ffffff;
   padding-top: 2rem;
@@ -562,6 +568,5 @@ input:checked + label {
 }
 
 .wheel-history {
-  
-}
 
+}
