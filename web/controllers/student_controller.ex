@@ -94,7 +94,6 @@ defmodule Skillswheel.StudentController do
     group_name = group.name
     user_id = Repo.get_by(UserGroup, group_id: group.id).user_id
     user = Repo.get(User, user_id)
-    user_name = user.name || "Unknown name"
     school_name = user.school_id && Repo.get(School, user.school_id).name || "Admin School"
 
     rand_wheel = "skills_wheel_" <> gen_rand_string(12) <> ".pdf"
