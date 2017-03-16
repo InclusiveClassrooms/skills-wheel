@@ -29,8 +29,26 @@
   <% end %>
 </div>
 
-<table id="survey-table"></table>
+<table id="survey-table" class="table"></table>
 
 <script>
+
+  var survey_data = JSON.parse(
+    "<%= Poison.encode!(@survey_data) %>"
+    .split("&quot;")
+    .join("\"")
+  );
+
+  console.log(survey_data);
+
+  survey_data.forEach(function (survey) {
+    var tr = document.createElement('tr');
+    survey.forEach(function (question) {
+      var td = document.createElement('td');
+      td.innerHTML = question[Object.keys(question)[0]];
+      tr.appendChild(td);
+    });
+    document.querySelector('#survey-table').appendChild(tr);
+  });
 
 </script>
