@@ -50,7 +50,7 @@
       </div>
     </div>
   </div>
-  <%= submit "Submit", [class: "btn btn-primary", id: "survey_submit_button"] %>
+  <%= submit "Submit", [class: "pull-right survey-submit-button", id: "survey_submit_button"] %>
 <% end %>
 
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>

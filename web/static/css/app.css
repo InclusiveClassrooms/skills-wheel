@@ -375,6 +375,17 @@ body {
   position: relative;
 }
 
+.survey-submit-button {
+  width: 222px;
+  height: 48px;
+  background-color: #009DE4;
+  color: #ffffff;
+  border:none;
+  font-size: 21px;
+  margin-bottom: 3rem;
+  margin-right: 10%;
+}
+
 /* taken from skills-wheel-old */
 
 .active {
