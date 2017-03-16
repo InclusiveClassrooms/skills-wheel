@@ -8,6 +8,7 @@
     <meta name="author" content="">
 
     <title>Hello Skillswheel!</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
@@ -22,7 +23,7 @@
           <%= if @conn.assigns.current_user && @conn.assigns.current_user.admin do %>
             <%= link "Admin Dashboard", to: admin_path(@conn, :index) %>
           <% end %>
-          <ol class="breadcrumb text-right">
+          <ol class="breadcrumb text-right" style="background-color:#ffffff;">
             <%= if @current_user do %>
             <li><%= @current_user.email %></li>
             <li>
