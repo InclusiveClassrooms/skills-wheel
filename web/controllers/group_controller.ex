@@ -74,29 +74,38 @@ defmodule Skillswheel.GroupController do
   end
 
   def invite(conn, params = %{"email_params" => %{"email" => email}, "group_id" => group_id}, user) do
-    IO.puts "+++++++++++"
-    IO.inspect group_id
-    IO.puts "+++++++++++"
     case Repo.get_by(User, email: email) do
       nil ->
         conn
         |> put_flash(:error, "This person has not registered with Skillswheel yet")
         |> redirect(to: group_path(conn, :show, group_id))
       user ->
-        user_group_changeset = UserGroup.changeset(%UserGroup{}, %{
-          user_id: user.id,
-          group_id: group_id
-          })
-        case Repo.insert(user_group_changeset) do
-          {:ok, _user_group} ->
+        case Repo.all(
+          from u in UserGroup,
+          where: u.group_id == ^group_id and u.user_id == ^user.id,
+          select: u
+        ) do
+          [] ->
+            user_group_changeset = UserGroup.changeset(%UserGroup{}, %{
+              user_id: user.id,
+              group_id: group_id
+              })
+            case Repo.insert(user_group_changeset) do
+              {:ok, _user_group} ->
+                conn
+                |> put_flash(:info, "#{user.name} added to the group!")
+                |> redirect(to: group_path(conn, :show, group_id))
+              {:error, _changeset} ->
+                conn
+                |> put_flash(:error, "Error adding #{user.name} to the group!")
+                |> redirect(to: group_path(conn, :show, group_id))
+            end
+          _more ->
             conn
-            |> put_flash(:info, "#{user.name} added to the group!")
+            |> put_flash(:error, "#{user.name} already added to the group!")
             |> redirect(to: group_path(conn, :show, group_id))
-          {:error, _changeset} ->
-            conn
-            |> put_flash(:error, "Error adding #{user.name} to the group!")
-            |> redirect(to: group_path(conn, :index))
         end
+
     end
   end
 

@@ -19,6 +19,9 @@
             <td style="color:#808080">
               <%= user.email %>
             </td>
+            <td>
+              Remove
+            </td>
         </tr>
       <% end %>
     </table>
