@@ -84,6 +84,17 @@ body {
   top: 1.5rem;
 }
 
+.group-heading {
+  font-size: 6rem;
+}
+
+.group-heading-container {
+  background-color: #333333;
+  color: #ffffff;
+  padding: 3rem;
+  padding-left: 6rem;
+}
+
 .group-icon {
   width: 16px;
   float: left;
@@ -125,7 +136,7 @@ body {
 }
 
 .group-student-add-button {
-  width: 222px;
+  width: 100%;
   height: 48px;
   background-color: #009DE4;
   color: #ffffff;
@@ -209,6 +220,27 @@ body {
 .group-title {
   font-size: 20px;
   color: #222222;
+}
+
+.group-update-container {
+  padding-left: 6rem;
+  width: 50%;
+}
+
+.group-update-input {
+  background-color: #FCFCFC;
+  border: 1px solid #E1E1E1;
+  border-radius: 2px;
+  margin-bottom: 2rem;
+}
+
+.group-user-email {
+  color: #808080;
+}
+
+.group-username {
+  margin-right: 3rem;
+  min-width: 8rem;
 }
 
 .group-wrapper {

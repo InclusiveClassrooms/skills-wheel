@@ -26,11 +26,12 @@ defmodule Skillswheel.Router do
     resources "/school", SchoolController, only: [:create, :delete]
     resources "/forgotpass", ForgotpassController, only: [:index, :create, :show]
     post "/forgotpass/:hash", ForgotpassController, :update_password
-    resources "/groups", GroupController, only: [:index, :create, :show, :delete]
+    resources "/groups", GroupController, only: [:index, :create, :show, :delete, :update]
     resources "/students", StudentController, only: [:create, :show, :delete]
     resources "/survey", SurveyController, only: [:show]
     post "/survey/:student_id", SurveyController, :create_survey
     get "/file/:file_id", StudentController, :get_file
+    post "/invite/:group_id", GroupController, :invite
   end
 
   scope "/api", Skillswheel do

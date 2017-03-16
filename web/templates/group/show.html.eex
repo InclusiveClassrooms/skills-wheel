@@ -1,30 +1,36 @@
-<h1><%= @group.name %></h1>
-
-<%= for student <- @students do %>
-<div><%= link (student.first_name <> " " <> student.last_name), to: student_path(@conn, :show, student.id) %></div>
+<div class="group-update-container">
+<%= form_for @changeset, group_path(@conn, :update, @group.id), fn f -> %>
+    <h3 style="margin-bottom:2rem;">Name</h3>
+    <div class="form-group">
+      <%= text_input f, :name, placeholder: @group.name, class: "form-control group-update-input" %>
+      <%= error_tag f, :name %>
+    </div>
+    <div style="text-align:center;margin-bottom:5rem;">
+      <%= submit "Update group name", class: "group-student-add-button" %>
+    </div>
+    <h3 style="margin-bottom:2rem;">Teaching Assistants</h3>
+    <table class="table">
+      <%= for user <- @group.users do %>
+        <tr>
+            <td>
+              <%= user.name %>
+              <%= if user.email == @conn.assigns.current_user.email do " (You)" end%>
+            </td>
+            <td style="color:#808080">
+              <%= user.email %>
+            </td>
+        </tr>
+      <% end %>
+    </table>
+    <br />
+    <br />
 <% end %>
-
-<%= form_for @changeset, student_path(@conn, :create), fn f -> %>
-  <div class="form-group">
-    <%= label f, :first_name, class: "control-label" %>
-    <%= text_input f, :first_name, placeholder: "First Name", class: "form-control" %>
-    <%= error_tag f, :first_name %>
+  <div>
+    <div>Add a new teaching assistant by Email</div>
+    <%= form_for @invitation_changeset, group_path(@conn, :invite, @group.id), [as: :email_params], fn f -> %>
+      <%= text_input f, :email, placeholder: "example@email.com", class: "form-control group-update-input" %>
+      <%= error_tag f, :email %>
+      <%= submit "Add", class: "group-student-add-button" %>
+    <% end %>
   </div>
-  <div class="form-group">
-    <%= label f, :last_name, class: "control-label" %>
-    <%= text_input f, :last_name, placeholder: "Last Name", class: "form-control" %>
-    <%= error_tag f, :last_name %>
-  </div>
-  <div class="form-group">
-    <%= label f, :sex, class: "control-label" %>
-    <%= select f, :sex, ["male", "female"], class: "form-control"%>
-    <%= error_tag f, :sex %>
-  </div>
-  <div class="form-group">
-    <%= label f, :year_group, class: "control-label" %>
-    <%= select f, :year_group, 1..6, class: "form-control" %>
-    <%= error_tag f, :year_group %>
-  </div>
-  <%= hidden_input f, :group_id, value: @group.id %>
-  <%= submit "Create Student", class: "btn btn-primary" %>
-<% end %>
+</div>

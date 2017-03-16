@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Hello Skillswheel!</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+  </head>
+
+  <body style="background-color:#ffffff;">
+    <div class="container">
+      <header class="header" style="background-color:#333333;">
+        <nav role="navigation">
+          <a href="/groups">
+            <img class="inclusive-logo" src="/images/inclusive-classrooms-logo.png" />
+          </a>
+          <%= if @conn.assigns.current_user && @conn.assigns.current_user.admin do %>
+            <%= link "Admin Dashboard", to: admin_path(@conn, :index), class: "admin-dashboard-button" %>
+          <% end %>
+          <ol class="breadcrumb text-right" style="background-color:#333333;color:#ffffff;">
+            <%= if @current_user do %>
+            <li><%= @current_user.email %></li>
+            <li>
+              <%= link "Log out", to: session_path(@conn, :delete, @current_user), method: "delete" %>
+            </li>
+            <% else %>
+              <li><%= link "Register", to: user_path(@conn, :new) %></li>
+              <li><%= link "Log in", to: session_path(@conn, :new) %></li>
+            <% end %>
+          </ol>
+        </nav>
+      </header>
+      <div class="group-heading-container">
+        <div class="group-heading">GROUP SETTINGS</div>
+      </div>
+      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+        <main role="main">
+          <%= render @view_module, @view_template, assigns %>
+        </main>
+    </div> <!-- /container -->
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>
