@@ -21,7 +21,7 @@
             <img class="inclusive-logo" src="/images/inclusive-classrooms-logo-grey.png" />
           </a>
           <%= if @conn.assigns.current_user && @conn.assigns.current_user.admin do %>
-            <%= link "Admin Dashboard", to: admin_path(@conn, :index) %>
+            <%= link "Admin Dashboard", to: admin_path(@conn, :index), class: "admin-dashboard-button" %>
           <% end %>
           <ol class="breadcrumb text-right" style="background-color:#ffffff;">
             <%= if @current_user do %>

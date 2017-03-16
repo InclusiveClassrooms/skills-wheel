@@ -5,6 +5,12 @@ body {
   background-color: #e1e1e1;
 }
 
+.admin-dashboard-button {
+  position: absolute;
+  top: 2.5rem;
+  left: 28%;
+}
+
 .alert-positioned {
   position: relative;
   z-index: 100;
