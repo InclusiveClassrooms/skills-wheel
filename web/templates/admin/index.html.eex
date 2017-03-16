@@ -28,3 +28,9 @@
     <%= submit "Approve School" %>
   <% end %>
 </div>
+
+<table id="survey-table"></table>
+
+<script>
+
+</script>
