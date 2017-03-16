@@ -17,10 +17,6 @@ body {
   border-radius: 0px;
 }
 
-.approve-school-container {
-  
-}
-
 .breadcrumb {
   background-color: #ffffff;
   padding-top: 2rem;
@@ -28,6 +24,13 @@ body {
 
 .container {
   max-width: 90%;
+}
+
+.edit-icon {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  width: 2rem;
 }
 
 .group-add-button {
@@ -50,6 +53,7 @@ body {
   padding-top: 2rem;
   text-align: left;
   display: inline-block;
+  position: relative;
 }
 
 .group-container-new {
@@ -72,6 +76,12 @@ body {
   width: 95%;
   height: 24px;
   box-shadow: inset 0 -1px 0 0 #808080;
+}
+
+.group-edit {
+  position: absolute;
+  right: 2rem;
+  top: 1.5rem;
 }
 
 .group-icon {
@@ -368,7 +378,7 @@ body {
   padding: 1rem;
   padding-left: 4rem;
   padding-right: 4rem;
-  bottom: 3rem;
+  bottom: 2rem;
 }
 
 .student-name {
