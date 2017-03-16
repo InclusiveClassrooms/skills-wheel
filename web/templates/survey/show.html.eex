@@ -8,8 +8,6 @@
 
 <h1>Survey</h1>
 
-<h3>Survey subheading</h3>
-
 <%= form_for @changeset, survey_path(@conn, :create_survey, @student_id), fn f -> %>
   <div class="all-inputs">
     <div class="container-fluid">
@@ -60,4 +58,3 @@
 <script>require("web/static/js/app").App.collapse()</script>
 <script>require("web/static/js/app").App.addLabelListeners()</script>
 <script>require("web/static/js/app").App.disableSubmitUnlessAllAreChecked()</script>
-
