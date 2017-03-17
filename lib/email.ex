@@ -5,7 +5,7 @@ defmodule Skillswheel.Email do
     new_email()
       |> to(email_address)
       |> from("inclusiveclassroomstest@gmail.com")
-      |> subject("Welcome!")
+      |> subject("Skillswheel Forgotten Password")
       |> text_body("Please visit https://skillswheel.herokuapp.com/forgotpass/" <> rand_string)
   end
 end
