@@ -17,6 +17,10 @@ body {
   border-radius: 0px;
 }
 
+.assessment-link {
+  color: #ffffff;
+}
+
 .breadcrumb {
   background-color: #ffffff;
   padding-top: 2rem;
@@ -528,11 +532,11 @@ body {
 }
 .question {
   margin-left: 1em;
+  position: relative;
 }
 .answers {
   width: 50%;
   margin: auto;
-  /*margin-top: -2em;*/
 }
 
 .always, .sometimes, .rarely, .never {
@@ -643,6 +647,39 @@ input:checked + label {
   display: block;
 }
 
-.wheel-history {
+.always-previous {
+  background-image: url("/images/face-always.svg");
+}
 
+.sometimes-previous {
+  background-image: url("/images/face-sometimes.svg");
+}
+
+.rarely-previous {
+  background-image: url("/images/face-rarely.svg");
+}
+
+.never-previous {
+  background-image: url("/images/face-never.svg");
+}
+
+.face {
+  cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  -webkit-o-transition: all 100ms ease-in;
+  -moz-o-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  height: 6em;
+  width: 6em;
+  position: absolute;
+  right: 0;
+  bottom: 0.5rem;
+}
+
+.previous-answer-button {
+  position: absolute;
+  right: 0;
+  bottom: 3.5rem;
 }
