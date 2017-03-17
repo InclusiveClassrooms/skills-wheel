@@ -2,7 +2,7 @@ defmodule Skillswheel.GroupController do
   use Skillswheel.Web, :controller
   alias Skillswheel.{Group, Student, UserGroup, User}
 
-  plug :authenticate_user when action in [:index, :create, :delete, :show, :update]
+  plug :authenticate_user when action in [:index, :create, :show, :update]
 
   def index(conn, _params, user) do
     groups =
@@ -102,10 +102,9 @@ defmodule Skillswheel.GroupController do
             end
           _more ->
             conn
-            |> put_flash(:error, "#{user.name} already added to the group!")
+            |> put_flash(:error, "#{user.name} has already been added to the group!")
             |> redirect(to: group_path(conn, :show, group_id))
         end
-
     end
   end
 

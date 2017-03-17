@@ -446,6 +446,11 @@ body {
   font-size: 2rem;
 }
 
+.user-group-remove-button {
+  border: none;
+  background-color: #ffffff;
+}
+
 /* taken from skills-wheel-old */
 
 .active {

@@ -1,5 +1,5 @@
 <div class="group-update-container">
-<%= form_for @changeset, group_path(@conn, :update, @group.id), fn f -> %>
+  <%= form_for @changeset, group_path(@conn, :update, @group.id), fn f -> %>
     <h3 style="margin-bottom:2rem;">Name</h3>
     <div class="form-group">
       <%= text_input f, :name, placeholder: @group.name, class: "form-control group-update-input" %>
@@ -8,26 +8,31 @@
     <div style="text-align:center;margin-bottom:5rem;">
       <%= submit "Update group name", class: "group-student-add-button" %>
     </div>
-    <h3 style="margin-bottom:2rem;">Teaching Assistants</h3>
-    <table class="table">
-      <%= for user <- @group.users do %>
-        <tr>
+  <% end %>
+  <h3 style="margin-bottom:2rem;">Teaching Assistants</h3>
+  <table class="table">
+    <%= for user <- @group.users do %>
+      <tr>
+          <td>
+            <%= user.name %>
+            <%= if user.email == @conn.assigns.current_user.email do " (You)" end%>
+          </td>
+          <td style="color:#808080">
+            <%= user.email %>
+          </td>
+          <%= form_for @conn, user_group_path(@conn, :delete, @group.id), [as: :user_params, method: "DELETE"], fn f -> %>
+          <%= hidden_input f, :user_id, value: user.id %>
             <td>
-              <%= user.name %>
-              <%= if user.email == @conn.assigns.current_user.email do " (You)" end%>
+              <%= if user.email != @conn.assigns.current_user.email do %>
+                <%= submit "Remove", class: "user-group-remove-button" %>
+              <% end %>
             </td>
-            <td style="color:#808080">
-              <%= user.email %>
-            </td>
-            <td>
-              Remove
-            </td>
-        </tr>
-      <% end %>
-    </table>
-    <br />
-    <br />
-<% end %>
+          <% end %>
+      </tr>
+    <% end %>
+  </table>
+  <br />
+  <br />
   <div>
     <div>Add a new teaching assistant by Email</div>
     <%= form_for @invitation_changeset, group_path(@conn, :invite, @group.id), [as: :email_params], fn f -> %>

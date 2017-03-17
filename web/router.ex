@@ -32,6 +32,7 @@ defmodule Skillswheel.Router do
     post "/survey/:student_id", SurveyController, :create_survey
     get "/file/:file_id", StudentController, :get_file
     post "/invite/:group_id", GroupController, :invite
+    resources "/usergroup", UserGroupController, only: [:delete]
   end
 
   scope "/api", Skillswheel do
