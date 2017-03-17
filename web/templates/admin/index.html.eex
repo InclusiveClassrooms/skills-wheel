@@ -33,22 +33,22 @@
 
 <script>
 
-  var survey_data = JSON.parse(
-    "<%= Poison.encode!(@survey_data) %>"
-    .split("&quot;")
-    .join("\"")
-  );
+  // var survey_data = JSON.parse(
+  //   "Poison.encode!(survey_data) "
+  //   .split("&quot;")
+  //   .join("\"")
+  // );
 
-  console.log(survey_data);
+  // console.log(survey_data);
 
-  survey_data.forEach(function (survey) {
-    var tr = document.createElement('tr');
-    survey.forEach(function (question) {
-      var td = document.createElement('td');
-      td.innerHTML = question[Object.keys(question)[0]];
-      tr.appendChild(td);
-    });
-    document.querySelector('#survey-table').appendChild(tr);
-  });
+  // survey_data.forEach(function (survey) {
+  //   var tr = document.createElement('tr');
+  //   survey.forEach(function (question) {
+  //     var td = document.createElement('td');
+  //     td.innerHTML = question[Object.keys(question)[0]];
+  //     tr.appendChild(td);
+  //   });
+  //   document.querySelector('#survey-table').appendChild(tr);
+  // });
 
 </script>
