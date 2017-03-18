@@ -29,7 +29,30 @@
   <% end %>
 </div>
 
-<table id="survey-table" class="table"></table>
+<div id="survey-container">
+  <label>Teaching Assistant</label>
+  <select id="ta_filter">
+    <option selected="selected" value="All">All</option>
+  </select>
+  <label>School</label>
+  <select id="school_filter">
+    <option selected="selected" value="All">All</option>
+  </select>
+  <label>Child</label>
+  <select id="child_filter">
+    <option selected="selected" value="All">All</option>
+  </select>
+  <label>Year</label>
+  <select id="year_filter">
+    <option selected="selected" value="All">All</option>
+  </select>
+  <label>Group</label>
+  <select id="group_filter">
+    <option selected="selected" value="All">All</option>
+  </select>
+
+  <table id="survey-table" class="table"></table>
+</div>
 
 <script>
 
@@ -62,16 +85,69 @@
     });
   }
 
-  var table_data = [survey_order].concat(orderEach(survey_order, surveys));
+  var table_data = orderEach(survey_order, surveys);
 
-  table_data.forEach(function (arr) {
-    var tr = document.createElement('tr');
-    arr.forEach(function (text) {
-      var td = document.createElement('td');
-      td.innerHTML = text;
-      tr.appendChild(td);
+  function filter_data(data) {
+    console.log('DATA: ', data);
+    return data.filter(function(data_arr) {
+      var arr = [];
+      [].forEach.call(document.querySelectorAll('#survey-container select'), function(select, i) {
+        arr.push(select.value === 'All' || select.value === data_arr[i]);
+      })
+      return arr.indexOf(false) === -1;
     });
-    document.querySelector('#survey-table').appendChild(tr);
+  }
+
+  function render_filters() {
+    var filters = [
+      "ta_filter",
+      "school_filter",
+      "child_filter",
+      "year_filter",
+      "group_filter"
+    ].map(function (filter, i) {
+      return {[filter]: table_data
+        .map(function (arr) {
+          return arr[i];
+        }).reduce(function(acc, elem) {
+            return acc.indexOf(elem) > -1 ? acc : acc.concat(elem);
+          }, [])
+        }
+    }).reduce(function(acc, obj) {
+      var key = Object.keys(obj)[0];
+      acc[key] = obj[key];
+      return acc;
+    }, {});
+
+    Object.keys(filters).forEach(function(filter) {
+      var select = document.querySelector('#' + filter);
+      filters[filter].forEach(function(elem) {
+        var option = document.createElement('option');
+        option.value = elem;
+        option.innerHTML = elem;
+        select.appendChild(option);
+      });
+    });
+  }
+
+  function render_table() {
+    document.querySelector('#survey-table').innerHTML = '';
+    ([survey_order].concat(filter_data(table_data))).forEach(function (arr) {
+      var tr = document.createElement('tr');
+      arr.forEach(function (text) {
+        var td = document.createElement('td');
+        td.innerHTML = text;
+        tr.appendChild(td);
+      });
+      document.querySelector('#survey-table').appendChild(tr);
+    });
+  }
+
+  render_table();
+  render_filters();
+
+  [].forEach.call(document.querySelectorAll('#survey-container select'), function (select) {
+    select.addEventListener('change', render_table);
   });
 })();
 
