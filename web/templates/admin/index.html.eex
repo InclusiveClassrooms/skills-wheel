@@ -33,22 +33,46 @@
 
 <script>
 
-  // var survey_data = JSON.parse(
-  //   "Poison.encode!(survey_data) "
-  //   .split("&quot;")
-  //   .join("\"")
-  // );
+(function () {
+  var surveys = JSON.parse(
+    "<%= Poison.encode!(@surveys) %>"
+    .split("&quot;")
+    .join("\"")
+    .split("&amp;")
+    .join("&")
+  );
 
-  // console.log(survey_data);
+  var survey_order = ['Teaching Assistant', 'School Name', 'Child Name', 'Year', 'Group Name',
+               'Date', 'Self Awareness & Self-Esteem', 'Managing Feelings',
+               'Non-Verbal Communication', 'Verbal Communication', 'Planning & Problem Solving',
+               'Relationships, Leaderships & Assertiveness', 'Survey Total']
 
-  // survey_data.forEach(function (survey) {
-  //   var tr = document.createElement('tr');
-  //   survey.forEach(function (question) {
-  //     var td = document.createElement('td');
-  //     td.innerHTML = question[Object.keys(question)[0]];
-  //     tr.appendChild(td);
-  //   });
-  //   document.querySelector('#survey-table').appendChild(tr);
-  // });
+  /**
+  * @param {Array.string} arr_order, The desired order of the array to output
+  * @param {Array.Object(string|number)} arrObjs, Array of objects we would like to order
+  * @returns Array of values of `arrObjs` in the order specified by arr_order
+  * E.g. orderEach(['a', 'b', 'c'], [{c: 3, b: 2, a: 1}, {b: 2, a: 1, c: 3}]
+  * // =>[[1, 2, 3], [1, 2, 3]]
+  */
+  function orderEach(arr_order, arrObjs) {
+    return arrObjs.map(function (obj) {
+      return survey_order.map(function (title) {
+        return obj[title];
+      });
+    });
+  }
+
+  var table_data = [survey_order].concat(orderEach(survey_order, surveys));
+
+  table_data.forEach(function (arr) {
+    var tr = document.createElement('tr');
+    arr.forEach(function (text) {
+      var td = document.createElement('td');
+      td.innerHTML = text;
+      tr.appendChild(td);
+    });
+    document.querySelector('#survey-table').appendChild(tr);
+  });
+})();
 
 </script>

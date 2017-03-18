@@ -17,7 +17,7 @@ defmodule Skillswheel.AdminController do
       naive = survey.inserted_at
       date = Integer.to_string(naive.day) <>
       "/" <> Integer.to_string(naive.month) <>
-      "/" <> Integer.to_string(naive.year)
+      "/" <> String.slice(Integer.to_string(naive.year), 2..3)
 
       student = Repo.get(Student, survey.student_id)
       year = student.year_group
@@ -48,12 +48,13 @@ defmodule Skillswheel.AdminController do
         "Non-Verbal Communication",
         "Verbal Communication",
         "Planning & Problem Solving",
-        "Relationships, Leaderships & Assertiveness"]
+        "Relationships, Leaderships & Assertiveness",
+        "Survey Total"]
 
-      Enum.zip(survey_titles, ordered_survey)
+      Enum.zip(survey_titles, ordered_survey ++ [Enum.sum(ordered_survey)])
       |> Map.new
-      |> Map.merge(%{"date" => date, "year" => year, "name" => name,
-                     "group" => group_name, "ta" => ta, "school" => school})
+      |> Map.merge(%{"Date" => date, "Year" => year, "Child Name" => name,
+                     "Group Name" => group_name, "Teaching Assistant" => ta, "School Name" => school})
 
     end)
 
