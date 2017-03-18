@@ -7,12 +7,8 @@ defmodule Skillswheel.AdminController do
   plug :authenticate_user when action in [:index]
   plug :authenticate_admin when action in [:index]
 
-  def index(conn, _params) do
-    schools = Repo.all(School)
-    changeset = School.changeset(%School{})
-
-    surveys
-    = Repo.all(Survey)
+  def all_survey_data() do
+    Repo.all(Survey)
     |> Enum.map(fn survey ->
       naive = survey.inserted_at
       date = Integer.to_string(naive.day) <>
@@ -55,8 +51,13 @@ defmodule Skillswheel.AdminController do
       |> Map.new
       |> Map.merge(%{"Date" => date, "Year" => year, "Child Name" => name,
                      "Group Name" => group_name, "Teaching Assistant" => ta, "School Name" => school})
-
     end)
+  end
+
+  def index(conn, _params) do
+    schools = Repo.all(School)
+    changeset = School.changeset(%School{})
+    surveys = all_survey_data()
 
     render conn, "index.html", changeset: changeset, schools: schools, surveys: surveys
   end
