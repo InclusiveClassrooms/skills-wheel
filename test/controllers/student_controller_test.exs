@@ -148,11 +148,45 @@ defmodule Skillswheel.StudentControllerTest do
   describe "downloading a pdf" do
     setup do
       RedisCli.flushdb()
+      %User {
+        id: 1234,
+        name: "My Name",
+        email: "email@test.com",
+        password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
+        admin: true
+      } |> Repo.insert
+      %Group{
+        name: "Test Group 1",
+        id: 1
+      } |> Repo.insert
+      %UserGroup{
+        group_id: 1,
+        user_id: 1234
+      } |> Repo.insert
+      %Student{
+        id: 1,
+        first_name: "First",
+        last_name: "Last",
+        sex: "male",
+        year_group: "2",
+        group_id: 1
+      } |> Repo.insert
+      struct(
+        Survey,
+        Map.merge(
+          %{id: 1, student_id: 1},
+          Map.new(
+            List.delete(Survey.elems, :student_id),
+            fn el -> {el, "1"} end
+          )
+        )
+      ) |> Repo.insert
+      :ok
     end
 
     test "/api/file/:survey_id :: POST", %{conn: conn} do
       with_mock PdfGenerator, [generate_binary!: fn(string, _page_size) -> string end] do
-        conn = post conn, student_path(conn, :post_file, "123"),
+        conn = post conn, student_path(conn, :post_file, "1"),
           %{"_json" => "html"}
         assert json_response(conn, 200) =~ "{\"link\": \"skills_wheel_"
       end

@@ -14,4 +14,11 @@ defmodule Skillswheel.Group do
     |> cast(params, [:name])
     |> validate_required([:name])
   end
+
+  def invitation_changeset(struct, params \\ :invalid) do
+    struct
+    |> cast(params, [:email])
+    |> validate_required([:email])
+  end
+
 end

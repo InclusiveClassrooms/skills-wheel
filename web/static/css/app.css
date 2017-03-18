@@ -17,10 +17,6 @@ body {
   border-radius: 0px;
 }
 
-.approve-school-container {
-  
-}
-
 .breadcrumb {
   background-color: #ffffff;
   padding-top: 2rem;
@@ -28,6 +24,13 @@ body {
 
 .container {
   max-width: 90%;
+}
+
+.edit-icon {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  width: 2rem;
 }
 
 .group-add-button {
@@ -50,6 +53,7 @@ body {
   padding-top: 2rem;
   text-align: left;
   display: inline-block;
+  position: relative;
 }
 
 .group-container-new {
@@ -72,6 +76,23 @@ body {
   width: 95%;
   height: 24px;
   box-shadow: inset 0 -1px 0 0 #808080;
+}
+
+.group-edit {
+  position: absolute;
+  right: 2rem;
+  top: 1.5rem;
+}
+
+.group-heading {
+  font-size: 6rem;
+}
+
+.group-heading-container {
+  background-color: #333333;
+  color: #ffffff;
+  padding: 3rem;
+  padding-left: 6rem;
 }
 
 .group-icon {
@@ -115,7 +136,7 @@ body {
 }
 
 .group-student-add-button {
-  width: 222px;
+  width: 100%;
   height: 48px;
   background-color: #009DE4;
   color: #ffffff;
@@ -129,7 +150,6 @@ body {
   box-shadow: inset 0 2px 3px 0 #808080;
   border: 1px solid #666666;
   border-radius: 10px;
-  /*display: inline-block;*/
   margin-bottom: 2rem;
   text-align: center;
   float: left;
@@ -199,6 +219,27 @@ body {
 .group-title {
   font-size: 20px;
   color: #222222;
+}
+
+.group-update-container {
+  padding-left: 6rem;
+  width: 50%;
+}
+
+.group-update-input {
+  background-color: #FCFCFC;
+  border: 1px solid #E1E1E1;
+  border-radius: 2px;
+  margin-bottom: 2rem;
+}
+
+.group-user-email {
+  color: #808080;
+}
+
+.group-username {
+  margin-right: 3rem;
+  min-width: 8rem;
 }
 
 .group-wrapper {
@@ -368,7 +409,7 @@ body {
   padding: 1rem;
   padding-left: 4rem;
   padding-right: 4rem;
-  bottom: 3rem;
+  bottom: 2rem;
 }
 
 .student-name {
@@ -403,6 +444,11 @@ body {
 
 .table-heading {
   font-size: 2rem;
+}
+
+.user-group-remove-button {
+  border: none;
+  background-color: #ffffff;
 }
 
 /* taken from skills-wheel-old */

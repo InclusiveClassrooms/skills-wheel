@@ -15,7 +15,10 @@
 
     <%= for group <- @groups do %>
       <div class="group-container">
-        <div><%= link group.name, to: group_path(@conn, :show, group.id), class: "group-title" %></div>
+        <div class="group-title"><%= group.name %></div>
+        <a href="/groups/<%= group.id %>">
+          <img src="/images/edit-symbol.png" class="edit-icon" />
+        </a>
         <div>
           <img src="/images/users-icon.png" class="group-icon" />
           <div class="group-members"><%= format_owners(@current_user, group.users) %></div>
