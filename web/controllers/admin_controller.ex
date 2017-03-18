@@ -61,9 +61,9 @@ defmodule Skillswheel.AdminController do
     schools = Repo.all(School)
     changeset = School.changeset(%School{})
 
-    surveys = Repo.all(Survey)
-
-    Enum.map(surveys, fn survey ->
+    surveys
+    = Repo.all(Survey)
+    |> Enum.map(fn survey ->
       naive = survey.inserted_at
       date = Integer.to_string(naive.day) <>
       "/" <> Integer.to_string(naive.month) <>
@@ -81,29 +81,32 @@ defmodule Skillswheel.AdminController do
         || "Admin School"
 
       survey_data = survey
-      |> Map.from_struct()
+      |> Map.from_struct
       |> Map.drop([:updated_at, :inserted_at, :student,
                    :__meta__, :student_id, :id])
+      |> Map.values
+      |> Enum.map(&(String.to_integer(&1)))
 
-      # |> Map.merge(%{date: date, year: year, name: name,
-      #                group: group_name, ta: ta, school: school})
-      # |> Map.drop([:updated_at, :__meta__, :student,
-      #              :id, :inserted_at, :student_id])
+      ordered_survey = Survey.elems
+      |> List.delete(:student_id)
+      |> Enum.map(fn question -> survey_data[question] end)
+      |> Enum.chunk(5)
+      |> Enum.map(fn chunk -> Enum.sum(chunk) end)
 
-      IEx.pry
+      survey_titles = [
+        "Self Awareness & Self-Esteem",
+        "Managing Feelings",
+        "Non-Verbal Communication",
+        "Verbal Communication",
+        "Planning & Problem Solving",
+        "Relationships, Leaderships & Assertiveness"]
+
+      Enum.zip(survey_titles, ordered_survey)
+      |> Map.new
+      |> Map.merge(%{"date" => date, "year" => year, "name" => name,
+                     "group" => group_name, "ta" => ta, "school" => school})
     end)
 
-    # survey_data = [Enum.map(
-    #   [:teaching_assistant, :school, :student, :year, :group, :date]
-    #   ++ total_scores(Map.new(List.delete(Survey.elems(), :student_id),
-    #   fn q -> %{q => Atom.to_string(q) <> "1"} end))
-    # ), 
-    # Enum.map(
-    #   [:teaching_assistant, :school, :student, :year, :group, :date]
-    #   ++ total_scores(List.delete(Survey.elems(), :student_id),
-    #   fn q -> %{q => Atom.to_string(q) <> "2"} end)
-    # )]
-
-    render conn, "index.html", changeset: changeset, schools: schools# , survey_data: survey_data
+    render conn, "index.html", changeset: changeset, schools: schools, surveys: surveys
   end
 end
