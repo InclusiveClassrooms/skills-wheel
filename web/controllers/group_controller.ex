@@ -2,7 +2,7 @@ defmodule Skillswheel.GroupController do
   use Skillswheel.Web, :controller
   alias Skillswheel.{Group, Student, UserGroup, User}
 
-  plug :authenticate_user when action in [:index, :create, :show, :update]
+  plug :authenticate_user when action in [:index, :create, :show, :update, :delete]
 
   def index(conn, _params, user) do
     groups =
@@ -105,6 +105,17 @@ defmodule Skillswheel.GroupController do
         end
     end
   end
+
+  def delete(conn, %{"id" => group_id}, _current_user) do
+    group = Repo.get(Group, group_id)
+    case Repo.delete group do
+      {:ok, _struct}       ->
+        conn
+        |> put_flash(:info, "#{group.name} deleted!")
+        |> redirect(to: group_path(conn, :index))
+    end
+  end
+
 
   def action(conn, _) do
     apply(__MODULE__, action_name(conn),

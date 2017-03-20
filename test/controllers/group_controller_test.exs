@@ -191,6 +191,15 @@ defmodule Skillswheel.GroupControllerTest do
       assert redirected_to(conn, 302) =~ "/groups/9"
     end
 
+    test "group/:id delete", %{conn: conn} do
+      %Group{
+        name: "Test Group",
+        id: 123
+      } |> Repo.insert
+      conn = delete conn, group_path(conn, :delete, struct(Group, %{id: 123}))
+      assert redirected_to(conn, 302) =~ "/groups"
+    end
+
 
   end
 
