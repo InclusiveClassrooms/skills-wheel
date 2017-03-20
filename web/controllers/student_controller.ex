@@ -154,7 +154,6 @@ defmodule Skillswheel.StudentController do
   end
 
   def get_file(conn, %{"file_id" => file}, _current_user) do
-    IO.puts "GETTING FILE: " <> file
     case RedisCli.get(file) do
       {:ok, nil} ->
         contents = PdfGenerator.generate_binary!("<html><body><h1> Download Link has Expired </h1><h3> Please try again </h3></body></html>")
