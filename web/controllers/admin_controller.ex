@@ -18,23 +18,28 @@ defmodule Skillswheel.AdminController do
       name = student.first_name <> " " <> student.last_name
       group = Repo.get(Group, student.group_id)
       group_name = group.name
-      user = Repo.get(User, Repo.get_by(UserGroup, group_id: group.id).user_id)
-      ta = user.name
-      school = user.school_id
-        && Repo.get(School, user.school_id).name
+      group = group |> Repo.preload(:users)
+      ta =
+        group.users
+        |> Enum.map(fn ta -> ta.name end)
+        |> Enum.join(", ")
+      school = List.first(group.users).school_id
+        && Repo.get(School, List.first(group.users).school_id).name
         || "Admin School"
 
-      survey_data = survey
-      |> Map.from_struct
-      |> Map.drop([:updated_at, :inserted_at, :student,
-                   :__meta__, :student_id, :id])
-      |> Enum.map(fn {k, v} -> {k, String.to_integer(v)} end)
+      survey_data =
+        survey
+        |> Map.from_struct
+        |> Map.drop([:updated_at, :inserted_at, :student,
+                     :__meta__, :student_id, :id])
+        |> Enum.map(fn {k, v} -> {k, String.to_integer(v)} end)
 
-      ordered_survey = Survey.elems
-      |> List.delete(:student_id)
-      |> Enum.map(fn question -> survey_data[question] end)
-      |> Enum.chunk(5)
-      |> Enum.map(fn chunk -> Enum.sum(chunk) end)
+      ordered_survey =
+        Survey.elems
+        |> List.delete(:student_id)
+        |> Enum.map(fn question -> survey_data[question] end)
+        |> Enum.chunk(5)
+        |> Enum.map(fn chunk -> Enum.sum(chunk) end)
 
       survey_titles = [
         "Self Awareness & Self-Esteem",
