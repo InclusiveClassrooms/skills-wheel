@@ -2,8 +2,6 @@ defmodule Skillswheel.AdminController do
   use Skillswheel.Web, :controller
   alias Skillswheel.{School, Survey, Student, Group, User, UserGroup}
 
-  require IEx
-
   plug :authenticate_user when action in [:index]
   plug :authenticate_admin when action in [:index]
 
