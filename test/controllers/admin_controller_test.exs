@@ -1,7 +1,8 @@
 defmodule Skillswheel.AdminControllerTest do
   use Skillswheel.ConnCase, async: false
 
-  alias Skillswheel.{User, AdminController}
+  alias Skillswheel.{User, AdminController, UserGroup,
+                     Group, School, Student, Survey}
   alias Comeonin.Bcrypt
 
   defp admin_auth(admin?) do
@@ -40,11 +41,60 @@ defmodule Skillswheel.AdminControllerTest do
 
   describe "all_survey_data function" do
     setup do
+      %School{
+        id: 1,
+        name: "Test School",
+        email_suffix: "test.com"
+      } |> Repo.insert
+      %User{
+        id: 12345,
+        name: "My Name",
+        email: "email@test.com",
+        password_hash: Bcrypt.hashpwsalt("password"),
+        school_id: 1,
+        admin: true
+      } |> Repo.insert
+      %Group{
+        name: "Group 1",
+        id: 1
+      } |> Repo.insert
+      %UserGroup{
+        group_id: 1,
+        user_id: 12345
+      } |> Repo.insert
+      %Student{
+        id: 1,
+        first_name: "First",
+        last_name: "Last",
+        sex: "male",
+        year_group: "2",
+        group_id: 1
+      } |> Repo.insert
+        struct(Survey, Map.new(Survey.elems, fn atom ->
+          {
+            atom,
+            (if atom == :student_id do 1 else "1" end)
+          }
+        end)) |> Repo.insert
+
       :ok
     end
 
-    test "returned list" do
-      assert AdminController.all_survey_data() == []
+    test "/admin" do
+      assert AdminController.all_survey_data() == [
+        %{"Child Name" => "First Last",
+          "Date" => "20/3/17",
+          "Group Name" => "Group 1",
+          "Managing Feelings" => 5,
+          "Non-Verbal Communication" => 5,
+          "Planning & Problem Solving" => 5,
+          "Relationships, Leaderships & Assertiveness" => 5,
+          "School Name" => "Test School",
+          "Self Awareness & Self-Esteem" => 5,
+          "Survey Total" => 30,
+          "Teaching Assistant" => "My Name",
+          "Verbal Communication" => 5,
+          "Year" => "2"}]
     end
   end
 end
