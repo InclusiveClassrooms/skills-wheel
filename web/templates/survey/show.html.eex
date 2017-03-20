@@ -42,23 +42,23 @@
                   </div>
                   <%= if @latest_survey != nil do %>
                     <div
-                    class="<%= {map, index} = question
+                    class="<%= {map, _index} = question
                       tag = map.question_tag
                       tag_atom = String.to_atom(tag)
                       {:ok, value} = Map.fetch(@latest_survey, tag_atom)
                       format_class(value)
                       %> face hidden"
-                    id="<%= {map, index} = question
+                    id="<%= {map, _index} = question
                       map.question_tag <> "_previous"
                     %>">
                     </div>
                 <div
-                id="<%= {map, index} = question
+                id="<%= {map, _index} = question
                   map.question_tag <> "_button"
                 %>"
                 class="previous-answer-button"
                 onclick=require("web/static/js/app").App.show_previous_answer("<%=
-                  {map, index} = question
+                  {map, _index} = question
                    map.question_tag
                 %>")>
                   Show Previous

@@ -30,9 +30,13 @@ defmodule Skillswheel.SurveyController do
     changeset = Survey.changeset(%Survey{})
     latest_survey = Repo.one(from s in Skillswheel.Survey, order_by: [desc: s.inserted_at], limit: 1, where: s.student_id == ^student_id)
 
-    if latest_survey != nil do
-      latest_survey = Map.from_struct(latest_survey)
-    end
+    latest_survey =
+      case latest_survey do
+        nil ->
+          nil
+        _not_nil ->
+          Map.from_struct(latest_survey)
+      end
 
     form = form()
 
