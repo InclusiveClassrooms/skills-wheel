@@ -119,7 +119,7 @@
     var wheel_history = document.createElement('div');
     var wheel_history_wheel = document.createElement('div');
     var download_link = document.createElement('a');
-
+    var view_larger = document.createElement('div');
     view_larger.className = "view-larger"
     wheel_history.classList = "wheel-history wheel-history-" + i;
     wheel_history_wheel.classList = "wheel-history-float wheel-history-wheel-" + i;
