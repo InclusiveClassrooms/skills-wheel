@@ -17,4 +17,12 @@ defmodule Skillswheel.SurveyViewTest do
 
     assert actual == expected
   end
+
+  test "format_class" do
+    score = "0"
+    actual = SurveyView.format_class(score)
+    expected = "never-previous"
+
+    assert actual == expected
+  end
 end

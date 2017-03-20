@@ -17,6 +17,20 @@ body {
   border-radius: 0px;
 }
 
+.approve-school-button {
+  width: 21%;
+  height: 40px;
+  background-color: #009DE4;
+  color: #ffffff;
+  border: none;
+  font-size: 21px;
+  border-radius: 5px;
+}
+
+.assessment-link {
+  color: #ffffff;
+}
+
 .breadcrumb {
   background-color: #ffffff;
   padding-top: 2rem;
@@ -142,6 +156,24 @@ body {
   color: #ffffff;
   border:none;
   font-size: 21px;
+}
+
+.delete-group-button {
+  width: 100%;
+  height: 48px;
+  background-color: #d9534f;
+  color: #ffffff;
+  border:none;
+  font-size: 21px;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding: 1rem;
+  margin-top: 10rem;
+}
+
+.delete-group-button:hover {
+  color: #ffffff;
+  text-decoration: none;
 }
 
 .group-student-form {
@@ -528,11 +560,11 @@ body {
 }
 .question {
   margin-left: 1em;
+  position: relative;
 }
 .answers {
   width: 50%;
   margin: auto;
-  /*margin-top: -2em;*/
 }
 
 .always, .sometimes, .rarely, .never {
@@ -643,6 +675,45 @@ input:checked + label {
   display: block;
 }
 
-.wheel-history {
+.always-previous {
+  background-image: url("/images/face-always.svg");
+}
 
+.sometimes-previous {
+  background-image: url("/images/face-sometimes.svg");
+}
+
+.rarely-previous {
+  background-image: url("/images/face-rarely.svg");
+}
+
+.never-previous {
+  background-image: url("/images/face-never.svg");
+}
+
+.face {
+  cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  -webkit-o-transition: all 100ms ease-in;
+  -moz-o-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  height: 6em;
+  width: 6em;
+  position: absolute;
+  right: 20px;
+  bottom: 0.5rem;
+}
+
+.previous-answer-button {
+  position: absolute;
+  right: 0;
+  bottom: 3.5rem;
+  border: 1px solid #009ee3;
+  color: #009ee3;
+  border-radius: 500px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  cursor: pointer;
 }

@@ -28,6 +28,15 @@ defmodule Skillswheel.SurveyController do
 
   def show(conn, %{"id" => student_id}, user) do
     changeset = Survey.changeset(%Survey{})
+    latest_survey = Repo.one(from s in Skillswheel.Survey, order_by: [desc: s.inserted_at], limit: 1, where: s.student_id == ^student_id)
+
+    latest_survey =
+      case latest_survey do
+        nil ->
+          nil
+        _not_nil ->
+          Map.from_struct(latest_survey)
+      end
 
     form = form()
 
@@ -49,7 +58,7 @@ defmodule Skillswheel.SurveyController do
       student ->
         case Enum.member?(user_groups, student.group_id) do
           true ->
-            render conn, "show.html", form: form, changeset: changeset, emotions: emotions, student_id: student_id
+            render conn, "show.html", form: form, changeset: changeset, emotions: emotions, student_id: student_id, latest_survey: latest_survey
           _ ->
             conn
             |> put_flash(:error, "You do not have permission to view this student's profile")

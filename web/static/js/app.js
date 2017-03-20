@@ -34,12 +34,21 @@ function reverse_toggle(id) {
   new_student_form.className += " hidden"
 }
 
+function show_previous_answer(id) {
+  var previous_answer = document.getElementById(`${id}_previous`);
+  previous_answer.className = previous_answer.className.replace(" hidden", "");
+  var show_answer_button = document.getElementById(`${id}_button`);
+  show_answer_button.className += " hidden"
+
+}
+
 export var App = {
   toggle_visibility: toggle_visibility,
   reverse_toggle: reverse_toggle,
   collapse: collapse,
   addLabelListeners: addLabelListeners,
-  disableSubmitUnlessAllAreChecked: disableSubmitUnlessAllAreChecked
+  disableSubmitUnlessAllAreChecked: disableSubmitUnlessAllAreChecked,
+  show_previous_answer: show_previous_answer
 }
 
 function collapse () {
@@ -97,4 +106,3 @@ function disableSubmitUnlessAllAreChecked() {
   var submit = document.querySelector('#survey_submit_button');
   submit.disabled = answered.length !== 30
 }
-
