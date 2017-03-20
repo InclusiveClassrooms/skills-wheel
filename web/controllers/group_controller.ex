@@ -60,7 +60,7 @@ defmodule Skillswheel.GroupController do
     end
   end
 
-  def update(conn, %{"id" => group_id, "group" => group_params} = params, user) do
+  def update(conn, %{"id" => group_id, "group" => group_params}, user) do
     group = Repo.get!(user_groups(user), group_id)
     changeset = Group.changeset(group, group_params)
     case Repo.update(changeset) do
@@ -68,14 +68,14 @@ defmodule Skillswheel.GroupController do
         conn
         |> put_flash(:info, "Group name updated!")
         |> redirect(to: group_path(conn, :show, group.id))
-      {:error, changeset} ->
+      {:error, _changeset} ->
         conn
         |> put_flash(:info, "Group name cannot be blank!")
         |> redirect(to: group_path(conn, :show, group.id))
     end
   end
 
-  def invite(conn, params = %{"email_params" => %{"email" => email}, "group_id" => group_id}, current_user) do
+  def invite(conn, %{"email_params" => %{"email" => email}, "group_id" => group_id}, _current_user) do
     case Repo.get_by(User, email: email) do
       nil ->
         conn
@@ -113,9 +113,5 @@ defmodule Skillswheel.GroupController do
 
   defp user_groups(user) do
     assoc(user, :groups)
-  end
-
-  defp group_students(group) do
-    assoc(group, :students)
   end
 end

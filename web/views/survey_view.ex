@@ -11,4 +11,17 @@ defmodule Skillswheel.SurveyView do
     |> String.replace(" ", "-")
     |> String.to_atom()
   end
+
+  def format_class(score) do
+    case score do
+      "0" ->
+        "never-previous"
+      "1" ->
+        "rarely-previous"
+      "2" ->
+        "sometimes-previous"
+      "3" ->
+        "always-previous"
+    end
+  end
 end
