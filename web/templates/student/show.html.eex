@@ -8,8 +8,6 @@
 </div>
 
 <div id="wheels-container"></div>
-<button class="generate-download-link">Generate Download Link</button>
-<a id="file_link" class="download-link hidden" href="" download target="_blank">Download as PDF</a>
 
 <hr>
 
@@ -111,20 +109,16 @@
   format_surveys.forEach(function (survey, i) {
     var wheel_history = document.createElement('div');
     var wheel_history_wheel = document.createElement('div');
-    var view_larger = document.createElement('div');
+    var download_link = document.createElement('a');
 
     wheel_history.classList = "wheel-history wheel-history-" + i;
     wheel_history_wheel.classList = "wheel-history-wheel-" + i;
-    view_larger.classList = "view-larger-" + i;
-    view_larger.innerHTML = 'View Larger';
-    view_larger.addEventListener('click', function () {
-      document.querySelector('.focused-wheel').classList.remove('focused-wheel');
-      document.querySelectorAll('.wheel')[i].classList.add('focused-wheel');
-    });
+    download_link.classList = "download-links download-link-" + i + " hidden";
+    download_link.innerHTML = 'Download Wheel';
 
     document.querySelector('#wheels-history').appendChild(wheel_history);
     wheel_history.appendChild(wheel_history_wheel);
-    wheel_history.appendChild(view_larger);
+    wheel_history.appendChild(download_link);
 
     Wheel.draw(
       survey,
@@ -139,20 +133,14 @@
     );
   });
 
-  document.querySelector('.generate-download-link').addEventListener('click', function () {
-    var index = parseInt(
-      document.querySelector('.focused-wheel')
-        .classList[1]
-        .split('-')[1]
-    );
-    var survey_id = surveys[index].id;
-    var wheel_html = document.querySelector('.focused-wheel').innerHTML;
-    Req.post('/api/file/' + survey_id, wheel_html, function (res) {
-      console.log('RES: ', res, typeof res, JSON.parse(res));
-      if(document.querySelector('.download-link').className.indexOf('hidden') > -1) {
-        document.querySelector('.download-link').className = 'download-link';
+  [].forEach.call(document.querySelectorAll('.download-links'), function (link_elem, i) {
+    var wheel_html = document.querySelector('.wheel-' + i).innerHTML;
+    Req.post('/api/file/' + surveys[i].id, wheel_html, function (res) {
+      if(link_elem.className.indexOf('hidden') > -1) {
+        link_elem.className = link_elem.className.replace(' hidden', '');
       }
-      document.querySelector('.download-link').href = "/file/" + JSON.parse(res).link
+      link_elem.href = "/file/" + JSON.parse(res).link
+      link_elem.download = 'skills-wheel.pdf'
     });
   });
 
