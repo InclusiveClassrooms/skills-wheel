@@ -674,7 +674,7 @@ input:checked + label {
   height: 6em;
   width: 6em;
   position: absolute;
-  right: 0;
+  right: 20px;
   bottom: 0.5rem;
 }
 
@@ -682,4 +682,10 @@ input:checked + label {
   position: absolute;
   right: 0;
   bottom: 3.5rem;
+  border: 1px solid #009ee3;
+  color: #009ee3;
+  border-radius: 500px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  cursor: pointer;
 }

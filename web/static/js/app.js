@@ -35,9 +35,11 @@ function reverse_toggle(id) {
 }
 
 function show_previous_answer(id) {
-  console.log("working");
   var previous_answer = document.getElementById(`${id}_previous`);
   previous_answer.className = previous_answer.className.replace(" hidden", "");
+  var show_answer_button = document.getElementById(`${id}_button`);
+  show_answer_button.className += " hidden"
+
 }
 
 export var App = {

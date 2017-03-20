@@ -28,9 +28,14 @@ defmodule Skillswheel.SurveyController do
 
   def show(conn, %{"id" => student_id}, user) do
     changeset = Survey.changeset(%Survey{})
-    latest_survey = Map.from_struct(Repo.one(from s in Skillswheel.Survey, order_by: [desc: s.inserted_at], limit: 1, where: s.student_id == ^student_id))
-    # survey is either nil or a struct
+    latest_survey = Repo.one(from s in Skillswheel.Survey, order_by: [desc: s.inserted_at], limit: 1, where: s.student_id == ^student_id)
+
+    if latest_survey != nil do
+      latest_survey = Map.from_struct(latest_survey)
+    end
+
     form = form()
+
     emotions = [
       "always",
       "sometimes",
