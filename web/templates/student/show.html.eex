@@ -120,6 +120,9 @@
     var wheel_history_wheel = document.createElement('div');
     var download_link = document.createElement('a');
     var view_larger = document.createElement('div');
+
+    download_link.classList = "download-links download-link-" + i + " hidden";
+    download_link.innerHTML = 'Download Wheel';
     view_larger.className = "view-larger"
     wheel_history.classList = "wheel-history wheel-history-" + i;
     wheel_history_wheel.classList = "wheel-history-float wheel-history-wheel-" + i;
