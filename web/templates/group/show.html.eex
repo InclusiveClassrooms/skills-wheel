@@ -41,4 +41,14 @@
       <%= submit "Add", class: "group-student-add-button" %>
     <% end %>
   </div>
+  <br />
+  <br />
+  <br />
+  <br />
+  <div>
+    <%= link "Delete Group", to: group_path(@conn, :delete, @group),
+            method: :delete,
+            data: [confirm: "Are you sure?"],
+            class: "delete-group-button" %>
+  </div>
 </div>
