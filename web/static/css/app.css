@@ -17,6 +17,16 @@ body {
   border-radius: 0px;
 }
 
+.approve-school-button {
+  width: 21%;
+  height: 40px;
+  background-color: #009DE4;
+  color: #ffffff;
+  border: none;
+  font-size: 21px;
+  border-radius: 5px;
+}
+
 .assessment-link {
   color: #ffffff;
 }

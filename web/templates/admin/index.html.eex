@@ -10,6 +10,11 @@
     <tr>
       <td><b><%= school.name %></b></td>
       <td><b><%= school.email_suffix %></b></td>
+      <td><%= link "Delete", to: school_path(@conn, :delete, school),
+              method: :delete,
+              data: [confirm: "Are you sure?"],
+              class: "btn btn-danger btn-xs" %>
+      </td>
     </tr>
   <% end %>
 </table>
@@ -25,7 +30,7 @@
     </div>
     <br />
     <br />
-    <%= submit "Approve School" %>
+    <%= submit "Approve School", class: "approve-school-button" %>
   <% end %>
 </div>
 
