@@ -3,8 +3,6 @@ defmodule Skillswheel.StudentController do
 
   alias Skillswheel.{User, UserGroup, School, Student, Group, Survey, RedisCli, LayoutView}
 
-  require IEx
-
   import Ecto.Query
 
   def create(conn, %{"student" => student}, _user) do

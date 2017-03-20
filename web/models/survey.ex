@@ -40,8 +40,8 @@ defmodule Skillswheel.Survey do
     field :express_thoughts_to_others, :string
     field :disagree_with_others, :string
     field :apologise_appropriately, :string
-    belongs_to :student, Student
 
+    belongs_to :student, Student
     timestamps()
   end
 

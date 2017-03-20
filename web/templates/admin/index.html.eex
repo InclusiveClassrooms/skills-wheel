@@ -28,3 +28,127 @@
     <%= submit "Approve School" %>
   <% end %>
 </div>
+
+<div id="survey-container">
+  <label>Teaching Assistant</label>
+  <select id="ta_filter">
+    <option selected="selected" value="All">All</option>
+  </select>
+  <label>School</label>
+  <select id="school_filter">
+    <option selected="selected" value="All">All</option>
+  </select>
+  <label>Child</label>
+  <select id="child_filter">
+    <option selected="selected" value="All">All</option>
+  </select>
+  <label>Year</label>
+  <select id="year_filter">
+    <option selected="selected" value="All">All</option>
+  </select>
+  <label>Group</label>
+  <select id="group_filter">
+    <option selected="selected" value="All">All</option>
+  </select>
+
+  <table id="survey-table" class="table"></table>
+</div>
+
+<script>
+
+(function () {
+  var surveys = JSON.parse(
+    "<%= Poison.encode!(@surveys) %>"
+    .split("&quot;")
+    .join("\"")
+    .split("&amp;")
+    .join("&")
+  );
+
+  var survey_order = ['Teaching Assistant', 'School Name', 'Child Name', 'Year', 'Group Name',
+               'Date', 'Self Awareness & Self-Esteem', 'Managing Feelings',
+               'Non-Verbal Communication', 'Verbal Communication', 'Planning & Problem Solving',
+               'Relationships, Leaderships & Assertiveness', 'Survey Total']
+
+  /**
+  * @param {Array.string} arr_order, The desired order of the array to output
+  * @param {Array.Object(string|number)} arrObjs, Array of objects we would like to order
+  * @returns Array of values of `arrObjs` in the order specified by arr_order
+  * E.g. orderEach(['a', 'b', 'c'], [{c: 3, b: 2, a: 1}, {b: 2, a: 1, c: 3}]
+  * // =>[[1, 2, 3], [1, 2, 3]]
+  */
+  function orderEach(arr_order, arrObjs) {
+    return arrObjs.map(function (obj) {
+      return survey_order.map(function (title) {
+        return obj[title];
+      });
+    });
+  }
+
+  var table_data = orderEach(survey_order, surveys);
+
+  function filter_data(data) {
+    console.log('DATA: ', data);
+    return data.filter(function(data_arr) {
+      var arr = [];
+      [].forEach.call(document.querySelectorAll('#survey-container select'), function(select, i) {
+        arr.push(select.value === 'All' || select.value === data_arr[i]);
+      })
+      return arr.indexOf(false) === -1;
+    });
+  }
+
+  function render_filters() {
+    var filters = [
+      "ta_filter",
+      "school_filter",
+      "child_filter",
+      "year_filter",
+      "group_filter"
+    ].map(function (filter, i) {
+      return {[filter]: table_data
+        .map(function (arr) {
+          return arr[i];
+        }).reduce(function(acc, elem) {
+            return acc.indexOf(elem) > -1 ? acc : acc.concat(elem);
+          }, [])
+        }
+    }).reduce(function(acc, obj) {
+      var key = Object.keys(obj)[0];
+      acc[key] = obj[key];
+      return acc;
+    }, {});
+
+    Object.keys(filters).forEach(function(filter) {
+      var select = document.querySelector('#' + filter);
+      filters[filter].forEach(function(elem) {
+        var option = document.createElement('option');
+        option.value = elem;
+        option.innerHTML = elem;
+        select.appendChild(option);
+      });
+    });
+  }
+
+  function render_table() {
+    document.querySelector('#survey-table').innerHTML = '';
+    ([survey_order].concat(filter_data(table_data))).forEach(function (arr) {
+      var tr = document.createElement('tr');
+      arr.forEach(function (text) {
+        var td = document.createElement('td');
+        td.innerHTML = text;
+        tr.appendChild(td);
+      });
+      document.querySelector('#survey-table').appendChild(tr);
+    });
+  }
+
+  render_table();
+  render_filters();
+
+  [].forEach.call(document.querySelectorAll('#survey-container select'), function (select) {
+    select.addEventListener('change', render_table);
+  });
+})();
+
+</script>

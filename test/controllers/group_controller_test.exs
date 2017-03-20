@@ -54,7 +54,6 @@ defmodule Skillswheel.GroupControllerTest do
         user_id: 123456
       } |> Repo.insert
 
-
       conn = get conn, group_path(conn, :show, 1)
       assert html_response(conn, 200) =~ "Group 1"
     end
