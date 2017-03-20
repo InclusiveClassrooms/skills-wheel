@@ -7,7 +7,7 @@ defmodule Skillswheel.Repo.Migrations.AddStudents do
       add :last_name, :string
       add :sex, :string
       add :year_group, :string
-      add :group_id, references(:groups)
+      add :group_id, references(:groups, on_delete: :delete_all)
     end
   end
 end
