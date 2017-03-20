@@ -191,7 +191,6 @@
 
   [].forEach.call(document.querySelectorAll('.wheel-history'), function (container, i) {
     var survey_table = gen_table(format_surveys[i], format_surveys[i + 1]);
-    console.log(survey_table);
     var date = surveys[i].inserted_at;
     var div = document.createElement('div');
     var table = document.createElement('table');
@@ -217,7 +216,6 @@
     ]
     var month = months[new Date(date).getMonth()]
     var year = (new Date(date).getFullYear()).toString()
-    console.log(year);
     data1.innerHTML = month + ' ' + year;
     data2.innerHTML = 'Score';
     data3.innerHTML = 'Change';
