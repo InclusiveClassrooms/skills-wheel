@@ -6,15 +6,22 @@
   <div class="student-group"><%= @student.group.name %></div>
   <div class="student-assessment-button"><%= link ("Start Assessment"), to: survey_path(@conn, :show, @student.id), class: "assessment-link" %></div>
 </div>
-
+<%= if length(@surveys) == 0 do %>
+  <div class="survey-prompt">
+    You haven't completed a survey for this student yet, click the "Start Assessment" button
+    above to begin
+  </div>
+<% end %>
 <div id="wheels-container"></div>
+<%= if length(@surveys) != 0 do %>
 <button class="generate-download-link">Generate Download Link</button>
 <a id="file_link" class="download-link hidden" href="" download target="_blank">Download as PDF</a>
 
-<hr>
 
+<hr>
 <h4>History</h4>
 <div id="wheels-history"></div>
+<% end %>
 
 <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 
@@ -113,10 +120,9 @@
     var wheel_history_wheel = document.createElement('div');
     var view_larger = document.createElement('div');
 
+    view_larger.className = "view-larger"
     wheel_history.classList = "wheel-history wheel-history-" + i;
-    wheel_history_wheel.classList = "wheel-history-wheel-" + i;
-    view_larger.classList = "view-larger-" + i;
-    view_larger.innerHTML = 'View Larger';
+    wheel_history_wheel.classList = "wheel-history-float wheel-history-wheel-" + i;
     view_larger.addEventListener('click', function () {
       document.querySelector('.focused-wheel').classList.remove('focused-wheel');
       document.querySelectorAll('.wheel')[i].classList.add('focused-wheel');
@@ -192,12 +198,30 @@
     var date = surveys[i].inserted_at;
     var div = document.createElement('div');
     var table = document.createElement('table');
-
+    table.className = "history-table"
+    div.className = "history-table-div"
     var row = document.createElement('tr');
     var data1 = document.createElement('td');
     var data2 = document.createElement('td');
     var data3 = document.createElement('td');
-    data1.innerHTML = date;
+    var months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    var month = months[new Date(date).getMonth()]
+    var year = (new Date(date).getFullYear()).toString()
+    console.log(year);
+    data1.innerHTML = month + ' ' + year;
     data2.innerHTML = 'Score';
     data3.innerHTML = 'Change';
     row.appendChild(data1);

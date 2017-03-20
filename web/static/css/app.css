@@ -282,6 +282,7 @@ body {
   background-color: #ffffff;
   margin-top: -2rem;
   margin-bottom: -0.1rem;
+  position: relative;
 }
 
 .help-block {
@@ -291,6 +292,22 @@ body {
 
 .hidden {
   display: none;
+}
+
+.history-table {
+  display: inline-block;
+  float: left;
+}
+
+.history-table td {
+  padding: 1rem;
+}
+
+.history-table-div {
+  float: left;
+  display: inline-block;
+  margin-top: 2rem;
+  margin-left: 8rem;
 }
 
 .inclusive-logo {
@@ -463,6 +480,15 @@ body {
   position: relative;
 }
 
+.survey-prompt {
+  text-align: center;
+  font-size: 3rem;
+  padding-top: 7rem;
+  color: #fff;
+  background-color: #50b9a7;
+  padding: 5rem;
+}
+
 .survey-submit-button {
   width: 222px;
   height: 48px;
@@ -481,6 +507,21 @@ body {
 .user-group-remove-button {
   border: none;
   background-color: #ffffff;
+}
+
+.view-larger {
+  display: inline-block;
+  float: left;
+}
+
+.wheel-history {
+  display: inline-block;
+  float: left;
+}
+
+.wheel-history-float {
+  display: inline-block;
+  float: left;
 }
 
 /* taken from skills-wheel-old */
@@ -672,6 +713,7 @@ input:checked + label {
 }
 
 .focused-wheel {
+  padding-top: 2rem;
   display: block;
 }
 
