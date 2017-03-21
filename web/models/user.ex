@@ -46,12 +46,21 @@ defmodule Skillswheel.User do
         changeset
     end
   end
-  
+
   defp email_validation(changeset) do
     schools = Repo.all(School)
     school_data = Enum.map(schools, fn school -> {school.email_suffix, school.id} end)
     school_emails = Enum.map(school_data, fn school -> elem(school, 0) end)
-    [_prefix, suffix] = get_field(changeset, :email) |> String.split("@")
+    email =
+      case get_field(changeset, :email) do
+        nil -> "@"
+        string ->
+          case String.contains? string, "@" do
+            true -> string
+            false -> "@" 
+          end
+      end
+    [_prefix, suffix] = email |> String.split("@")
 
     if Enum.member?(school_emails, suffix) do
       [{_, school_id}] = Enum.filter(school_data, fn school -> elem(school, 0) == suffix end)

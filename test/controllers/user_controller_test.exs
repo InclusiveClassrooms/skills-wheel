@@ -22,11 +22,6 @@ defmodule Skillswheel.UserControllerTest do
       :ok
     end
 
-    test "/users/new", %{conn: conn} do
-      conn = get conn, user_path(conn, :new)
-      assert html_response(conn, 200) =~ "New User"
-    end
-
     test "create new user", %{conn: conn} do
       conn = post conn, user_path(conn, :create,
       %{"user" => %{
@@ -46,7 +41,7 @@ defmodule Skillswheel.UserControllerTest do
           email: "email@test.com",
           password: "secretpassword"
         }})
-      assert html_response(conn, 200) =~ "New User"
+      assert html_response(conn, 302) =~ "/sessions/new"
     end
   end
 end
