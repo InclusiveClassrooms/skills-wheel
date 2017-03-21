@@ -83,7 +83,7 @@ defmodule Skillswheel.StudentController do
     survey = Repo.get_by(Survey, id: survey_id)
     date = Integer.to_string(survey.inserted_at.month) <> "/" <> String.slice(Integer.to_string(survey.inserted_at.year), 2, 4)
     student = Repo.get(Student, survey.student_id)
-    name = student.first_name <> student.last_name
+    name = student.first_name <> " " <> student.last_name
     year = student.year_group
     group = Repo.get(Group, student.group_id)
     group_name = group.name
