@@ -19,7 +19,7 @@ defmodule Skillswheel.SurveyViewTest do
   end
 
   test "format_class" do
-    score = "0"
+    score = "1"
     actual = SurveyView.format_class(score)
     expected = "never-previous"
 
