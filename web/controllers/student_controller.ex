@@ -93,6 +93,7 @@ defmodule Skillswheel.StudentController do
     user_id = Repo.get_by(UserGroup, group_id: group.id).user_id
     user = Repo.get(User, user_id)
     school_name = user.school_id && Repo.get(School, user.school_id).name || "Admin School"
+    user_name = user.name
 
     rand_wheel = "skills_wheel_" <> gen_rand_string(12) <> ".pdf"
     link_changed_html = String.replace(html, "/images",
@@ -103,8 +104,6 @@ defmodule Skillswheel.StudentController do
         IO.puts "MIX ENV NOT PROD"
         "http://localhost:4000/images"
       end)
-
-    user_name = "user name"
 
     form_data = [%{label: "Teaching Assistant:", name: user_name},
     %{label: "Student:", name: name},
