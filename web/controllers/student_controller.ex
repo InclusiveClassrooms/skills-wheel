@@ -43,12 +43,9 @@ defmodule Skillswheel.StudentController do
             surveys = Repo.all(
               from s in Survey,
               where: s.student_id == ^student_id,
+              order_by: s.inserted_at,
               select: s
-            )
-
-            surveys
-              =  surveys
-              |> sanitize()
+            ) |> sanitize()
 
             student = Repo.preload(student, :group)
             render conn, "show.html", student: student, surveys: surveys
