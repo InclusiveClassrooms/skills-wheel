@@ -14,7 +14,6 @@
 <% end %>
 <div id="wheels-container"></div>
 <%= if length(@surveys) != 0 do %>
-<button class="generate-download-link">Generate Download Link</button>
 <a id="file_link" class="download-link hidden" href="" download target="_blank">Download as PDF</a>
 
 
