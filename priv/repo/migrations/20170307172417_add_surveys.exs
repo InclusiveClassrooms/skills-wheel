@@ -33,8 +33,7 @@ defmodule Skillswheel.Repo.Migrations.AddSurveys do
       add :express_thoughts_to_others, :string
       add :disagree_with_others, :string
       add :apologise_appropriately, :string
-      add :student_id, references(:students)
+      add :student_id, references(:students, on_delete: :delete_all)
     end
   end
 end
-
