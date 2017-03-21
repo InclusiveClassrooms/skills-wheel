@@ -26,7 +26,7 @@
         <div class="group-divide"></div>
         <div>
           <%= for student <- group.students do %>
-          <div><%= link student.first_name, to: student_path(@conn, :show, student.id), class: "group-student" %></div>
+          <div><%= link student.first_name <> " " <> String.first(student.last_name), to: student_path(@conn, :show, student.id), class: "group-student" %></div>
           <% end %>
           <div id="button<%= group.id %>" class="group-student-new" onclick=require("web/static/js/app").App.toggle_visibility(<%= group.id %>)>
             <img src="/images/plus-symbol.png" class="group-student-new-icon"/>
