@@ -1,40 +1,44 @@
 <h1>ADMIN DASHBOARD</h1>
 
-<h2>Approved schools</h2>
-<table class="table">
-  <tr>
-    <th><b class="table-heading">School Name</b></th>
-    <th><b class="table-heading">School Email Suffix</b></th>
-  </tr>
-  <%= for school <- @schools do %>
+<div id="schools-container">
+  <h2>Approved schools</h2>
+  <table class="table">
     <tr>
-      <td><b><%= school.name %></b></td>
-      <td><b><%= school.email_suffix %></b></td>
-      <td><%= link "Delete", to: school_path(@conn, :delete, school),
-              method: :delete,
-              data: [confirm: "Are you sure?"],
-              class: "btn btn-danger btn-xs" %>
-      </td>
+      <th><b class="table-heading">School Name</b></th>
+      <th><b class="table-heading">School Email Suffix</b></th>
+      <th></th>
     </tr>
-  <% end %>
-</table>
-<div class="approve-school-container">
-  <%= form_for @changeset, school_path(@conn, :create), fn f -> %>
-    <div class="form-group school-input">
-      <%= label f, :name, class: "control-label" %>
-      <%= text_input f, :name, placeholder: "School Name", class: "control-label" %>
-    </div>
-    <div class="form-group school-input">
-      <%= label f, :email_suffix, class: "control-label" %>
-      <%= text_input f, :email_suffix, placeholder: "school.org.uk", class: "control-label" %>
-    </div>
-    <br />
-    <br />
-    <%= submit "Approve School", class: "approve-school-button" %>
-  <% end %>
+    <%= for school <- @schools do %>
+      <tr>
+        <td><b><%= school.name %></b></td>
+        <td><b><%= school.email_suffix %></b></td>
+        <td><%= link "Delete", to: school_path(@conn, :delete, school),
+                method: :delete,
+                data: [confirm: "Are you sure?"],
+                class: "btn btn-danger btn-xs" %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <div class="approve-school-container">
+    <%= form_for @changeset, school_path(@conn, :create), fn f -> %>
+      <div class="form-group school-input">
+        <%= label f, :name, class: "control-label" %>
+        <%= text_input f, :name, placeholder: "School Name", class: "control-label" %>
+      </div>
+      <div class="form-group school-input">
+        <%= label f, :email_suffix, class: "control-label" %>
+        <%= text_input f, :email_suffix, placeholder: "school.org.uk", class: "control-label" %>
+      </div>
+      <br />
+      <br />
+      <%= submit "Approve School", class: "approve-school-button" %>
+    <% end %>
+  </div>
 </div>
 
 <div id="survey-container">
+  <h2>Aggregated Data</h2>
   <label>Teaching Assistant</label>
   <select id="ta_filter">
     <option selected="selected" value="All">All</option>

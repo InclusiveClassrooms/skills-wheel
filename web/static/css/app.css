@@ -759,3 +759,35 @@ input:checked + label {
   padding-right: 1rem;
   cursor: pointer;
 }
+
+#survey-table td {
+  text-align: center;
+  padding: 2px 8px;
+  border: 1px solid #fff;
+}
+
+#schools-container {
+  border: 1px #7F569F;
+  padding: 12px;
+  color: #fff;
+  background-color: #7F569F;
+  margin: 30px 0;
+  border-radius: 5px;
+}
+
+.school-input input.control-label {
+  color: black;
+}
+
+#survey-container {
+  background-color: #E5007D;
+  display: inline-block;
+  padding: 24px;
+  color: #fff;
+  border-radius: 5px;
+}
+
+#survey-container select {
+  color: black;
+}
+
