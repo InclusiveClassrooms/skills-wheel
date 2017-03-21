@@ -81,9 +81,11 @@ defmodule Skillswheel.AdminControllerTest do
     end
 
     test "/admin" do
-      assert AdminController.all_survey_data() == [
+      actual =
+        AdminController.all_survey_data()
+        |> Enum.map(&(Map.delete(&1, "Date")))
+      expected = [
         %{"Child Name" => "First Last",
-          "Date" => "20/3/17",
           "Group Name" => "Group 1",
           "Managing Feelings" => 5,
           "Non-Verbal Communication" => 5,
@@ -95,6 +97,8 @@ defmodule Skillswheel.AdminControllerTest do
           "Teaching Assistant" => "My Name",
           "Verbal Communication" => 5,
           "Year" => "2"}]
+
+      assert actual == expected
     end
   end
 end

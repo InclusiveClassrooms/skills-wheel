@@ -3,10 +3,20 @@ defmodule Skillswheel.SurveyController do
 
   alias Skillswheel.{Student, Survey}
 
+  defp increment(string) do
+    case string do
+      "0" -> "1"
+      "1" -> "2"
+      "2" -> "3"
+      "3" -> "4"
+      _ -> string
+    end
+  end
+
   def create_survey(conn, %{"student_id" => student_id, "survey" => survey}, _user) do
     attrs
       =  survey
-      |> Map.new(fn {key, val} -> {String.to_atom(key), val} end)
+      |> Map.new(fn {key, val} -> {String.to_atom(key), increment(val)} end)
       |> Map.delete(:student_id)
 
     student = Repo.get!(Student, student_id)
