@@ -23,7 +23,8 @@ defmodule Skillswheel.AdminController do
         group.users
         |> Enum.map(fn ta -> ta.name end)
         |> Enum.join(", ")
-      school = List.first(group.users).school_id
+      school = List.first(group.users)
+        && List.first(group.users).school_id
         && Repo.get(School, List.first(group.users).school_id).name
         || "Admin School"
 
