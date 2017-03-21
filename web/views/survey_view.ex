@@ -14,13 +14,13 @@ defmodule Skillswheel.SurveyView do
 
   def format_class(score) do
     case score do
-      "0" ->
-        "never-previous"
       "1" ->
-        "rarely-previous"
+        "never-previous"
       "2" ->
-        "sometimes-previous"
+        "rarely-previous"
       "3" ->
+        "sometimes-previous"
+      "4" ->
         "always-previous"
     end
   end
