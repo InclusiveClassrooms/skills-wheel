@@ -43,12 +43,9 @@ defmodule Skillswheel.StudentController do
             surveys = Repo.all(
               from s in Survey,
               where: s.student_id == ^student_id,
+              order_by: s.inserted_at,
               select: s
-            )
-
-            surveys
-              =  surveys
-              |> sanitize()
+            ) |> sanitize()
 
             student = Repo.preload(student, :group)
             render conn, "show.html", student: student, surveys: surveys
@@ -86,13 +83,14 @@ defmodule Skillswheel.StudentController do
     survey = Repo.get_by(Survey, id: survey_id)
     date = Integer.to_string(survey.inserted_at.month) <> "/" <> String.slice(Integer.to_string(survey.inserted_at.year), 2, 4)
     student = Repo.get(Student, survey.student_id)
-    name = student.first_name <> student.last_name
+    name = student.first_name <> " " <> student.last_name
     year = student.year_group
     group = Repo.get(Group, student.group_id)
     group_name = group.name
     user_id = Repo.get_by(UserGroup, group_id: group.id).user_id
     user = Repo.get(User, user_id)
     school_name = user.school_id && Repo.get(School, user.school_id).name || "Admin School"
+    user_name = user.name
 
     rand_wheel = "skills_wheel_" <> gen_rand_string(12) <> ".pdf"
     link_changed_html = String.replace(html, "/images",
@@ -103,8 +101,6 @@ defmodule Skillswheel.StudentController do
         IO.puts "MIX ENV NOT PROD"
         "http://localhost:4000/images"
       end)
-
-    user_name = "user name"
 
     form_data = [%{label: "Teaching Assistant:", name: user_name},
     %{label: "Student:", name: name},
