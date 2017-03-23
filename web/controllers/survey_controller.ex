@@ -1,7 +1,7 @@
 defmodule Skillswheel.SurveyController do
   use Skillswheel.Web, :controller
 
-  alias Skillswheel.{Student, Survey}
+  alias Skillswheel.{Student, Survey, Group, School}
 
   defp increment(string) do
     case string do
@@ -13,7 +13,42 @@ defmodule Skillswheel.SurveyController do
     end
   end
 
+  defp send_to_google_docs(student_id, survey) do
+    date = DateTime.utc_now()
+    formatted_date = Integer.to_string(date.month)
+           <> "/" <> Integer.to_string(date.year)
+    student = Repo.get(Student, student_id)
+    year = student.year_group
+    name = student.first_name <> " " <> student.last_name
+    group = Repo.get(Group, student.group_id) |> Repo.preload(:users)
+    group_name = group.name
+    ta =
+      group.users
+      |> Enum.map(fn ta -> ta.name end)
+      |> Enum.join(", ")
+
+    school = List.first(group.users)
+      && List.first(group.users).school_id
+      && Repo.get(School, List.first(group.users).school_id).name
+      || "Admin School"
+
+    url = "https://script.google.com/macros/s/AKfycbxzdgBRvWFf9CDWjZ4M8VyGlYyMwL3ScEFY9ukqw9xntvV2cQI3/exec?null=null&" <>
+    (
+      survey
+      |> Map.new(fn {k, v} ->
+        {k |> String.replace("_", "-") |> String.replace("build", "built"), v}
+      end)
+      |> Map.merge(%{"ta" => ta, "student" => name, "school" => school,
+        "school-year" => year, "group" => group_name, "date" => formatted_date})
+      |> URI.encode_query
+    ) <> "&null=null"
+    
+    HTTPotion.post(url)
+  end
+
   def create_survey(conn, %{"student_id" => student_id, "survey" => survey}, _user) do
+    send_to_google_docs(student_id, survey)
+
     attrs
       =  survey
       |> Map.new(fn {key, val} -> {String.to_atom(key), increment(val)} end)
