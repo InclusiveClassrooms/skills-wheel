@@ -26,24 +26,24 @@ defmodule Skillswheel.SurveyController do
       group.users
       |> Enum.map(fn ta -> ta.name end)
       |> Enum.join(", ")
+
     school = List.first(group.users)
       && List.first(group.users).school_id
       && Repo.get(School, List.first(group.users).school_id).name
       || "Admin School"
 
-    HTTPotion.post("https://script.google.com/macros/s/AKfycbxzdgBRvWFf9CDWjZ4M8VyGlYyMwL3ScEFY9ukqw9xntvV2cQI3/exec?null=null"
-    <> "&ta=" <> ta
-    <> "&student=" <> name
-    <> "&school=" <> school
-    <> "&school-year=" <> year
-    <> "&group=" <> group_name
-    <> "&date=" <> formatted_date
-    <> "&" <> (survey
-      |> Map.to_list
-      |> Enum.map(fn {k, v} -> k <> "=" <> v end)
-      |> Enum.join("&")
-    )
-    <> "&null=null");
+    url = "https://script.google.com/macros/s/AKfycbxzdgBRvWFf9CDWjZ4M8VyGlYyMwL3ScEFY9ukqw9xntvV2cQI3/exec?null=null&" <>
+    (
+      survey
+      |> Map.new(fn {k, v} ->
+        {k |> String.replace("_", "-") |> String.replace("build", "built"), v}
+      end)
+      |> Map.merge(%{"ta" => ta, "student" => name, "school" => school,
+        "school-year" => year, "group" => group_name, "date" => formatted_date})
+      |> URI.encode_query
+    ) <> "&null=null"
+    
+    HTTPotion.post(url)
   end
 
   def create_survey(conn, %{"student_id" => student_id, "survey" => survey}, _user) do
