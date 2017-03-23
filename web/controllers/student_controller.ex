@@ -1,7 +1,7 @@
 defmodule Skillswheel.StudentController do
   use Skillswheel.Web, :controller
 
-  alias Skillswheel.{User, UserGroup, School, Student, Group, Survey, RedisCli, LayoutView}
+  alias Skillswheel.{User, UserGroup, School, Student, Group, Survey, RedisCli, LayoutView, Endpoint}
 
   import Ecto.Query
 
@@ -93,14 +93,7 @@ defmodule Skillswheel.StudentController do
     user_name = user.name
 
     rand_wheel = "skills_wheel_" <> gen_rand_string(12) <> ".pdf"
-    link_changed_html = String.replace(html, "/images",
-      if (System.get_env("MIX_ENV") == "prod") do
-        IO.puts "MIX ENV PROD"
-        "https://skillswheel.herokuapp.com/images"
-      else
-        IO.puts "MIX ENV NOT PROD"
-        "http://localhost:4000/images"
-      end)
+    link_changed_html = String.replace(html, "/images", Endpoint.url <> "/images")
 
     form_data = [%{label: "Teaching Assistant:", name: user_name},
     %{label: "Student:", name: name},
@@ -121,17 +114,7 @@ defmodule Skillswheel.StudentController do
         <body>
           <header style=\"background-color: #E5007D; width: 100%; height: 4em;\">
             <a href=\"http://inclusiveclassrooms.co.uk\">
-              <img src=\""
-                <>
-                  if (System.get_env("MIX_ENV") == "prod") do
-                    IO.puts "MIX ENV PROD"
-                    "https://skillswheel.herokuapp.com/images/inclusive-classrooms-300x126.png"
-                  else
-                    IO.puts "MIX ENV NOT PROD"
-                    "http://localhost:4000/images/inclusive-classrooms-300x126.png"
-                  end
-                <>
-              "\" alt=\"inclusive classrooms\" height=\"100%\"/>
+              <img src=\"" <> Endpoint.url <> "/images/inclusive-classrooms-300x126.png\" alt=\"inclusive classrooms\" height=\"100%\"/>
             </a>
           </header>
           <div style='float: left'>"
