@@ -2,185 +2,85 @@ defmodule Skillswheel.StudentControllerTest do
   use Skillswheel.ConnCase
   import Mock
 
-  alias Skillswheel.{Group, Student, User, UserGroup, Survey, RedisCli}
+  alias Skillswheel.{User, RedisCli}
 
   test "create new student", %{conn: conn} do
-    %Group{
-      name: "Test Group 1",
-      id: 1
-    } |> Repo.insert
+    insert_group()
 
     conn = post conn, student_path(conn, :create,
-    %{"student" => %{
+      %{"student" => %{
         first_name: "First",
         last_name: "Last",
         sex: "male",
-        year_group: "5",
+        year_group: "1",
         group_id: 1
       }})
     assert redirected_to(conn, 302) =~ "/groups"
   end
 
   test "create new student error", %{conn: conn} do
-    %Group{
-      name: "Test Group 5",
-      id: 5
-    } |> Repo.insert
+    insert_group()
 
     conn = post conn, student_path(conn, :create,
-    %{"student" => %{
+      %{"student" => %{
         first_name: "",
         last_name: "",
         sex: "male",
-        year_group: "5",
-        group_id: 5
+        year_group: "1",
+        group_id: 1
       }})
     assert redirected_to(conn, 302) =~ "/groups"
   end
 
   test "show student", %{conn: conn} do
-    %User{
-      id: 123,
-      name: "My Name",
-      email: "email@test3.com",
-      password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
-      admin: true
-    } |> Repo.insert
-
-    %Group{
-      name: "Test Group 1",
-      id: 2
-    } |> Repo.insert
-
-    %UserGroup{
-      group_id: 2,
-      user_id: 123
-    } |> Repo.insert
-
-    %Student{
-      id: 2,
-      first_name: "First",
-      last_name: "Last",
-      sex: "male",
-      year_group: "2",
-      group_id: 2
-    } |> Repo.insert
-
-    struct(Survey, Map.new(Survey.elems() ++ [:id], fn x ->
-      {x, if x == :id || x == :student_id do 2 else Atom.to_string(x) end}
-    end)) |> Repo.insert
+    insert_user(%{admin: true})
+    insert_group()
+    insert_usergroup()
+    insert_student()
+    insert_survey()
 
     conn =
       conn
-      |> assign(:current_user, Repo.get(User, 123))
+      |> assign(:current_user, Repo.get(User, 1))
 
-    conn = get conn, student_path(conn, :show, 2)
+    conn = get conn, student_path(conn, :show, 1)
     assert html_response(conn, 200) =~ "First"
   end
 
   test "show student unauthorised", %{conn: conn} do
-    %User{
-      id: 123,
-      name: "My Name",
-      email: "email@test3.com",
-      password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
-      admin: true
-    } |> Repo.insert
-
-    %Group{
-      name: "Test Group 3",
-      id: 3
-    } |> Repo.insert
-
-    %Group{
-      name: "Test Group 4",
-      id: 4
-    } |> Repo.insert
-
-    %UserGroup{
-      group_id: 3,
-      user_id: 123
-    } |> Repo.insert
-
-    %Student{
-      id: 3,
-      first_name: "First",
-      last_name: "Last",
-      sex: "male",
-      year_group: "2",
-      group_id: 3
-    } |> Repo.insert
-
-    %Student{
-      id: 4,
-      first_name: "First",
-      last_name: "Last",
-      sex: "male",
-      year_group: "2",
-      group_id: 4
-    } |> Repo.insert
+    insert_user()
+    insert_group()
+    insert_group(%{id: 2, name: "Test Group 2"})
+    insert_usergroup()
+    insert_student()
+    insert_student(%{id: 2, group_id: 2})
 
     conn =
       conn
-      |> assign(:current_user, Repo.get(User, 123))
+      |> assign(:current_user, Repo.get(User, 1))
 
-    conn = get conn, student_path(conn, :show, 4)
+    conn = get conn, student_path(conn, :show, 2)
     assert redirected_to(conn, 302) =~ "/groups"
   end
 
   test "show student non-existent", %{conn: conn} do
-    %User{
-      id: 1234,
-      name: "My Name",
-      email: "email@test4.com",
-      password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
-      admin: true
-    } |> Repo.insert
+    insert_user()
 
-    conn =
-      conn
-      |> assign(:current_user, Repo.get(User, 1234))
-
+    conn = assign(conn, :current_user, Repo.get(User, 1))
     conn = get conn, student_path(conn, :show, 100)
+
     assert redirected_to(conn, 302) =~ "/groups"
   end
 
   describe "downloading a pdf" do
     setup do
       RedisCli.flushdb()
-      %User {
-        id: 1234,
-        name: "My Name",
-        email: "email@test.com",
-        password_hash: Comeonin.Bcrypt.hashpwsalt("password"),
-        admin: true
-      } |> Repo.insert
-      %Group{
-        name: "Test Group 1",
-        id: 1
-      } |> Repo.insert
-      %UserGroup{
-        group_id: 1,
-        user_id: 1234
-      } |> Repo.insert
-      %Student{
-        id: 1,
-        first_name: "First",
-        last_name: "Last",
-        sex: "male",
-        year_group: "2",
-        group_id: 1
-      } |> Repo.insert
-      struct(
-        Survey,
-        Map.merge(
-          %{id: 1, student_id: 1},
-          Map.new(
-            List.delete(Survey.elems, :student_id),
-            fn el -> {el, "1"} end
-          )
-        )
-      ) |> Repo.insert
+      insert_user()
+      insert_group()
+      insert_usergroup()
+      insert_student()
+      insert_survey(%{id: 1})
+
       :ok
     end
 

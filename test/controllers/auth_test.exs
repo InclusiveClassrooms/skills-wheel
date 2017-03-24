@@ -19,6 +19,7 @@ defmodule Skillswheel.AuthTest do
 
     test "authenticate_user halts when no current_user exists", %{conn: conn} do
       conn = Auth.authenticate_user(conn, [])
+
       assert conn.halted
     end
 
@@ -51,7 +52,7 @@ defmodule Skillswheel.AuthTest do
     end
 
     test "call places user from session into assigns", %{conn: conn} do
-      user = insert_user()
+      user = insert_validated_user()
       conn =
         conn
         |> put_session(:user_id, user.id)
@@ -66,22 +67,22 @@ defmodule Skillswheel.AuthTest do
     end
 
     test "login with a valid username and pass", %{conn: conn} do
-      user = insert_user(%{email: "me@test.com", password: "secret", school_id: 1})
+      user = insert_validated_user(%{school_id: 1})
       {:ok, conn} =
-        Auth.login_by_email_and_pass(conn, "me@test.com", "secret", repo: Repo)
+        Auth.login_by_email_and_pass(conn, "email@test.com", "supersecret", repo: Repo)
 
       assert conn.assigns.current_user.id == user.id
     end
 
     test "login with a not found user", %{conn: conn} do
       assert {:error, :not_found, _conn} =
-        Auth.login_by_email_and_pass(conn, "me@me.com", "secret", repo: Repo)
+        Auth.login_by_email_and_pass(conn, "me@me.com", "supersecret", repo: Repo)
     end
 
     test "login with password mismatch", %{conn: conn} do
-      insert_user(%{email: "me@test.com", password: "secret"})
+      insert_validated_user()
       assert {:error, :unauthorized, _conn} =
-        Auth.login_by_email_and_pass(conn, "me@test.com", "wrong", repo: Repo)
+        Auth.login_by_email_and_pass(conn, "email@test.com", "wrong", repo: Repo)
     end
   end
 end
