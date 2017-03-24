@@ -1,6 +1,8 @@
 defmodule Skillswheel.SurveyControllerTest do
   use Skillswheel.ConnCase
   alias Skillswheel.{User, Student, Group, Survey, UserGroup}
+  import Mock
+
   describe "/survey :: create_survey" do
     test "Successful new survey", %{conn: conn} do
       %Group{
@@ -23,6 +25,8 @@ defmodule Skillswheel.SurveyControllerTest do
 
       assert redirected_to(conn, 302) == "/students/" <> Integer.to_string(student.id)
       assert get_flash(conn, :info) == "Survey submitted"
+      with_mock HTTPotion, [post: fn(_url) -> nil end] do
+      end
     end
 
     test "Unsuccessful survey request", %{conn: conn} do
@@ -45,6 +49,8 @@ defmodule Skillswheel.SurveyControllerTest do
         %{"survey" => Map.new(Survey.elems, fn atom -> {atom, ""} end)}
       assert redirected_to(conn, 302) == "/students/" <> Integer.to_string(student.id)
       assert get_flash(conn, :error) == "Error creating survey"
+      with_mock HTTPotion, [post: fn(_url) -> nil end] do
+      end
     end
   end
 
