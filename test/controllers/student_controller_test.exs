@@ -13,7 +13,7 @@ defmodule Skillswheel.StudentControllerTest do
         last_name: "Last",
         sex: "male",
         year_group: "1",
-        group_id: 1
+        group_id: id().group
       }})
     assert redirected_to(conn, 302) =~ "/groups"
   end
@@ -27,7 +27,7 @@ defmodule Skillswheel.StudentControllerTest do
         last_name: "",
         sex: "male",
         year_group: "1",
-        group_id: 1
+        group_id: id().group
       }})
     assert redirected_to(conn, 302) =~ "/groups"
   end
@@ -39,35 +39,33 @@ defmodule Skillswheel.StudentControllerTest do
     insert_student()
     insert_survey()
 
-    conn =
-      conn
-      |> assign(:current_user, Repo.get(User, 1))
+    conn = assign(conn, :current_user, Repo.get(User, id().user))
 
-    conn = get conn, student_path(conn, :show, 1)
+    conn = get conn, student_path(conn, :show, id().student)
     assert html_response(conn, 200) =~ "First"
   end
 
   test "show student unauthorised", %{conn: conn} do
     insert_user()
     insert_group()
-    insert_group(%{id: 2, name: "Test Group 2"})
+    insert_group(%{id: id().group + 1, name: "Test Group #{id().group + 1}"})
     insert_usergroup()
     insert_student()
-    insert_student(%{id: 2, group_id: 2})
+    insert_student(%{id: id().student + 1, group_id: id().group + 1})
 
     conn =
       conn
-      |> assign(:current_user, Repo.get(User, 1))
+      |> assign(:current_user, Repo.get(User, id().user))
 
-    conn = get conn, student_path(conn, :show, 2)
+    conn = get conn, student_path(conn, :show, id().group + 1)
     assert redirected_to(conn, 302) =~ "/groups"
   end
 
   test "show student non-existent", %{conn: conn} do
     insert_user()
 
-    conn = assign(conn, :current_user, Repo.get(User, 1))
-    conn = get conn, student_path(conn, :show, 100)
+    conn = assign(conn, :current_user, Repo.get(User, id().user))
+    conn = get conn, student_path(conn, :show, 123)
 
     assert redirected_to(conn, 302) =~ "/groups"
   end
@@ -79,14 +77,14 @@ defmodule Skillswheel.StudentControllerTest do
       insert_group()
       insert_usergroup()
       insert_student()
-      insert_survey(%{id: 1})
+      insert_survey(%{id: id().survey})
 
       :ok
     end
 
     test "/api/file/:survey_id :: POST", %{conn: conn} do
       with_mock PdfGenerator, [generate_binary!: fn(string, _page_size) -> string end] do
-        conn = post conn, student_path(conn, :post_file, "1"),
+        conn = post conn, student_path(conn, :post_file, "#{id().survey}"),
           %{"_json" => "html"}
         assert json_response(conn, 200) =~ "{\"link\": \"skills_wheel_"
       end

@@ -15,7 +15,7 @@ defmodule Skillswheel.SessionControllerTest do
       insert_school()
       insert_user()
 
-      conn = assign(build_conn(), :current_user, Repo.get(User, 1))
+      conn = assign(build_conn(), :current_user, Repo.get(User, id().user))
       {:ok, conn: conn}
     end
 

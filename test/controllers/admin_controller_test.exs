@@ -5,7 +5,7 @@ defmodule Skillswheel.AdminControllerTest do
 
   defp admin_auth(admin?) do
     insert_user(%{admin: admin?})
-    conn = assign(build_conn(), :current_user, Repo.get(User, 1))
+    conn = assign(build_conn(), :current_user, Repo.get(User, id().user))
 
     {:ok, conn: conn}
   end
@@ -35,7 +35,7 @@ defmodule Skillswheel.AdminControllerTest do
   describe "all_survey_data function" do
     setup do
       insert_school()
-      insert_user(%{school_id: 1})
+      insert_user(%{school_id: id().school})
       insert_group()
       insert_usergroup()
       insert_student()
@@ -50,7 +50,7 @@ defmodule Skillswheel.AdminControllerTest do
         |> Enum.map(&(Map.delete(&1, "Date")))
       expected = [
         %{"Child Name" => "First Last",
-          "Group Name" => "Group 1",
+          "Group Name" => "Group #{id().group}",
           "Managing Feelings" => 5,
           "Non-Verbal Communication" => 5,
           "Planning & Problem Solving" => 5,

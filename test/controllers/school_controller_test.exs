@@ -8,7 +8,7 @@ defmodule Skillswheel.SchoolControllerTest do
 
   setup do
     insert_user(%{admin: true})
-    conn = assign(build_conn(), :current_user, Repo.get(User, 1))
+    conn = assign(build_conn(), :current_user, Repo.get(User, id().user))
 
     {:ok, conn: conn}
   end
@@ -25,7 +25,7 @@ defmodule Skillswheel.SchoolControllerTest do
 
   test "/school/:id delete", %{conn: conn} do
     insert_school()
-    conn = delete conn, school_path(conn, :delete, %School{id: 1})
+    conn = delete conn, school_path(conn, :delete, %School{id: id().school})
 
     assert redirected_to(conn, 302) =~ "/admin"
   end

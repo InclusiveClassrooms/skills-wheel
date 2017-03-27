@@ -5,7 +5,7 @@ defmodule Skillswheel.GroupControllerTest do
 
   defp admin_auth(admin?) do
     insert_user(%{admin: admin?})
-    conn = assign(build_conn(), :current_user, Repo.get(User, 1))
+    conn = assign(build_conn(), :current_user, Repo.get(User, id().user))
 
     if admin? do
       {:ok, conn: conn}
@@ -29,37 +29,37 @@ defmodule Skillswheel.GroupControllerTest do
       insert_group()
       insert_usergroup()
 
-      conn = assign(conn, :current_user, Repo.get(User, 1))
-      conn = get conn, group_path(conn, :show, 1)
-      assert html_response(conn, 200) =~ "Group 1"
+      conn = assign(conn, :current_user, Repo.get(User, id().user))
+      conn = get conn, group_path(conn, :show, id().group)
+      assert html_response(conn, 200) =~ "Group #{id().group}"
     end
 
     test "/groups/:id update", %{conn: conn} do
       insert_group()
       insert_usergroup()
 
-      conn = assign(conn, :current_user, Repo.get(User, 1))
-      conn = put conn, group_path(conn, :update, 1, %{"id" => "1", "group" => %{"name" => "test"}})
+      conn = assign(conn, :current_user, Repo.get(User, id().user))
+      conn = put conn, group_path(conn, :update, id().group, %{"id" => "#{id().group}", "group" => %{"name" => "test"}})
 
-      assert redirected_to(conn, 302) =~ "/groups/1"
+      assert redirected_to(conn, 302) =~ "/groups/#{id().group}"
     end
 
     test "/groups/:id update with bad information", %{conn: conn} do
       insert_group()
       insert_usergroup()
 
-      conn = assign(conn, :current_user, Repo.get(User, 1))
-      conn = put conn, group_path(conn, :update, 1, %{"id" => "1", "group" => %{"name" => ""}})
+      conn = assign(conn, :current_user, Repo.get(User, id().user))
+      conn = put conn, group_path(conn, :update, id().group, %{"id" => "#{id().group}", "group" => %{"name" => ""}})
 
-      assert redirected_to(conn, 302) =~ "/groups/1"
+      assert redirected_to(conn, 302) =~ "/groups/#{id().group}"
     end
 
     test "/groups/:id access denied", %{conn: conn} do
       %Group{
-        name: "Group 2",
-        id: 2
+        name: "Group #{id().group}",
+        id: id().group
       } |> Group.changeset |> Repo.insert
-      conn = get conn, group_path(conn, :show, 2)
+      conn = get conn, group_path(conn, :show, id().group)
       assert redirected_to(conn, 302) =~ "/groups"
     end
 
@@ -84,29 +84,29 @@ defmodule Skillswheel.GroupControllerTest do
     test "invite user to group", %{conn: conn} do
       insert_group()
 
-      conn = post conn, group_path(conn, :invite, 1, %{"email_params" => %{"email" => "email@test.com"}, "group_id" => "1"})
-      assert redirected_to(conn, 302) =~ "/groups/1"
+      conn = post conn, group_path(conn, :invite, id().group, %{"email_params" => %{"email" => "email@test.com"}, "group_id" => "#{id().group}"})
+      assert redirected_to(conn, 302) =~ "/groups/#{id().group}"
     end
 
     test "invite non-skillswheel user to group", %{conn: conn} do
       insert_group()
 
-      conn = post conn, group_path(conn, :invite, 1, %{"email_params" => %{"email" => "user@notregistered.com"}, "group_id" => "1"})
-      assert redirected_to(conn, 302) =~ "/groups/1"
+      conn = post conn, group_path(conn, :invite, id().group, %{"email_params" => %{"email" => "user@notregistered.com"}, "group_id" => "#{id().group}"})
+      assert redirected_to(conn, 302) =~ "/groups/#{id().group}"
     end
 
     test "teaching assistant already added", %{conn: conn} do
       insert_group()
       insert_usergroup()
 
-      conn = post conn, group_path(conn, :invite, 1, %{"email_params" => %{"email" => "email@test.com"}, "group_id" => "1"})
-      assert redirected_to(conn, 302) =~ "/groups/1"
+      conn = post conn, group_path(conn, :invite, id().group, %{"email_params" => %{"email" => "email@test.com"}, "group_id" => "#{id().group}"})
+      assert redirected_to(conn, 302) =~ "/groups/#{id().group}"
     end
 
     test "group/:id delete", %{conn: conn} do
       insert_group()
 
-      conn = delete conn, group_path(conn, :delete, %Group{id: 1})
+      conn = delete conn, group_path(conn, :delete, %Group{id: id().group})
       assert redirected_to(conn, 302) =~ "/groups"
     end
   end
@@ -122,7 +122,7 @@ defmodule Skillswheel.GroupControllerTest do
     end
 
     test "/groups/:id", %{conn: conn} do
-      conn = get conn, group_path(conn, :show, 1)
+      conn = get conn, group_path(conn, :show, id().group)
       assert redirected_to(conn, 302) =~ "/"
     end
   end

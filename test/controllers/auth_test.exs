@@ -34,16 +34,16 @@ defmodule Skillswheel.AuthTest do
     test "login puts the user in the session", %{conn: conn} do
       login_conn =
         conn
-        |> Auth.login(%User{id: 123})
+        |> Auth.login(%User{id: id().user})
         |> send_resp(:ok, "")
       next_conn = get(login_conn, "/")
-      assert get_session(next_conn, :user_id) == 123
+      assert get_session(next_conn, :user_id) == id().user
     end
 
     test "logout drops the session", %{conn: conn} do
       logout_conn =
         conn
-        |> put_session(:user_id, 123)
+        |> put_session(:user_id, id().user)
         |> Auth.logout()
         |> send_resp(:ok, "")
 
@@ -67,7 +67,7 @@ defmodule Skillswheel.AuthTest do
     end
 
     test "login with a valid username and pass", %{conn: conn} do
-      user = insert_validated_user(%{school_id: 1})
+      user = insert_validated_user(%{school_id: id().school})
       {:ok, conn} =
         Auth.login_by_email_and_pass(conn, "email@test.com", "supersecret", repo: Repo)
 
@@ -76,7 +76,7 @@ defmodule Skillswheel.AuthTest do
 
     test "login with a not found user", %{conn: conn} do
       assert {:error, :not_found, _conn} =
-        Auth.login_by_email_and_pass(conn, "me@me.com", "supersecret", repo: Repo)
+        Auth.login_by_email_and_pass(conn, "notemail@nottest.com", "supersecret", repo: Repo)
     end
 
     test "login with password mismatch", %{conn: conn} do
