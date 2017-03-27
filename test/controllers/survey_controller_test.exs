@@ -1,50 +1,57 @@
 defmodule Skillswheel.SurveyControllerTest do
   use Skillswheel.ConnCase
+  import Mock
+
   alias Skillswheel.{User, Student, Group, Survey, UserGroup}
+
   describe "/survey :: create_survey" do
     test "Successful new survey", %{conn: conn} do
-      %Group{
-        name: "Test Group 1",
-        id: 1
-      } |> Repo.insert
-      group = Repo.get!(Group, 1)
-      changeset = Ecto.build_assoc(group, :students)
-        |> Student.changeset(%{
-          first_name: "First",
-          last_name: "Last",
-          sex: "male",
-          year_group: "5",
-          group_id: 1
-        })
+      with_mock HTTPotion, [post: fn(_url) -> nil end] do
+        %Group{
+          name: "Test Group 1",
+          id: 1
+        } |> Repo.insert
+        group = Repo.get!(Group, 1)
+        changeset = Ecto.build_assoc(group, :students)
+          |> Student.changeset(%{
+            first_name: "First",
+            last_name: "Last",
+            sex: "male",
+            year_group: "5",
+            group_id: 1
+          })
 
-      {:ok, student} = changeset |> Repo.insert
-      conn = post conn, survey_path(conn, :create_survey, student.id),
-        %{"survey" => Map.new(Survey.elems, fn atom -> {atom, Atom.to_string(atom)} end)}
+        {:ok, student} = changeset |> Repo.insert
+        conn = post conn, survey_path(conn, :create_survey, student.id),
+          %{"survey" => Map.new(Survey.elems, fn atom -> {atom, Atom.to_string(atom)} end)}
 
-      assert redirected_to(conn, 302) == "/students/" <> Integer.to_string(student.id)
-      assert get_flash(conn, :info) == "Survey submitted"
+        assert redirected_to(conn, 302) == "/students/" <> Integer.to_string(student.id)
+        assert get_flash(conn, :info) == "Survey submitted"
+      end
     end
 
     test "Unsuccessful survey request", %{conn: conn} do
-      %Group{
-        name: "Test Group 1",
-        id: 1
-      } |> Repo.insert
-      group = Repo.get!(Group, 1)
-      changeset = Ecto.build_assoc(group, :students)
-        |> Student.changeset(%{
-          first_name: "First",
-          last_name: "Last",
-          sex: "male",
-          year_group: "5",
-          group_id: 1
-        })
-      {:ok, student} = changeset |> Repo.insert
+      with_mock HTTPotion, [post: fn(_url) -> nil end] do
+        %Group{
+          name: "Test Group 1",
+          id: 1
+        } |> Repo.insert
+        group = Repo.get!(Group, 1)
+        changeset = Ecto.build_assoc(group, :students)
+          |> Student.changeset(%{
+            first_name: "First",
+            last_name: "Last",
+            sex: "male",
+            year_group: "5",
+            group_id: 1
+          })
+        {:ok, student} = changeset |> Repo.insert
 
-      conn = post conn, survey_path(conn, :create_survey, student.id),
-        %{"survey" => Map.new(Survey.elems, fn atom -> {atom, ""} end)}
-      assert redirected_to(conn, 302) == "/students/" <> Integer.to_string(student.id)
-      assert get_flash(conn, :error) == "Error creating survey"
+        conn = post conn, survey_path(conn, :create_survey, student.id),
+          %{"survey" => Map.new(Survey.elems, fn atom -> {atom, ""} end)}
+        assert redirected_to(conn, 302) == "/students/" <> Integer.to_string(student.id)
+        assert get_flash(conn, :error) == "Error creating survey"
+      end
     end
   end
 
