@@ -9,10 +9,10 @@ defmodule Skillswheel.PageControllerTest do
 
   test "Get / User logged in", %{conn: conn} do
     insert_school()
-    insert_user(%{id: 1234567})
+    insert_user()
     conn =
       conn
-      |> assign(:current_user, Repo.get_by(User, email: "random@test.com"))
+      |> assign(:current_user, Repo.get_by(User, email: "email@test.com"))
     conn = get conn, page_path(conn, :index)
     assert redirected_to(conn, 302) =~ "/groups"
   end

@@ -50,8 +50,8 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
     test "password too short", %{conn: conn} do
       insert_school()
-      insert_user(%{email: "me@test.com", password: "secret"})
-      RedisCli.set("s00Rand0m", "me@test.com")
+      insert_validated_user()
+      RedisCli.set("s00Rand0m", "email@test.com")
 
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "short"}}
@@ -59,9 +59,9 @@ defmodule Skillswheel.ForgotpassControllerTest do
       assert redirected_to(conn, 302) =~ "/forgotpass/s00Rand0m"
       assert get_flash(conn, :error) == "Invalid, ensure your password is 6-20 characters"
 
-      user = Repo.get_by(User, email: "me@test.com")
+      user = Repo.get_by(User, email: "email@test.com")
 
-      assert Bcrypt.checkpw("secret", user.password_hash)
+      assert Bcrypt.checkpw("supersecret", user.password_hash)
       refute Bcrypt.checkpw("mypass", user.password_hash)
     end
 
@@ -80,7 +80,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
     test "user not in redis", %{conn: conn} do
       insert_school()
-      insert_user(%{email: "me@test.com", password: "secret"})
+      insert_user()
 
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "newpass"}}
@@ -88,9 +88,9 @@ defmodule Skillswheel.ForgotpassControllerTest do
       assert redirected_to(conn, 302) =~ "/users"
       assert get_flash(conn, :error) == "The email link has expired"
 
-      user = Repo.get_by(User, email: "me@test.com")
+      user = Repo.get_by(User, email: "email@test.com")
 
-      assert Bcrypt.checkpw("secret", user.password_hash)
+      assert Bcrypt.checkpw("password", user.password_hash)
       refute Bcrypt.checkpw("newpass", user.password_hash)
     end
 
@@ -145,13 +145,13 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
     test "user found in postgres" do
       insert_school()
-      insert_user(%{email: "me@test.com", password: "secret"})
+      insert_user()
 
-      {:ok, actual} = ForgotpassController.get_user_from_email("me@test.com")
-      {:ok, expected} = {:ok, %User{email: "me@test.com", name: "user ", password: nil}}
+      {:ok, actual} = ForgotpassController.get_user_from_email("email@test.com")
+      {:ok, expected} = {:ok, %User{email: "email@test.com", name: "My Name", password: nil}}
 
       assert actual.email == expected.email
-      assert actual.name =~ expected.name
+      assert actual.name == expected.name
       assert actual.password == expected.password
     end
   end

@@ -66,9 +66,9 @@ defmodule Skillswheel.AuthTest do
     end
 
     test "login with a valid username and pass", %{conn: conn} do
-      user = insert_user(%{email: "me@test.com", password: "secret", school_id: 1})
+      user = insert_validated_user(%{school_id: 1})
       {:ok, conn} =
-        Auth.login_by_email_and_pass(conn, "me@test.com", "secret", repo: Repo)
+        Auth.login_by_email_and_pass(conn, "email@test.com", "supersecret", repo: Repo)
 
       assert conn.assigns.current_user.id == user.id
     end
