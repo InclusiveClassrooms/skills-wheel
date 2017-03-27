@@ -144,6 +144,9 @@ defmodule Skillswheel.ForgotpassControllerTest do
     end
 
     test "user found in postgres" do
+      IO.puts "++++++++++++++++++++"
+      IO.inspect Repo.all(User)
+      IO.puts "++++++++++++++++++++"
       insert_school()
       insert_user(%{email: "me@test.com", password: "secret"})
 
