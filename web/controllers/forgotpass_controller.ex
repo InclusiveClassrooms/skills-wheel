@@ -20,20 +20,6 @@ defmodule Skillswheel.ForgotpassController do
   - Fetches user from postgres
   - Validates password
   - Replaces old password with new one
-
-  ### How to manual test
-  * Log in as admin
-  * Go to `/admin`
-  * Ensure that your email suffix is registered
-  * Log out
-  * Try forgotten password flow:
-  - with an unregistered domain
-  - with a non registered user, but registered domain
-  - with an incorrect hash
-  - check that the users you have been trying with don't exist in the database
-  - with a properly registered user
-  - check that the new password works
-  - check that the old password doesnt
   """
 
   use Skillswheel.Web, :controller
