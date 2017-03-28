@@ -62,3 +62,14 @@ at the root of your project
 ## Routes
 
 Check the application routes with `mix pheonix.routes`
+
+## Further Documentation
+
+You can view further technical documentation by running:
+```bash
+mix docs
+```
+Then opening the generated html file
+```
+open docs/index.html
+```

@@ -45,13 +45,14 @@ defmodule Skillswheel.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:comeonin, "~> 2.0"},
-     {:excoveralls, "~> 0.6.2"},
      {:bamboo, "~> 0.7"},
      {:bamboo_smtp, "~> 1.2.1"},
      {:mock, "~> 0.2.0", only: :test},
      {:redix, ">= 0.0.0"},
      {:pdf_generator, ">= 0.3.5"},
-     {:httpotion, "~> 3.0.2"}]
+     {:httpotion, "~> 3.0.2"},
+     {:excoveralls, "~> 0.6.2"},
+     {:ex_doc, "~> 0.11", only: :dev}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
