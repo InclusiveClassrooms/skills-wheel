@@ -1,125 +1,65 @@
 defmodule Skillswheel.GroupControllerTest do
   use Skillswheel.ConnCase, async: false
 
-  alias Skillswheel.{User, Group, UserGroup}
-  alias Comeonin.Bcrypt
+  alias Skillswheel.{User, Group}
 
   defp admin_auth(admin?) do
-    %User{
-      id: 12345,
-      name: "My Name",
-      email: "email@test.com",
-      password_hash: Bcrypt.hashpwsalt("password"),
-      admin: admin?
-    } |> Repo.insert
+    insert_user(%{admin: admin?})
+    conn = assign(build_conn(), :current_user, Repo.get(User, id().user))
 
     if admin? do
-      {:ok, conn: build_conn() |> assign(:current_user, Repo.get(User, 12345))}
+      {:ok, conn: conn}
     else
       :ok
     end
   end
 
   describe "group paths with authentication" do
-
     setup do
       admin_auth(true)
     end
 
     test "/groups", %{conn: conn} do
       conn = get conn, group_path(conn, :index)
+
       assert html_response(conn, 200) =~ "Add Group"
     end
 
     test "/groups/:id", %{conn: conn} do
-      %User{
-        id: 123456,
-        name: "My Name",
-        email: "email@test2.com",
-        password_hash: Bcrypt.hashpwsalt("password"),
-        admin: true
-      } |> Repo.insert
+      insert_group()
+      insert_usergroup()
 
-      conn =
-        conn
-        |> assign(:current_user, Repo.get(User, 123456))
-
-      %Group{
-        name: "Group 1",
-        id: 1
-      } |> Repo.insert
-
-      %UserGroup{
-        group_id: 1,
-        user_id: 123456
-      } |> Repo.insert
-
-      conn = get conn, group_path(conn, :show, 1)
-      assert html_response(conn, 200) =~ "Group 1"
+      conn = assign(conn, :current_user, Repo.get(User, id().user))
+      conn = get conn, group_path(conn, :show, id().group)
+      assert html_response(conn, 200) =~ "Group #{id().group}"
     end
 
     test "/groups/:id update", %{conn: conn} do
-      %User{
-        id: 1234567,
-        name: "My Name",
-        email: "email@test2.com",
-        password_hash: Bcrypt.hashpwsalt("password"),
-        admin: true
-      } |> Repo.insert
+      insert_group()
+      insert_usergroup()
 
-      conn =
-        conn
-        |> assign(:current_user, Repo.get(User, 1234567))
+      conn = assign(conn, :current_user, Repo.get(User, id().user))
+      conn = put conn, group_path(conn, :update, id().group, %{"id" => "#{id().group}", "group" => %{"name" => "test"}})
 
-      %Group{
-        name: "Group 30",
-        id: 30
-      } |> Repo.insert
-
-      %UserGroup{
-        group_id: 30,
-        user_id: 1234567
-      } |> Repo.insert
-
-
-
-      conn = put conn, group_path(conn, :update, 30, %{"id" => "30", "group" => %{"name" => "test"}})
-      assert redirected_to(conn, 302) =~ "/groups/30"
+      assert redirected_to(conn, 302) =~ "/groups/#{id().group}"
     end
 
     test "/groups/:id update with bad information", %{conn: conn} do
-      %User{
-        id: 12345678,
-        name: "My Name",
-        email: "email@test3.com",
-        password_hash: Bcrypt.hashpwsalt("password"),
-        admin: true
-      } |> Repo.insert
+      insert_group()
+      insert_usergroup()
 
-      conn =
-        conn
-        |> assign(:current_user, Repo.get(User, 12345678))
+      conn = assign(conn, :current_user, Repo.get(User, id().user))
+      conn = put conn, group_path(conn, :update, id().group, %{"id" => "#{id().group}", "group" => %{"name" => ""}})
 
-      %Group{
-        name: "Group 31",
-        id: 31
-      } |> Repo.insert
-
-      %UserGroup{
-        group_id: 31,
-        user_id: 12345678
-      } |> Repo.insert
-
-      conn = put conn, group_path(conn, :update, 31, %{"id" => "31", "group" => %{"name" => ""}})
-      assert redirected_to(conn, 302) =~ "/groups/31"
+      assert redirected_to(conn, 302) =~ "/groups/#{id().group}"
     end
 
     test "/groups/:id access denied", %{conn: conn} do
       %Group{
-        name: "Group 2",
-        id: 2
+        name: "Group #{id().group}",
+        id: id().group
       } |> Group.changeset |> Repo.insert
-      conn = get conn, group_path(conn, :show, 2)
+      conn = get conn, group_path(conn, :show, id().group)
       assert redirected_to(conn, 302) =~ "/groups"
     end
 
@@ -142,69 +82,36 @@ defmodule Skillswheel.GroupControllerTest do
     end
 
     test "invite user to group", %{conn: conn} do
-      %Group{
-        name: "Group 36",
-        id: 6
-      } |> Repo.insert
+      insert_group()
 
-      %User{
-        id: 11111,
-        name: "My Name",
-        email: "email@test11.com",
-        password_hash: Bcrypt.hashpwsalt("password"),
-        admin: true
-      } |> Repo.insert
-      conn = post conn, group_path(conn, :invite, 6, %{"email_params" => %{"email" => "email@test11.com"}, "group_id" => "6"})
-      assert redirected_to(conn, 302) =~ "/groups/6"
+      conn = post conn, group_path(conn, :invite, id().group, %{"email_params" => %{"email" => "email@test.com"}, "group_id" => "#{id().group}"})
+      assert redirected_to(conn, 302) =~ "/groups/#{id().group}"
     end
 
     test "invite non-skillswheel user to group", %{conn: conn} do
-      %Group{
-        name: "Group 7",
-        id: 7
-      } |> Repo.insert
+      insert_group()
 
-      conn = post conn, group_path(conn, :invite, 7, %{"email_params" => %{"email" => "user@notregistered.com"}, "group_id" => "7"})
-      assert redirected_to(conn, 302) =~ "/groups/7"
+      conn = post conn, group_path(conn, :invite, id().group, %{"email_params" => %{"email" => "user@notregistered.com"}, "group_id" => "#{id().group}"})
+      assert redirected_to(conn, 302) =~ "/groups/#{id().group}"
     end
 
     test "teaching assistant already added", %{conn: conn} do
-      %User{
-        id: 22,
-        name: "My Name",
-        email: "email@test22.com",
-        password_hash: Bcrypt.hashpwsalt("password"),
-        admin: true
-      } |> Repo.insert
+      insert_group()
+      insert_usergroup()
 
-      %Group{
-        name: "Group 9",
-        id: 9
-      } |> Repo.insert
-
-      %UserGroup{
-        group_id: 9,
-        user_id: 22
-      } |> Repo.insert
-
-      conn = post conn, group_path(conn, :invite, 9, %{"email_params" => %{"email" => "email@test22.com"}, "group_id" => "9"})
-      assert redirected_to(conn, 302) =~ "/groups/9"
+      conn = post conn, group_path(conn, :invite, id().group, %{"email_params" => %{"email" => "email@test.com"}, "group_id" => "#{id().group}"})
+      assert redirected_to(conn, 302) =~ "/groups/#{id().group}"
     end
 
     test "group/:id delete", %{conn: conn} do
-      %Group{
-        name: "Test Group",
-        id: 123
-      } |> Repo.insert
-      conn = delete conn, group_path(conn, :delete, struct(Group, %{id: 123}))
+      insert_group()
+
+      conn = delete conn, group_path(conn, :delete, %Group{id: id().group})
       assert redirected_to(conn, 302) =~ "/groups"
     end
-
-
   end
 
   describe "group paths without authentication" do
-
     setup do
       admin_auth(false)
     end
@@ -215,7 +122,7 @@ defmodule Skillswheel.GroupControllerTest do
     end
 
     test "/groups/:id", %{conn: conn} do
-      conn = get conn, group_path(conn, :show, 1)
+      conn = get conn, group_path(conn, :show, id().group)
       assert redirected_to(conn, 302) =~ "/"
     end
   end

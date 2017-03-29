@@ -33,8 +33,8 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
     test "working flow", %{conn: conn} do
       insert_school()
-      insert_user(%{email: "me@test.com", password: "secret"})
-      RedisCli.set("s00Rand0m", "me@test.com")
+      insert_validated_user()
+      RedisCli.set("s00Rand0m", "email@test.com")
 
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "newpass"}}
@@ -42,16 +42,16 @@ defmodule Skillswheel.ForgotpassControllerTest do
       assert redirected_to(conn, 302) =~ "/groups"
       assert get_flash(conn, :info) == "Password Changed"
 
-      user = Repo.get_by(User, email: "me@test.com")
+      user = Repo.get_by(User, email: "email@test.com")
 
-      refute Bcrypt.checkpw("secret", user.password_hash)
+      refute Bcrypt.checkpw("supersecret", user.password_hash)
       assert Bcrypt.checkpw("newpass", user.password_hash)
     end
 
     test "password too short", %{conn: conn} do
       insert_school()
-      insert_user(%{email: "me@test.com", password: "secret"})
-      RedisCli.set("s00Rand0m", "me@test.com")
+      insert_validated_user()
+      RedisCli.set("s00Rand0m", "email@test.com")
 
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "short"}}
@@ -59,9 +59,9 @@ defmodule Skillswheel.ForgotpassControllerTest do
       assert redirected_to(conn, 302) =~ "/forgotpass/s00Rand0m"
       assert get_flash(conn, :error) == "Invalid, ensure your password is 6-20 characters"
 
-      user = Repo.get_by(User, email: "me@test.com")
+      user = Repo.get_by(User, email: "email@test.com")
 
-      assert Bcrypt.checkpw("secret", user.password_hash)
+      assert Bcrypt.checkpw("supersecret", user.password_hash)
       refute Bcrypt.checkpw("mypass", user.password_hash)
     end
 
@@ -80,7 +80,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
     test "user not in redis", %{conn: conn} do
       insert_school()
-      insert_user(%{email: "me@test.com", password: "secret"})
+      insert_validated_user(%{email: "me@test.com", password: "secret"})
 
       conn = post conn, forgotpass_path(conn, :update_password, "s00Rand0m"),
         %{"hash" => "s00Rand0m", "newpass" => %{"password" => "newpass"}}
@@ -145,13 +145,13 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
     test "user found in postgres" do
       insert_school()
-      insert_user(%{email: "me@test.com", password: "secret"})
+      insert_user()
 
-      {:ok, actual} = ForgotpassController.get_user_from_email("me@test.com")
-      {:ok, expected} = {:ok, %User{email: "me@test.com", name: "user ", password: nil}}
+      {:ok, actual} = ForgotpassController.get_user_from_email("email@test.com")
+      {:ok, expected} = {:ok, %User{email: "email@test.com", name: "My Name", password: nil}}
 
       assert actual.email == expected.email
-      assert actual.name =~ expected.name
+      assert actual.name == expected.name
       assert actual.password == expected.password
     end
   end
@@ -159,12 +159,12 @@ defmodule Skillswheel.ForgotpassControllerTest do
   describe "validate_password" do
     test "returns changeset when password is valid" do
       insert_school()
-      insert_user(%{email: "me@test.com", password: "secret"})
-      user = Repo.get_by(User, email: "me@test.com")
+      insert_user()
+      user = Repo.get_by(User, email: "email@test.com")
 
       {:ok, result} = ForgotpassController.validate_password(user, "validpass")
 
-      assert result.changes == %{email: "me@test.com", password: "validpass"}
+      assert result.changes == %{email: "email@test.com", password: "validpass"}
       assert result.valid?
     end
   end
@@ -172,8 +172,8 @@ defmodule Skillswheel.ForgotpassControllerTest do
   describe "put_pass_hash" do
     test "returns a new pass hash" do
       insert_school()
-      insert_user(%{email: "me@test.com", password: "secret"})
-      user = Repo.get_by(User, email: "me@test.com")
+      insert_user()
+      user = Repo.get_by(User, email: "email@test.com")
 
       old_password_hash = user.password_hash
       params = %{
@@ -191,8 +191,8 @@ defmodule Skillswheel.ForgotpassControllerTest do
   describe "update_user" do
     test "updates user in the database" do
       insert_school()
-      insert_user(%{email: "me@test.com", password: "secret"})
-      user = Repo.get_by(User, email: "me@test.com")
+      insert_user()
+      user = Repo.get_by(User, email: "email@test.com")
 
       old_password_hash = user.password_hash
       params = %{
@@ -202,7 +202,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
       }
       changeset = User.validate_password(%User{}, params)
         |> User.put_pass_hash
-      password_hash = Repo.get_by(User, email: "me@test.com").password_hash
+      password_hash = Repo.get_by(User, email: "email@test.com").password_hash
 
       assert password_hash == old_password_hash
 
@@ -210,7 +210,7 @@ defmodule Skillswheel.ForgotpassControllerTest do
 
       refute new_user.password_hash == old_password_hash
 
-      password_hash = Repo.get_by(User, email: "me@test.com").password_hash
+      password_hash = Repo.get_by(User, email: "email@test.com").password_hash
 
       refute password_hash == old_password_hash
     end

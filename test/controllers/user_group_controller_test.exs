@@ -1,46 +1,19 @@
 defmodule Skillswheel.UserGroupControllerTest do
   use Skillswheel.ConnCase, async: false
   
-  alias Skillswheel.{User, Group, UserGroup}
-  alias Comeonin.Bcrypt
+  alias Skillswheel.User
 
   test "remove teaching assistant from group", %{conn: conn} do
-    %User{
-      id: 321,
-      name: "Test 1",
-      email: "email@test321.com",
-      password_hash: Bcrypt.hashpwsalt("password"),
-      admin: true
-    } |> Repo.insert
 
-    conn =
-      conn
-      |> assign(:current_user, Repo.get(User, 321))
+    insert_user(%{admin: true})
+    insert_user(%{id: 2, email: "email@test2.com"})
+    insert_group()
+    insert_usergroup()
+    insert_usergroup(%{user_id: 2})
 
-    %User{
-      id: 123,
-      name: "Test 2",
-      email: "email@test123.com",
-      password_hash: Bcrypt.hashpwsalt("password"),
-      admin: true
-    } |> Repo.insert
+    conn = assign(conn, :current_user, Repo.get(User, 1))
 
-    %Group{
-      name: "Group 1",
-      id: 1
-    } |> Repo.insert
-
-    %UserGroup{
-      group_id: 1,
-      user_id: 321
-    } |> Repo.insert
-
-    %UserGroup{
-      group_id: 1,
-      user_id: 123
-    } |> Repo.insert
-
-    conn = delete conn, user_group_path(conn, :delete, 1, %{"id" => "1", "user_params" => %{"user_id" => "123"}})
-    assert redirected_to(conn, 302) =~ "groups/1"
+    conn = delete conn, user_group_path(conn, :delete, 2, %{"id" => "2", "user_params" => %{"user_id" => "2"}})
+    assert redirected_to(conn, 302) == "/groups/2"
   end
 end

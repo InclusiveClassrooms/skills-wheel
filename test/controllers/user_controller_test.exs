@@ -1,28 +1,17 @@
 defmodule Skillswheel.UserControllerTest do
   use Skillswheel.ConnCase, async: false
 
-  alias Skillswheel.{User, School}
   alias Comeonin.Bcrypt
 
-  describe "all user paths that don't need authentication" do
+  describe "creating new user" do
     setup do
-      %School{
-        id: 1,
-        name: "Test School",
-        email_suffix: "test.com"
-      } |> Repo.insert
-      :ok
+      insert_school()
+      insert_validated_user(%{password_hash: Bcrypt.hashpwsalt("password")})
 
-      %User{
-        id: 12345,
-        name: "My Name",
-        email: "email@test.com",
-        password_hash: Bcrypt.hashpwsalt("password")
-      } |> Repo.insert
       :ok
     end
 
-    test "create new user", %{conn: conn} do
+    test "email doesn't already exist", %{conn: conn} do
       conn = post conn, user_path(conn, :create,
       %{"user" => %{
           name: "Test Name",
@@ -34,7 +23,7 @@ defmodule Skillswheel.UserControllerTest do
       assert redirected_to(conn, 302) =~ "/groups"
     end
 
-    test "Sign up fail: existing email", %{conn: conn} do
+    test "email already exists", %{conn: conn} do
       conn = post conn, user_path(conn, :create,
       %{"user" => %{
           name: "Test Name",

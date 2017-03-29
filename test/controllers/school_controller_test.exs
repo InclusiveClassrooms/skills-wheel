@@ -2,21 +2,15 @@ defmodule Skillswheel.SchoolControllerTest do
   use Skillswheel.ConnCase, async: false
 
   alias Skillswheel.{User, School}
-  alias Comeonin.Bcrypt
 
   @valid_attrs %{name: "Test", email_suffix: "test.org"}
   @invalid_attrs %{name: "", email_suffix: ""}
 
   setup do
-    %User{
-      id: 12345,
-      name: "My Name",
-      email: "email@test.com",
-      password_hash: Bcrypt.hashpwsalt("password"),
-      admin: true
-    } |> Repo.insert
+    insert_user(%{admin: true})
+    conn = assign(build_conn(), :current_user, Repo.get(User, id().user))
 
-    {:ok, conn: build_conn() |> assign(:current_user, Repo.get(User, 12345))}
+    {:ok, conn: conn}
   end
 
   test "/school/new", %{conn: conn} do
@@ -30,12 +24,9 @@ defmodule Skillswheel.SchoolControllerTest do
   end
 
   test "/school/:id delete", %{conn: conn} do
-    %School{
-      name: "Test School",
-      email_suffix: "test.org.uk",
-      id: 123
-    } |> Repo.insert
-    conn = delete conn, school_path(conn, :delete, struct(School, %{id: 123}))
+    insert_school()
+    conn = delete conn, school_path(conn, :delete, %School{id: id().school})
+
     assert redirected_to(conn, 302) =~ "/admin"
   end
 end

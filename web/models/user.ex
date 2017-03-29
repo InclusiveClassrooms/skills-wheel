@@ -1,7 +1,8 @@
 defmodule Skillswheel.User do
   use Skillswheel.Web, :model
-  alias Skillswheel.School
-  alias Skillswheel.Repo
+  alias Skillswheel.{School, Repo, Group}
+  alias Comeonin.Bcrypt
+  alias Ecto.Changeset
 
   schema "users" do
     field :name, :string
@@ -9,8 +10,8 @@ defmodule Skillswheel.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     field :admin, :boolean
-    belongs_to :school, Skillswheel.School
-    many_to_many :groups, Skillswheel.Group, join_through: "users_groups"
+    belongs_to :school, School
+    many_to_many :groups, Group, join_through: "users_groups"
 
     timestamps()
   end
@@ -40,8 +41,8 @@ defmodule Skillswheel.User do
 
   def put_pass_hash(changeset) do
     case changeset do
-      %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->
-        put_change(changeset, :password_hash, Comeonin.Bcrypt.hashpwsalt(pass))
+      %Changeset{valid?: true, changes: %{password: pass}} ->
+        put_change(changeset, :password_hash, Bcrypt.hashpwsalt(pass))
       _ ->
         changeset
     end
