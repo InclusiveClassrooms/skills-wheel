@@ -1,4 +1,5 @@
 defmodule Skillswheel.ErrorView do
+  @moduledoc false
   use Skillswheel.Web, :view
 
   def render("404.html", _assigns) do

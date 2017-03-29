@@ -1,4 +1,5 @@
 defmodule Skillswheel.Router do
+  @moduledoc false
   use Skillswheel.Web, :router
 
   pipeline :browser do
@@ -19,6 +20,9 @@ defmodule Skillswheel.Router do
   scope "/", Skillswheel do
     pipe_through :browser # Use the default browser stack
 
+    @doc """
+    thing123
+    """
     get "/", PageController, :index
     resources "/users", UserController, only: [:new, :create]
     resources "/sessions", SessionController, only: [:new, :create, :delete]

@@ -1,4 +1,5 @@
 defmodule Skillswheel.Email do
+  @moduledoc false
   use Bamboo.Phoenix, view: Skillswheel.EmailView
 
   def forgotten_password_email(email_address, rand_string) do

@@ -1,4 +1,5 @@
 defmodule Skillswheel.RedisClientSupervisor do
+  @moduledoc false
   use Supervisor
 
   alias Skillswheel.RedisCli

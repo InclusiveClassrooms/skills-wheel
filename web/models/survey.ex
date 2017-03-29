@@ -1,4 +1,5 @@
 defmodule Skillswheel.Survey do
+  @moduledoc false
   use Skillswheel.Web, :model
 
   alias Skillswheel.Student

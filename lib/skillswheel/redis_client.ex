@@ -1,4 +1,5 @@
 defmodule Skillswheel.RedisCli do
+  @moduledoc false
   def start_link(connection, name) do
     Redix.start_link(connection, name: name)
   end

@@ -1,4 +1,5 @@
 defmodule Skillswheel.PageController do
+  @moduledoc false
   use Skillswheel.Web, :controller
 
   def index(conn, _params) do

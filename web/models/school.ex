@@ -1,4 +1,5 @@
 defmodule Skillswheel.School do
+  @moduledoc false
   use Skillswheel.Web, :model
 
   schema "schools" do

@@ -1,4 +1,5 @@
 defmodule Skillswheel.UserGroup do
+  @moduledoc false
   use Skillswheel.Web, :model
 
   @primary_key false
