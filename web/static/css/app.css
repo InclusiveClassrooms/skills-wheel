@@ -791,3 +791,9 @@ input:checked + label {
   color: black;
 }
 
+.tr-heading td {
+  background: white;
+  color: #E5007D;
+  border: 1px solid #E5007D;
+}
+
