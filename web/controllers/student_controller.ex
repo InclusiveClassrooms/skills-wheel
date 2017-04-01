@@ -103,7 +103,7 @@ defmodule Skillswheel.StudentController do
     %{label: "Date:", name: date}]
     form_string
       =  form_data
-      |> Enum.map(fn (data) -> "<h6 style=\"font-weight: normal;\">#{data.label}</h6><h4 style=\"margin-bottom: 5px;font-weight: bold;\">#{data.name}</h4>" end)
+      |> Enum.map(fn (data) -> "<h5 style=\"font-weight: normal;margin: 10px 0 0 0;padding: 0;\">#{data.label}</h5><h4 style=\"padding: 0;margin: 0 0 5px 0;font-weight: bold;\">#{data.name}</h4>" end)
       |> Enum.join("")
 
     pdf_binary = PdfGenerator.generate_binary!("
