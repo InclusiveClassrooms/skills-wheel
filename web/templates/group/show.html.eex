@@ -50,5 +50,6 @@
             method: :delete,
             data: [confirm: "Are you sure?"],
             class: "delete-group-button" %>
+    <%= link "Back to Groups", to: group_path(@conn, :index), class: "back-to-group-button" %>
   </div>
 </div>
