@@ -36,7 +36,7 @@ defmodule Skillswheel.SurveyController do
     (
       survey
       |> Map.new(fn {k, v} ->
-        {k |> String.replace("_", "-") |> String.replace("build", "built"), v}
+        {k |> String.replace("_", "-") |> String.replace("build", "built"), increment(v)}
       end)
       |> Map.merge(%{"ta" => ta, "student" => name, "school" => school,
         "school-year" => year, "group" => group_name, "date" => formatted_date})
