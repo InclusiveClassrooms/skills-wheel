@@ -103,7 +103,7 @@ defmodule Skillswheel.StudentController do
     %{label: "Date:", name: date}]
     form_string
       =  form_data
-      |> Enum.map(fn (data) -> "<div style=\"margin: 5px\"><h4>" <> data.label <> "</h4><h4><strong>" <> data.name <> "</strong></h4></div>" end)
+      |> Enum.map(fn (data) -> "<p style=\"font-weight: normal;\">#{data.label}</p><h5 style=\"margin-bottom: 5px;font-weight: normal;\">#{data.name}</h5>" end)
       |> Enum.join("")
 
     pdf_binary = PdfGenerator.generate_binary!("
@@ -114,7 +114,7 @@ defmodule Skillswheel.StudentController do
         <body>
           <header style=\"background-color: #E5007D; width: 100%; height: 4em;\">
             <a href=\"http://inclusiveclassrooms.co.uk\">
-              <img src=\"" <> Endpoint.url <> "/images/inclusive-classrooms-300x126.png\" alt=\"inclusive classrooms\" height=\"100%\"/>
+              <img src=\"#{Endpoint.url}/images/inclusive-classrooms-300x126.png\" alt=\"inclusive classrooms\" height=\"100%\"/>
             </a>
           </header>
           <div style='float: left'>"
