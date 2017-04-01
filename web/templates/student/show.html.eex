@@ -102,6 +102,28 @@
     .map(order)
     .map(decrement);
 
+  var date_div = document.createElement('h3')
+  date_div.style = 'float: left; margin-left: 18px;';
+  var main_date = surveys[0].inserted_at;
+  var main_months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ]
+  var main_month = main_months[new Date(main_date).getMonth()]
+  var main_year = (new Date(main_date).getFullYear()).toString()
+  date_div.innerHTML = 'Most Recent: ' + main_month + ' ' + main_year;
+  document.querySelector('#wheels-container').appendChild(date_div);
+
   // draw in all the wheels to the wheels-container
   format_surveys.forEach(function (survey, i) {
     var div = document.createElement('div');
