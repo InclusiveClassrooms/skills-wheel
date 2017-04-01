@@ -20,6 +20,7 @@
           <a href="/groups">
             <img class="inclusive-logo" src="/images/inclusive-classrooms-logo-grey.png" />
           </a>
+          <%= link "Groups", to: group_path(@conn, :index), class: "group-dashboard-button" %>
           <%= if @conn.assigns.current_user && @conn.assigns.current_user.admin do %>
             <%= link "Admin Dashboard", to: admin_path(@conn, :index), class: "admin-dashboard-button" %>
           <% end %>

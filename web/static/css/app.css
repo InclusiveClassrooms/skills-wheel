@@ -5,6 +5,12 @@ body {
   background-color: #e1e1e1;
 }
 
+.group-dashboard-button {
+  position: absolute;
+  top: 2.5rem;
+  left: 20%;
+}
+
 .admin-dashboard-button {
   position: absolute;
   top: 2.5rem;
