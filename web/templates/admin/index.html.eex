@@ -141,8 +141,11 @@
 
   function render_table() {
     document.querySelector('#survey-table').innerHTML = '';
-    ([survey_order].concat(filter_data(table_data))).forEach(function (arr) {
+    ([survey_order].concat(filter_data(table_data))).forEach(function (arr, i) {
       var tr = document.createElement('tr');
+      if (i === 0) {
+        tr.className = 'tr-heading'
+      }
       arr.forEach(function (text) {
         var td = document.createElement('td');
         td.innerHTML = text;

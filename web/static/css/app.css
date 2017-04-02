@@ -5,6 +5,12 @@ body {
   background-color: #e1e1e1;
 }
 
+.group-dashboard-button {
+  position: absolute;
+  top: 2.5rem;
+  left: 20%;
+}
+
 .admin-dashboard-button {
   position: absolute;
   top: 2.5rem;
@@ -158,22 +164,30 @@ body {
   font-size: 21px;
 }
 
-.delete-group-button {
-  width: 100%;
+.delete-group-button, .back-to-group-button {
+  width: 45%;
   height: 48px;
-  background-color: #d9534f;
-  color: #ffffff;
+  color: #fff;
   border:none;
   font-size: 21px;
   padding-left: 2rem;
   padding-right: 2rem;
   padding: 1rem;
-  margin-top: 10rem;
 }
 
-.delete-group-button:hover {
-  color: #ffffff;
+.delete-group-button:hover, .back-to-group-button:hover {
+  color: #fff;
   text-decoration: none;
+}
+
+.delete-group-button {
+  background-color: #d9534f;
+  float: left;
+}
+
+.back-to-group-button {
+  background-color: grey;
+  float: right;
 }
 
 .group-student-form {
@@ -789,5 +803,12 @@ input:checked + label {
 
 #survey-container select {
   color: black;
+}
+
+#survey-table .tr-heading td {
+  background: white;
+  color: #E5007D;
+  border: 1px solid #fff;
+  border-right: 1px solid #E5007D;
 }
 
