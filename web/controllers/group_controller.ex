@@ -1,4 +1,5 @@
 defmodule Skillswheel.GroupController do
+  @moduledoc false
   use Skillswheel.Web, :controller
   alias Skillswheel.{Group, Student, UserGroup, User}
 

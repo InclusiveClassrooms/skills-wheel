@@ -1,4 +1,5 @@
 defmodule Skillswheel.SessionController do
+  @moduledoc false
   use Skillswheel.Web, :controller
   alias Skillswheel.User
 

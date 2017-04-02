@@ -1,4 +1,5 @@
 defmodule Skillswheel.SurveyView do
+  @moduledoc false
   use Skillswheel.Web, :view
 
   def get_int_string(tuple) do

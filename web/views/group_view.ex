@@ -1,4 +1,5 @@
 defmodule Skillswheel.GroupView do
+  @moduledoc false
   use Skillswheel.Web, :view
 
   def format_owners(current_user, owners) do

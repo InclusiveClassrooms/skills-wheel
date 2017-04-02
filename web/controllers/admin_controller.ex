@@ -1,4 +1,5 @@
 defmodule Skillswheel.AdminController do
+  @moduledoc false
   use Skillswheel.Web, :controller
   alias Skillswheel.{School, Survey, Student, Group}
 

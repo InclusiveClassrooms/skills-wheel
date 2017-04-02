@@ -1,4 +1,5 @@
 defmodule Skillswheel.User do
+  @moduledoc false
   use Skillswheel.Web, :model
   alias Skillswheel.{School, Repo, Group}
   alias Comeonin.Bcrypt

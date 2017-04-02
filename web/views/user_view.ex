@@ -1,4 +1,5 @@
 defmodule Skillswheel.UserView do
+  @moduledoc false
   use Skillswheel.Web, :view
   alias Skillswheel.User
 

@@ -1,4 +1,5 @@
 defmodule Skillswheel.SchoolController do
+  @moduledoc false
   use Skillswheel.Web, :controller
   alias Skillswheel.School
 

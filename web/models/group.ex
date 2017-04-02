@@ -1,4 +1,5 @@
 defmodule Skillswheel.Group do
+  @moduledoc false
   use Skillswheel.Web, :model
 
   schema "groups" do
